@@ -30,7 +30,7 @@ GUIImageManager::~GUIImageManager() {
 	images_.clear();
 }
 
-GUITexture* GUIImageManager::GetImage(std::string fileName) {
+GUITexture* GUIImageManager::GetImage(const std::string& fileName) {
 	if(images_.find(fileName) != images_.end()) {
 		return images_[fileName];
 	};
@@ -39,4 +39,12 @@ GUITexture* GUIImageManager::GetImage(std::string fileName) {
 	images_.insert(std::make_pair(fileName, image));
 
 	return image;
+}
+
+void GUIImageManager::RemoveImage(const std::string& fileName) {
+	const auto p = images_.find(fileName);
+	if(p != images_.end()) {
+		delete p->second;
+		images_.erase(p);
+	};
 }

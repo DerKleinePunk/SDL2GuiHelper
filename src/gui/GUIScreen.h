@@ -34,6 +34,7 @@ public:
 	void HandleEvent(const SDL_Event* event) const;
 	bool NeedRedraw() const;
 	void ToggleFullscreen();
-
+	void DrawTextOnBootScreen(const std::string& text);
+	
 	void Shutdown();
 };

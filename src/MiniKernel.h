@@ -23,10 +23,13 @@ public:
     ~MiniKernel();
 
     bool StartUp(int argc, char* argv[]);
+    void UpdateScreens();
     void Run();
     void Shutdown();
     GUIElementManager* CreateScreen(const std::string& title, const std::string& videoDriver);
     void SetStateCallBack(KernelStateCallbackFunction callback);
     void RegisterApplicationEvent(ApplicationEventCallbackFunction callbackFunction);
+    void DrawTextOnBootScreen(const std::string& text);
+    int StartAudio(const std::string& drivername);
 };
 

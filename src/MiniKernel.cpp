@@ -138,6 +138,17 @@ bool MiniKernel::StartUp(int argc, char* argv[]) {
     return result;
 }
 
+void MiniKernel::UpdateScreens() {
+    auto screenPtr = _screens.begin();
+    while (screenPtr != _screens.end()) {
+        screenPtr->second->UpdateAnimationInternal();
+        if (screenPtr->second->NeedRedraw()) {
+            screenPtr->second->Draw();
+        }
+        ++screenPtr;
+    }
+}
+
 void MiniKernel::Run() {
     SDL_Event event;
     auto quit = false;
@@ -174,15 +185,8 @@ void MiniKernel::Run() {
                     }
                 }
             }
-
-            auto screenPtr = _screens.begin();
-            while (screenPtr != _screens.end()) {
-                screenPtr->second->UpdateAnimationInternal();
-                if (screenPtr->second->NeedRedraw()) {
-                    screenPtr->second->Draw();
-                }
-                ++screenPtr;
-            }
+            
+            UpdateScreens();
 
             const auto endFrame = SDL_GetTicks();
 
@@ -270,4 +274,32 @@ void MiniKernel::SetStateCallBack(KernelStateCallbackFunction callback) {
 
 void MiniKernel::RegisterApplicationEvent(ApplicationEventCallbackFunction callbackFunction) {
 	_applicationEventCallbackFunction = callbackFunction;
+}
+
+void MiniKernel::DrawTextOnBootScreen(const std::string& text) {
+    const auto screenPtr = _screens.begin();
+    if(screenPtr != _screens.end()) {
+        screenPtr->second->DrawTextOnBootScreen(text);
+        screenPtr->second->UpdateAnimationInternal();
+        if (screenPtr->second->NeedRedraw()) {
+            screenPtr->second->Draw();
+        }
+    }
+}
+
+int MiniKernel::StartAudio(const std::string& drivername) {
+    _base->InitAudio(drivername);
+
+#ifdef ENABLEAUDIOMANAGER
+	audioManager_ = new AudioManager(eventManager_, configManager_->GetVolume());
+	auto result = audioManager_->Init();
+	if(result != 0) {
+		LOG(ERROR) << "Audio Init Failed";
+		//Todo show on screen
+		return result;
+	}
+	LOG(INFO) << "AudioManager Started";
+#endif
+
+	return 0;
 }

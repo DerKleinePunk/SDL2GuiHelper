@@ -40,13 +40,8 @@ int main(int argc, char **argv)
         auto app = new SampleApp(kernel);
         app->Startup();
         kernel->Run();
-        
+        app->Shutdown();
         kernel->Shutdown();
-
-		/*
-		kernel->Run();
-		app->Shutdown();
-		kernel->Shutdown();*/
 
 		printf("all down deleting pointer\n");
 

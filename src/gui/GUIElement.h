@@ -73,7 +73,7 @@ protected:
 	GUIPoint TopLeft() const;
 	GUIPoint ScreenTopLeft() const;
 	bool NeedRedraw() const;
-	void Create(GUIRenderer* renderer);
+	void Create(GUIRenderer* renderer, GUIFontManager* fontManager);
 	void Create(GUIRenderer* renderer, GUIElement* parent, GUIFontManager* fontManager, SDLEventManager* eventManager, GUIImageManager* imageManager, IMapManager* mapManager, Uint32 windowId);
 	void HandleEventBase(GUIEvent& event);
 	void SetRedraw();

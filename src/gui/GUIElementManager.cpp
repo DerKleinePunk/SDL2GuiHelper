@@ -258,7 +258,7 @@ GUIElementManager::GUIElementManager(GUIRenderer* renderer,GUIScreenCanvas* canv
 
 	renderer_ = renderer;
 	fontManager_ = new GUIFontManager();
-	rootNode_.Element()->Create(renderer_);
+	rootNode_.Element()->Create(renderer_, fontManager_);
 	eventManager_ = eventManager;
     imageManager_ = imageManager;
     mapManager_ = mapManager;

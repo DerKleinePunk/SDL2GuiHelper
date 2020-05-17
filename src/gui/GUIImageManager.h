@@ -9,5 +9,6 @@ class GUIImageManager {
 public:
 	explicit GUIImageManager(GUIRenderer* renderer);
 	~GUIImageManager();
-	GUITexture* GetImage(std::string fileName);
+	GUITexture* GetImage(const std::string& fileName);
+	void RemoveImage(const std::string& fileName);
 };

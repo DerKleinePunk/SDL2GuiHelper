@@ -12,6 +12,7 @@
 #include "GUIRenderer.h"
 #include "../exception/GUIException.h"
 #include "../../common/exception/NullPointerException.h"
+#include "../../common/utils/Tokenizer.h"
 #include "GUITexture.h"
 #include <SDL_image.h>
 
@@ -397,6 +398,9 @@ GUITexture* GUIRenderer::RenderTextBlended(TTF_Font* font, std::string text, SDL
 	return textureText;
 }
 
+//Some day we do this ?
+//https://gamedev.stackexchange.com/questions/46238/rendering-multiline-text-with-sdl-ttf
+//TTF_LineSkip TTF_GlyphMetrics and draw all own ? To max Text Center and so an without gerade memory...
 GUITexture* GUIRenderer::RenderTextBlendedWrapped(TTF_Font* font, std::string text, SDL_Color foregroundColor, Uint32 wrapLength) const {
 	if (text.size() == 0) return nullptr;
 
@@ -404,7 +408,26 @@ GUITexture* GUIRenderer::RenderTextBlendedWrapped(TTF_Font* font, std::string te
 		throw NullPointerException("font can not be null");
 	}
 
-	auto surfaceText = TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), foregroundColor, wrapLength);
+	//Make Textture Only so width the max Text width
+	int w = 0,h = 0;
+	Uint32 maxTextWidth = 0;
+	Tokenizer tokenizer(text, "\n");
+	while(tokenizer.NextToken()) {
+		
+		if(TTF_SizeUTF8(font,tokenizer.GetToken().c_str(),&w,&h) != 0) {
+			throw TTFException("SizeUTF8");
+		}
+
+		if((Uint32)w > maxTextWidth){
+			maxTextWidth = w;
+		}
+	}
+
+	if(maxTextWidth > wrapLength){
+		maxTextWidth = wrapLength;
+	}
+
+	auto surfaceText = TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), foregroundColor, maxTextWidth);
 	if (surfaceText == nullptr) {
 		throw TTFException("RenderUTF8_Blended_Wrapped");
 	}

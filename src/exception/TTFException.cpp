@@ -17,16 +17,16 @@ std::string TTFException::CreateText(std::string function, std::string errormsg)
 	return tmp;
 }	
 
-TTFException::TTFException(const char* function)
-{
+TTFException::TTFException(const char* function) {
+	el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
 	sdl_error_ = TTF_GetError();
 	sdl_function_ = function;
 	message_ = CreateText(sdl_function_, sdl_error_);
 	LOG(ERROR) << "TTFException " << message_;
 }
 
-TTFException::TTFException(const std::string& function)
-{
+TTFException::TTFException(const std::string& function) {
+	el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
 	sdl_error_ = TTF_GetError();
 	sdl_function_ = function;
 	message_ = CreateText(sdl_function_, sdl_error_);

@@ -13,13 +13,14 @@
 //https://github.com/grimfang4/SDL_FontCache
 //https://fonts.google.com/specimen/Inconsolata
 
-//#define DEFAULT_FONT "Ubuntu-Medium.ttf"
-//#define DEFAULT_FONT "DesignSystemC700R.ttf"
-//#define DEFAULT_FONT "Arkitech-Medium.ttf"
-//#define DEFAULT_SMALL_FONT "DesignSystemC500R.otf"
-#define DEFAULT_SMALL_FONT "Inconsolata-Regular.ttf"
-#define DEFAULT_FONT "Inconsolata-Bold.ttf"
-//#define DEFAULT_SMALL_FONT "Ubuntu-Medium.ttf"
+#ifndef DEFAULT_SMALL_FONT 
+	#define DEFAULT_SMALL_FONT "Inconsolata-Regular.ttf"
+#endif
+
+#ifndef DEFAULT_FONT 
+	#define DEFAULT_FONT "Inconsolata-Bold.ttf"
+#endif
+
 
 GUIFontManager::GUIFontManager()
 {
@@ -70,8 +71,7 @@ TTF_Font* GUIFontManager::GetDefaultFont(int height) {
 	if (height <= 0) return nullptr;
 
 	const auto fontEntry = defaultFonts_.find(height);
-	if(fontEntry != defaultFonts_.end())
-	{
+	if(fontEntry != defaultFonts_.end()) {
 		return fontEntry->second;
 	}
 

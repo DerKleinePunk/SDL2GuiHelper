@@ -16,5 +16,6 @@ public:
     virtual ~SampleApp();
 
     void Startup();
+    void Shutdown();
 };
 

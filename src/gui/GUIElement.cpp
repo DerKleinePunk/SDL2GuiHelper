@@ -373,11 +373,17 @@ bool GUIElement::NeedRedraw() const
 	return needRedraw_;
 }
 
-void GUIElement::Create(GUIRenderer* renderer)
+void GUIElement::Create(GUIRenderer* renderer, GUIFontManager* fontManager)
 {
 	renderer_ = renderer;
+	fontManager_ = fontManager;
+
 	if (renderer_ == nullptr) {
 		throw NullPointerException("renderer can not be null");
+	}
+	
+	if (fontManager_ == nullptr) {
+		throw NullPointerException("fontManager can not be null");
 	}
 
 	if (size_.type == sizeType::absolute) {
@@ -408,11 +414,6 @@ void GUIElement::Create(GUIRenderer* renderer, GUIElement* parent, GUIFontManage
 	if (parent_ == nullptr) {
 		throw NullPointerException("parent can not be null");
 	}
-	
-	fontManager_ = fontManager;
-	if (fontManager_ == nullptr) {
-		throw NullPointerException("fontManager can not be null");
-	}
 
 	eventManager_ = eventManager;
 	if (eventManager_ == nullptr) {
@@ -425,7 +426,7 @@ void GUIElement::Create(GUIRenderer* renderer, GUIElement* parent, GUIFontManage
 	}
     mapManager_ = mapManager;
     windowId_ = windowId;
-	Create(renderer);
+	Create(renderer, fontManager);
 }
 
 bool GUIElement::ButtonDownBase(Uint8 button, Uint8 clicks, const GUIPoint& point)

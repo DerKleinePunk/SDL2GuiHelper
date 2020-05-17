@@ -199,6 +199,10 @@ void GUIScreen::ToggleFullscreen() {
 	SDL_SetWindowFullscreen(window_, IsFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
 }
 
+void GUIScreen::DrawTextOnBootScreen(const std::string& text) {
+	canvas_->Text(text);
+}
+
 void GUIScreen::Shutdown()
 {
 	if (manager_ != nullptr) {
