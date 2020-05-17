@@ -160,19 +160,23 @@ void GUIListview::DrawData() {
             renderer_->SetClipRect(rect);
 			for (auto& column : rows_[i].GetColumns()) {
 				GUIRect dstrect;
-				dstrect.x = 39;
-				if(column->GetImageSize() > 0) {
-					const auto imageRaw = SDL_RWFromMem(column->GetImageData(), column->GetImageSize());
-                    const auto image = renderer_->LoadTextureImageData(imageRaw);
-					if(image == nullptr) {
-						LOG(WARNING) << "Image not get";
-					} else {
-						GUIPoint imagePoint;
-						imagePoint.x = 2;
-						imagePoint.y = actHight + 2;
-                        renderer_->RenderCopy(image, imagePoint);
-						delete image;
+				if(_rowHasImage) {
+					dstrect.x = 39;
+					if(column->GetImageSize() > 0) {
+						const auto imageRaw = SDL_RWFromMem(column->GetImageData(), column->GetImageSize());
+						const auto image = renderer_->LoadTextureImageData(imageRaw);
+						if(image == nullptr) {
+							LOG(WARNING) << "Image not get";
+						} else {
+							GUIPoint imagePoint;
+							imagePoint.x = 2;
+							imagePoint.y = actHight + 2;
+							renderer_->RenderCopy(image, imagePoint);
+							delete image;
+						}
 					}
+				} else {
+					dstrect.x = 2;
 				}
 				GUITexture* details = nullptr;
 				const auto textureText = column->GetTexture(renderer_, font_, smallFont_, foregroundColor_, &details, Size().width);
@@ -188,7 +192,12 @@ void GUIListview::DrawData() {
 			}
             renderer_->ClearClipRect();
 		}
-		actHight += ENTRYHEIGHT_PIXEL;
+
+		if(_rowHasDetails || _rowHasImage) {
+			actHight += ENTRYHEIGHT_PIXEL;
+		} else {
+			actHight += 1 + FONT_HEIGHT;
+		}
 	}
 	
 	if (scrollEnabled_) {
@@ -394,6 +403,8 @@ GUIListview::GUIListview(const GUIPoint position, const GUISize size, const std:
 	selectedRow_ = -1;
 	scrolling_ = false;
 	downOnY_ = 0;
+	_rowHasImage = true;
+	_rowHasDetails = true;
 }
 
 void GUIListview::Init() {
@@ -492,4 +503,14 @@ void GUIListview::RegisterOnClick(const ClickListViewDelegate onClick) {
 
 void GUIListview::RegisterOnLongClick(const ClickListViewDelegate onClick) {
     OnLongClick_ = onClick;
+}
+
+void GUIListview::ChangeRowHasImage(bool on) {
+	_rowHasImage = on;
+	SetRedraw();
+}
+
+void GUIListview::ChangeRowHasDetails(bool on) {
+	_rowHasDetails = on;
+	SetRedraw();
 }

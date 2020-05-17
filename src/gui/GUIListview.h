@@ -65,6 +65,8 @@ class GUIListview : public GUIElement {
 	int selectedRow_;
 	int quickJumpEntryHeight_;
 	int downOnRow_;
+	bool _rowHasImage;
+	bool _rowHasDetails;
 	RTTI_DERIVED(GUIListview);
 
 	void DrawData();
@@ -93,5 +95,7 @@ public:
 
 	void RegisterOnClick(ClickListViewDelegate OnClick);
 	void RegisterOnLongClick(ClickListViewDelegate OnClick);
+	void ChangeRowHasImage(bool on);
+	void ChangeRowHasDetails(bool on);
 };
 

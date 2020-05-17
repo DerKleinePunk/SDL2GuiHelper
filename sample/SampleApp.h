@@ -11,6 +11,7 @@ private:
     void ApplicationEvent(AppEvent event, void* data1, void* data2);
     void KernelstateChanged(KernelState state);
     void BuildFirstScreen();
+    void LoadSdsList();
 public:
     SampleApp(MiniKernel* kernel);
     virtual ~SampleApp();
