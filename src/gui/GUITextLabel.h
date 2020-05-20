@@ -20,6 +20,7 @@ class GUITextLabel : public GUIElement, public GUIOnClickDecorator
 	SDL_Color selectedBackgroundColor_;
 	SDL_Color normalBackgroundColor_;
 	AnchorFlags textAnchor_;
+	int _corner;
 	RTTI_DERIVED(GUITextLabel);
 
 	void GetFont();
@@ -44,6 +45,9 @@ public:
 	void HandleEvent(GUIEvent& event) override;
 	void UpdateAnimation() override;
 	void Close() override;
+
+	int GetCorner() const;
+	void SetCorner(int corner);
 };
 
 

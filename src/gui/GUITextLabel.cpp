@@ -46,6 +46,7 @@ GUITextLabel::GUITextLabel(const GUIPoint position, const GUISize size, const st
 	angle_ = 0;
 	fontHeight_ = -1;
 	textAnchor_ = AnchorFlags::Right;
+	_corner = 0;
 }
 
 void GUITextLabel::Select() {
@@ -121,6 +122,10 @@ void GUITextLabel::RenderText() {
 
 //http://stackoverflow.com/questions/3229391/sdl-sdl-ttf-transparent-blended-text
 void GUITextLabel::Draw() {
+	if(_corner != 0) {
+		renderer_->DrawRoundRect(GUIRect(0,0, Size().width, Size().height), GetCorner(), foregroundColor_);
+	}
+
 	if (font_ == nullptr) {
 		GetFont();
 	}
@@ -176,4 +181,12 @@ void GUITextLabel::Close()
 		delete textureText_;
 		textureText_ = nullptr;
 	}
+}
+
+int GUITextLabel::GetCorner() const {
+	return _corner;
+}
+
+void GUITextLabel::SetCorner(int corner) {
+	_corner = corner;
 }

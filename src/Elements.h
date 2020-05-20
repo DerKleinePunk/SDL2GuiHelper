@@ -3,3 +3,4 @@
 #include "gui/GUITextLabel.h"
 #include "gui/GUITextButton.h"
 #include "gui/GUIListview.h"
+#include "gui/GUIIconview.h"
