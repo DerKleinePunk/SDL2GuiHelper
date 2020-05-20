@@ -190,7 +190,7 @@ void GUIKeyboard::ButtonUp(Uint8 button, Uint8 clicks, const GUIPoint& point) {
                     SDL_Event event;
                     event.text.type = SDL_TEXTINPUT;
                     event.text.windowID = windowId_;
-                    strncpy(event.text.text, key.c_str(), 32);
+                    strncpy(event.text.text, key.c_str(), 31);
                     SDL_PushEvent(&event);
                 }
             }
