@@ -53,6 +53,7 @@ GUIScreen::GUIScreen():
 	canvas_(nullptr),
 	eventManager_(nullptr) {
 	el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
+	size_.set(0,0);
 }
 
 GUIScreen::~GUIScreen()
@@ -209,6 +210,7 @@ void GUIScreen::Shutdown()
 		manager_->CloseAll();
 		delete manager_;
 		manager_ = nullptr;
+		//manager_ is deleting the rootNode 
 		canvas_ = nullptr;
 	}
 

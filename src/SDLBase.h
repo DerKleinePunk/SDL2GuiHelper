@@ -5,6 +5,8 @@
 class SDLBase
 {
     bool initDone_;
+	bool initVideoDone_;
+	bool initAudioDone_;
     el::Logger* logger_;
 	el::Logger* sdlLogger_;
 
@@ -16,7 +18,7 @@ public:
 	virtual ~SDLBase();
 
 	void Init();
-	static float InitVideo(const std::string& videoDriver);
-	static void InitAudio(const std::string& drivername);
+	float InitVideo(const std::string& videoDriver);
+	void InitAudio(const std::string& drivername);
 };
 

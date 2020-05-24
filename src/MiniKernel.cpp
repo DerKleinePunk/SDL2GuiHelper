@@ -19,63 +19,65 @@
 void MiniKernel::HandleEvent(const SDL_Event& event,bool& exitLoop) {
     GUIScreen* screen = nullptr;
 
-    auto winId = event.window.windowID;
-    if (winId == 0) {
-        winId = event.user.windowID;
-    }
-    
-    if (event.type == SDL_FINGERMOTION ||
-        event.type == SDL_FINGERDOWN ||
-        event.type == SDL_FINGERUP) {
-        //Todo how to map touchId to Window
-        LOG(DEBUG) << "Touch Id " << event.tfinger.touchId;
-        winId = 1;
-	}
-
-	if (_screens.find(winId) != _screens.end()) {
-		screen = _screens[winId];
-	}
-	
-	if(screen) {
-		screen->HandleEvent(&event);
-	}
-	
-	KernelEvent type;
-	if (_eventManager->IsKernelEvent(&event, type)) {
-		switch (type)
-		{
-			case KernelEvent::Shutdown:
-            {
-                LOG(INFO) << "Kernel Event Shutdown";
-                exitLoop = true;
-                break;
-            }
-			default:
-            {
-                LOG(WARNING) << "Not Implemented Kernel Event " << type;
-            }
-		}
-	}
-
-	AppEvent code;
-	void* data1;
-	void* data2;
-	if (_eventManager->IsApplicationEvent(&event, code, data1, data2)) {
-        //TODO better move to Kernel event ?
-        //TODO better move Interface ?
-        /*if(code == AppEvent::NewGeopos && mapManager_ != nullptr) {
-            KernelGPSMessage* message = (KernelGPSMessage*)data1;
-            configManager_->UpdateLastPosition(message->coord);
-            mapManager_->CenterMap(message->coord, message->compass, message->speed);
-        } else if(code == AppEvent::LongClick || code == AppEvent::Click) {
-            PlaySound("Click.wav");
-        } else {
-            
-        }*/
-        if (_applicationEventCallbackFunction != nullptr) {
-            _applicationEventCallbackFunction(code, data1, data2);
+    if(event.type != SDL_QUIT) {
+        auto winId = event.window.windowID;
+        if (winId == 0) {
+            winId = event.user.windowID;
         }
-	}
+        
+        if (event.type == SDL_FINGERMOTION ||
+            event.type == SDL_FINGERDOWN ||
+            event.type == SDL_FINGERUP) {
+            //Todo how to map touchId to Window
+            LOG(DEBUG) << "Touch Id " << event.tfinger.touchId;
+            winId = 1;
+        }
+
+        if (_screens.find(winId) != _screens.end()) {
+            screen = _screens[winId];
+        }
+        
+        if(screen) {
+            screen->HandleEvent(&event);
+        }
+        
+        KernelEvent type;
+        if (_eventManager->IsKernelEvent(&event, type)) {
+            switch (type)
+            {
+                case KernelEvent::Shutdown:
+                {
+                    LOG(INFO) << "Kernel Event Shutdown";
+                    exitLoop = true;
+                    break;
+                }
+                default:
+                {
+                    LOG(WARNING) << "Not Implemented Kernel Event " << type;
+                }
+            }
+        }
+
+        AppEvent code;
+        void* data1;
+        void* data2;
+        if (_eventManager->IsApplicationEvent(&event, code, data1, data2)) {
+            //TODO better move to Kernel event ?
+            //TODO better move Interface ?
+            /*if(code == AppEvent::NewGeopos && mapManager_ != nullptr) {
+                KernelGPSMessage* message = (KernelGPSMessage*)data1;
+                configManager_->UpdateLastPosition(message->coord);
+                mapManager_->CenterMap(message->coord, message->compass, message->speed);
+            } else if(code == AppEvent::LongClick || code == AppEvent::Click) {
+                PlaySound("Click.wav");
+            } else {
+                
+            }*/
+            if (_applicationEventCallbackFunction != nullptr) {
+                _applicationEventCallbackFunction(code, data1, data2);
+            }
+        }
+    }
 
 	switch (event.type)
 	{
@@ -157,30 +159,34 @@ void MiniKernel::Run() {
     while (!quit) {
         try {
             const auto startFrame = SDL_GetTicks();
+            memset(&event, 0, sizeof(SDL_Event));
+                        
             while (_eventManager->WaitEvent(&event, delay) != 0) {
                 HandleEvent(event, quit);
-                auto winId = event.window.windowID;
-                if (winId == 0) {
-                    winId = event.user.windowID;
-                }
-
-                if (winId == 0) {
-                    //Update all Windows
-                    auto screenPtr = _screens.begin();
-                    while (screenPtr != _screens.end()) {
-                        screenPtr->second->UpdateAnimationInternal();
-                        if (screenPtr->second->NeedRedraw())
-                        {
-                            screenPtr->second->Draw();
-                        }
-                        ++screenPtr;
+                if(!quit) {
+                    auto winId = event.window.windowID;
+                    if (winId == 0) {
+                        winId = event.user.windowID;
                     }
-                } else {
-                    const auto screenPtr = _screens.find(winId);
-                    if (screenPtr != _screens.end()) {
-                        screenPtr->second->UpdateAnimationInternal();
-                        if (screenPtr->second->NeedRedraw()) {
+
+                    if (winId == 0) {
+                        //Update all Windows
+                        auto screenPtr = _screens.begin();
+                        while (screenPtr != _screens.end()) {
+                            screenPtr->second->UpdateAnimationInternal();
+                            if (screenPtr->second->NeedRedraw())
+                            {
                                 screenPtr->second->Draw();
+                            }
+                            ++screenPtr;
+                        }
+                    } else {
+                        const auto screenPtr = _screens.find(winId);
+                        if (screenPtr != _screens.end()) {
+                            screenPtr->second->UpdateAnimationInternal();
+                            if (screenPtr->second->NeedRedraw()) {
+                                    screenPtr->second->Draw();
+                            }
                         }
                     }
                 }
@@ -242,7 +248,19 @@ void MiniKernel::Run() {
 }
 
 void MiniKernel::Shutdown() {
+    auto screenEntry = _screens.begin();
+    while (screenEntry != _screens.end())
+    {
+        screenEntry->second->Shutdown();
+        delete screenEntry->second;
+        ++screenEntry;
+    }
+    _screens.clear();
 
+    if(_base != nullptr) {
+        delete _base;
+        _base = nullptr;
+    }
 }
 
 GUIElementManager* MiniKernel::CreateScreen(const std::string& title, const std::string& videoDriver) {

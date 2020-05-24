@@ -11,11 +11,11 @@ class GUITextButton : public GUIElement, public GUIOnClickDecorator
 	RTTI_DERIVED(GUITextButton);
 	el::Logger* logger_;
 	bool centertext_;
-    TTF_Font* font_;
-    GUITexture* textureText_;
-    int fontHeight_;
+	TTF_Font* font_;
+	GUITexture* textureText_;
+	int fontHeight_;
 	bool smallFont_;
-    int _corner;
+	int _corner;
 	SDL_Color backgroundColorButton_;
 
     void GetFont();

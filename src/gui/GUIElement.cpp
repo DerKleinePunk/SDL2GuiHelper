@@ -324,12 +324,15 @@ GUIPoint GUIElement::ScreenTopLeft() const
 
 GUIElement::GUIElement(const GUIPoint position, const GUISize size, const std::string& name):
 	parent_(nullptr),
+	textureControl_(nullptr),
 	name_(name),
 	size_(size),
+	absoluteSize_(0,0),
 	screenArea_(0,0,0,0),
 	anchor_(),
 	eventManager_(nullptr),
 	fontManager_(nullptr),
+	imageManager_(nullptr),
 	renderer_(nullptr),
     mapManager_(nullptr),
 	backgroundColor_(black_color),
@@ -338,6 +341,8 @@ GUIElement::GUIElement(const GUIPoint position, const GUISize size, const std::s
 	hidden_(false),
 	hasFocus_(false),
 	needRedraw_(true),
+	mouseOver_(false),
+	buttonDown_(false),
 	hasBorder_(false),
 	enabled_(true),
 	selected_(false)
@@ -352,6 +357,7 @@ GUIElement::GUIElement(const GUIPoint position, const GUISize size, const std::s
     } else {
         LOG(DEBUG) << ToString() << " create new element at " << topLeft_.x << " x " << topLeft_.y << " size " << size_.width << " x " << size_.height;
     }
+	
 }
 
 GUIElement::~GUIElement()

@@ -17,14 +17,20 @@ namespace utils
 }
 
 SDLBase::SDLBase(): 
-	initDone_(false)
+	initDone_(false),
+    initVideoDone_(false),
+    initAudioDone_(false)
 {
     logger_ = el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
 	sdlLogger_ = el::Loggers::getLogger("SDL");
 }
 
-SDLBase::~SDLBase()
-{
+SDLBase::~SDLBase() {
+    if(initAudioDone_) SDL_AudioQuit();
+    if(initVideoDone_) {
+        IMG_Quit();
+        SDL_VideoQuit();
+    }
 	SDL_Quit();
 }
 
@@ -86,18 +92,21 @@ float SDLBase::InitVideo(const std::string& videoDriver) {
 
     if(!videoDriver.empty()) {
         if(SDL_VideoInit(videoDriver.c_str()) < 0) {
+            initVideoDone_ = false;
             throw SDLException("InitVideo");
         }
     }
 
-	if (InitSubsystem(SDL_INIT_VIDEO) < 0)
-	{
+	if (InitSubsystem(SDL_INIT_VIDEO) < 0) {
+        initVideoDone_ = false;
 		throw SDLException("InitVideo");
 	}
     
     const auto driver = SDL_GetCurrentVideoDriver();
     LOG(INFO) << "Using " << driver << " Video driver";
-        
+
+    initVideoDone_ = true;
+
     if(strcmp(driver, "RPI") == 0){
         //todo Change thinks we are on Raspberry without X driver var MemoryLeak ?
         LOG(INFO) << "Raspberry without X";
@@ -174,14 +183,14 @@ void SDLBase::InitAudio(const std::string& drivername)
 	auto count = SDL_GetNumAudioDevices(0);
     if(count == 0) {
         LOG(WARNING) << "Warning: no Audio device found";
-        //Todo: audioEnabled_ = false;
+        initAudioDone_ = false;
         return;
     }
     
     for (auto i = 0; i < count; ++i) {
         LOG(INFO) << "Audio device " << i << " " << SDL_GetAudioDeviceName(i, 0);
     }
-    //audioEnabled_= true;
+    initAudioDone_ = true;
    
     for (auto i = 0; i < SDL_GetNumAudioDrivers(); ++i) {
         std::string drivernameFound = SDL_GetAudioDriver(i);
@@ -189,6 +198,7 @@ void SDLBase::InitAudio(const std::string& drivername)
         if(drivernameFound == drivername) {
             SDL_AudioQuit();
             if (SDL_AudioInit(drivername.c_str()) <0) {
+                initAudioDone_ = false;
                 throw SDLException("SDL_AudioInit");
             }
             else {
