@@ -2,6 +2,7 @@
 #include "SDLBase.h"
 #include "SDLEventManager.h"
 #include "gui/GUIScreen.h"
+#include "gui/GUIElementManager.h"
 #include <map>
 
 typedef std::function<void(KernelState state)> KernelStateCallbackFunction;
@@ -17,9 +18,11 @@ private:
     KernelStateCallbackFunction _callbackState;
     ApplicationEventCallbackFunction _applicationEventCallbackFunction;
     float _screenDpi;
+    GUIElementManager* _manager;
+    std::string _errorMessage;
     void HandleEvent(const SDL_Event& event,bool& exitLoop);
 public:
-    MiniKernel();
+    MiniKernel();   
     ~MiniKernel();
 
     bool StartUp(int argc, char* argv[]);
@@ -31,5 +34,7 @@ public:
     void RegisterApplicationEvent(ApplicationEventCallbackFunction callbackFunction);
     void DrawTextOnBootScreen(const std::string& text);
     int StartAudio(const std::string& drivername);
+    SDLEventManager* GetEventManager() const;
+    void ShowErrorMessage(const std::string& message);
 };
 

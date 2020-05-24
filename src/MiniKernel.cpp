@@ -12,6 +12,8 @@
 #include "exception/SDLException.h"
 #include "exception/TTFException.h"
 #include "../common/exception/IllegalStateException.h"
+#include "ErrorMessageDialog.h"
+#include "AppEvents.h"
 
 //#define MILLESECONDS_PER_FRAME 1000.0/120.0       /* about 120 frames per second */
 #define MILLESECONDS_PER_FRAME 1000.0/60.0       /* about 60 frames per second */
@@ -46,15 +48,23 @@ void MiniKernel::HandleEvent(const SDL_Event& event,bool& exitLoop) {
             switch (type)
             {
                 case KernelEvent::Shutdown:
-                {
-                    LOG(INFO) << "Kernel Event Shutdown";
-                    exitLoop = true;
-                    break;
-                }
+                    {
+                        LOG(INFO) << "Kernel Event Shutdown";
+                        exitLoop = true;
+                        break;
+                    }
+                case KernelEvent::ShowError:
+                    {
+                        LOG(INFO) << "Kernel Event UpdateScreen";
+                        auto errorMessageDialog =  new ErrorMessageDialog(_manager);
+                        errorMessageDialog->SetMessage(_errorMessage);
+                        errorMessageDialog->Create(nullptr);
+                        break;
+                    }
                 default:
-                {
-                    LOG(WARNING) << "Not Implemented Kernel Event " << type;
-                }
+                    {
+                        LOG(WARNING) << "Not Implemented Kernel Event " << type;
+                    }
             }
         }
 
@@ -73,7 +83,14 @@ void MiniKernel::HandleEvent(const SDL_Event& event,bool& exitLoop) {
             } else {
                 
             }*/
-            if (_applicationEventCallbackFunction != nullptr) {
+            if(code == AppEvent::ClosePopup) {
+                const auto element = static_cast<IPopupDialog*>(data1);
+                if (element != nullptr) {
+                    element->Close();
+                    delete element;
+                }
+                _applicationEventCallbackFunction(code, nullptr, data2);
+            } else if (_applicationEventCallbackFunction != nullptr) {
                 _applicationEventCallbackFunction(code, data1, data2);
             }
         }
@@ -276,14 +293,14 @@ GUIElementManager* MiniKernel::CreateScreen(const std::string& title, const std:
 
     IMapManager* mapManager = nullptr;
 
-	const auto manager = screen->Create(title, _eventManager, mapManager, "");
+	_manager = screen->Create(title, _eventManager, mapManager, "");
 	auto id = screen->GetId();
 
 	_screens.insert(std::make_pair(id, screen));
     
     //if(mapManager_ != nullptr) mapManager_->SetScreenDpi(screenDpi_);
 
-	return manager;
+	return _manager;
 }
 
 void MiniKernel::SetStateCallBack(KernelStateCallbackFunction callback) {
@@ -320,4 +337,13 @@ int MiniKernel::StartAudio(const std::string& drivername) {
 #endif
 
 	return 0;
+}
+
+SDLEventManager* MiniKernel::GetEventManager() const {
+    return _eventManager;
+}
+
+void MiniKernel::ShowErrorMessage(const std::string& message) {
+    _errorMessage = message; 
+    _eventManager->PushKernelEvent(KernelEvent::ShowError);
 }

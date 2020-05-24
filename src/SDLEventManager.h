@@ -14,7 +14,8 @@ enum class KernelState : unsigned char {
 };
 
 enum class KernelEvent : Sint32 {
-    Shutdown = 1
+    Shutdown = 1,
+	ShowError = 2,	
 };
 
 std::ostream& operator<<(std::ostream& os, const KernelState c);

@@ -16,6 +16,11 @@
 #include "GUITexture.h"
 #include <SDL_image.h>
 
+void GUIRenderer::CheckThreadId() const {
+	if(_guiThreadId != std::this_thread::get_id()) {
+		throw GUIException("Wrong Thread Id");
+	}
+}
 
 void GUIRenderer::Create(SDL_Window* window)
 {
@@ -152,11 +157,13 @@ void GUIRenderer::Clear(const SDL_Color color) const
 
 void GUIRenderer::Present() const
 {
+	CheckThreadId();
 	SDL_RenderPresent(renderer_);
 }
 
 void GUIRenderer::DrawColor(SDL_Color color) const
 {
+	CheckThreadId();
 	DrawColor(color.r, color.g, color.b, color.a);
 }
 
@@ -172,6 +179,7 @@ void GUIRenderer::DrawColor(Uint32 color) const
 
 void GUIRenderer::DrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 alpha) const
 {
+	CheckThreadId();
 	if (SDL_SetRenderDrawBlendMode(renderer_, (alpha == 0xFF) ? SDL_BLENDMODE_NONE : SDL_BLENDMODE_BLEND) != 0)
 	{
 		throw GUIException("SDL_SetRenderDrawBlendMode");
@@ -211,6 +219,8 @@ GUITexture* GUIRenderer::CreateTexture(Uint32 format, int access, GUISize size) 
 
 void GUIRenderer::RenderTarget(GUITexture* texture) const
 {
+	CheckThreadId();
+
 	SDL_Texture* textureLocal =  nullptr;
 	if(texture != nullptr )
 	{
@@ -236,7 +246,7 @@ void GUIRenderer::RenderCopy(GUITexture* texture, const GUIPoint topleft) const 
 }
 
 void GUIRenderer::RenderCopy(GUITexture* texture, GUIRect dstrect) const {
-
+	CheckThreadId();
 	if(texture == nullptr || !texture->IsValid())
 	{
 		throw GUIException("nullptr texture");
@@ -257,7 +267,7 @@ void GUIRenderer::RenderCopy(GUITexture* texture, const GUIPoint topleft, const 
 }
 
 void GUIRenderer::RenderCopy(GUITexture* texture, GUIRect dstrect, const double angle, GUIPoint pointToRotate) const {
-
+	CheckThreadId();
 	if (texture == nullptr || !texture->IsValid()) {
 		throw GUIException("nullptr texture");
 	}
@@ -286,6 +296,7 @@ GUITexture* GUIRenderer::LoadTextureImageData(SDL_RWops* imageRaw) {
 }
 
 void GUIRenderer::DrawLine(int x1, int y1, int x2, int y2, SDL_Color color) const {
+	CheckThreadId();
 	DrawColor(color);
 	if (SDL_RenderDrawLine(renderer_, x1, y1, x2, y2) != 0)	{
 		throw GUIException("SDL_RenderDrawLine");
@@ -293,6 +304,7 @@ void GUIRenderer::DrawLine(int x1, int y1, int x2, int y2, SDL_Color color) cons
 }
 
 void GUIRenderer::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b, Uint8 alpha) const {
+	CheckThreadId();
 	DrawColor(r, g, b, alpha);
 	if (SDL_RenderDrawLine(renderer_, x1, y1, x2, y2) != 0)	{
 		throw GUIException("SDL_RenderDrawLine");
@@ -300,6 +312,7 @@ void GUIRenderer::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uin
 }
 
 void GUIRenderer::DrawPixel(int x, int y, Uint32 color) const {
+	CheckThreadId();
 	DrawColor(color);
 	if (SDL_RenderDrawPoint(renderer_, x, y) != 0) {
 		throw GUIException("SDL_RenderDrawPoint");
@@ -307,6 +320,7 @@ void GUIRenderer::DrawPixel(int x, int y, Uint32 color) const {
 }
 
 void GUIRenderer::DrawPixel(int x, int y, SDL_Color color) const {
+	CheckThreadId();
 	DrawColor(color);
 	if (SDL_RenderDrawPoint(renderer_, x, y) != 0) {
 		throw GUIException("SDL_RenderDrawPoint");
@@ -314,18 +328,15 @@ void GUIRenderer::DrawPixel(int x, int y, SDL_Color color) const {
 }
 
 void GUIRenderer::DrawPixel(int x, int y, Uint8 r, Uint8 g, Uint8 b, Uint8 alpha) const {
+	CheckThreadId();
 	DrawColor(r, g, b, alpha);
 	if (SDL_RenderDrawPoint(renderer_, x, y) != 0) {
 		throw GUIException("SDL_RenderDrawPoint");
 	}
 }
 
-void setPixel(Uint32*& pixelBuffer,int pitch, int x, int y, Uint32 color) {
-	auto pixel = pixelBuffer + (y*(pitch / 4)) + x;
-	*pixel = color; 
-}
-
 void GUIRenderer::DrawMidpointEllipse(int centerX, int centerY, int width, int height, SDL_Color color, bool filled, int lineWidth) const {
+	CheckThreadId();
 	if(filled) {
 		if(filledEllipseRGBA(renderer_, centerX, centerY, width, height, color.r, color.g, color.b, color.a) < 0) {
 			throw GUIException("filledEllipseRGBA");
@@ -342,8 +353,8 @@ void GUIRenderer::DrawMidpointEllipse(int centerX, int centerY, int width, int h
 	}
 }
 
-GUITexture* GUIRenderer::LoadImageTexture(std::string fielName) const
-{
+GUITexture* GUIRenderer::LoadImageTexture(std::string fielName) const {
+	CheckThreadId();
 	auto result = IMG_LoadTexture(renderer_, fielName.c_str());
 	if (result == nullptr)
 	{
@@ -361,8 +372,8 @@ GUITexture* GUIRenderer::LoadImageTexture(std::string fielName) const
 	return internResult;
 }
 
-GUITexture* GUIRenderer::CreateTextureFromSurface(SDL_Surface* surface) const
-{
+GUITexture* GUIRenderer::CreateTextureFromSurface(SDL_Surface* surface) const {
+	CheckThreadId();
 	auto result = SDL_CreateTextureFromSurface(renderer_, surface);
 	if(result == nullptr) {
 		throw GUIException("SDL_CreateTextureFromSurface");
@@ -443,6 +454,8 @@ GUIRenderer::GUIRenderer():
 	max_texture_width_(0),
 	windowPixleFormat_(0) {
 	el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
+	_guiThreadId = std::this_thread::get_id();
+ 
 }
 
 GUIRenderer::~GUIRenderer()

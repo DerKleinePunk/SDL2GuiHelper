@@ -3,6 +3,7 @@
 class GUITexture;
 #include "GUI.h"
 #include "SDL_ttf.h"
+#include <thread>
 
 class GUIRenderer
 {
@@ -10,6 +11,8 @@ class GUIRenderer
     int max_texture_height_;
     int max_texture_width_;
 	Uint32 windowPixleFormat_;
+	std::thread::id _guiThreadId;
+	void CheckThreadId() const;
 public:
 	GUIRenderer();
 	virtual ~GUIRenderer();
