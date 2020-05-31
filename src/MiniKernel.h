@@ -1,9 +1,10 @@
 #pragma once
+#include <map>
 #include "SDLBase.h"
 #include "SDLEventManager.h"
 #include "gui/GUIScreen.h"
 #include "gui/GUIElementManager.h"
-#include <map>
+#include "KernelConfig.h"
 
 typedef std::function<void(KernelState state)> KernelStateCallbackFunction;
 typedef std::function<void(AppEvent code, void* data1, void* data2)> ApplicationEventCallbackFunction;
@@ -20,6 +21,8 @@ private:
     float _screenDpi;
     GUIElementManager* _manager;
     std::string _errorMessage;
+    KernelConfig _kernelConfig;
+
     void HandleEvent(const SDL_Event& event,bool& exitLoop);
 public:
     MiniKernel();   
@@ -36,5 +39,6 @@ public:
     int StartAudio(const std::string& drivername);
     SDLEventManager* GetEventManager() const;
     void ShowErrorMessage(const std::string& message);
+    int PlaySound(const std::string& filename) const;
 };
 

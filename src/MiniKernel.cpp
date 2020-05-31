@@ -7,11 +7,13 @@
 
 #include "MiniKernel.h"
 #include "../common/easylogging/easylogging++.h"
+#include "../common/utils/commonutils.h"
 #include "gui/GUIScreen.h"
 #include "exception/GUIException.h"
 #include "exception/SDLException.h"
 #include "exception/TTFException.h"
 #include "../common/exception/IllegalStateException.h"
+#include "../common/exception/FileNotFoundException.h"
 #include "ErrorMessageDialog.h"
 #include "AppEvents.h"
 
@@ -78,10 +80,6 @@ void MiniKernel::HandleEvent(const SDL_Event& event,bool& exitLoop) {
                 KernelGPSMessage* message = (KernelGPSMessage*)data1;
                 configManager_->UpdateLastPosition(message->coord);
                 mapManager_->CenterMap(message->coord, message->compass, message->speed);
-            } else if(code == AppEvent::LongClick || code == AppEvent::Click) {
-                PlaySound("Click.wav");
-            } else {
-                
             }*/
             if(code == AppEvent::ClosePopup) {
                 const auto element = static_cast<IPopupDialog*>(data1);
@@ -90,6 +88,14 @@ void MiniKernel::HandleEvent(const SDL_Event& event,bool& exitLoop) {
                     delete element;
                 }
                 _applicationEventCallbackFunction(code, nullptr, data2);
+            } else if(code == AppEvent::Click) {
+                if(_kernelConfig.AudioFileForClick.length() > 0) {
+                    PlaySound(_kernelConfig.AudioFileForClick);
+                }
+            } else if(code == AppEvent::LongClick) {
+                if(_kernelConfig.AudioFileForLongClick.length() > 0) {
+                    PlaySound(_kernelConfig.AudioFileForLongClick);
+                }
             } else if (_applicationEventCallbackFunction != nullptr) {
                 _applicationEventCallbackFunction(code, data1, data2);
             }
@@ -346,4 +352,20 @@ SDLEventManager* MiniKernel::GetEventManager() const {
 void MiniKernel::ShowErrorMessage(const std::string& message) {
     _errorMessage = message; 
     _eventManager->PushKernelEvent(KernelEvent::ShowError);
+}
+
+int MiniKernel::PlaySound(const std::string& filename) const {
+    if(!utils::FileExists(filename)) {
+        throw FileNotFoundException("Audio File Not Exits");
+    }
+
+#ifdef ENABLEAUDIOMANAGER
+    if(audioManager_ == nullptr) {
+        throw NullPointerException("No Audio Manager");
+    }
+    return audioManager_->PlayBackground(filename);
+#else
+    return 0;
+#endif
+    
 }
