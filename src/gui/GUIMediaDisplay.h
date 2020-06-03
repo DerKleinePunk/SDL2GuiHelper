@@ -6,7 +6,7 @@
 
 struct GUIEvent;
 class GUITexture;
-class AudioManager;
+class IAudioManager;
 
 class GUIMediaDisplay : public GUIElement, public GUIOnClickDecorator
 {
@@ -19,7 +19,7 @@ class GUIMediaDisplay : public GUIElement, public GUIOnClickDecorator
 	GUITexture* textureMediadata_;
 	SDL_Color selectedColor_;
 	AnchorFlags textAnchor_;
-	AudioManager* audioManager_;
+	IAudioManager* audioManager_;
 	bool running_;
 	int fullgrad_;
 	RTTI_DERIVED(GUIMediaDisplay);
@@ -36,7 +36,7 @@ public:
 
 	void Init() override;
 	//Todo find better this is not good
-	void SetAudioManager(AudioManager* manager);
+	void SetAudioManager(IAudioManager* manager);
 	void RenderText();
 	void Draw() override;
 	void HandleEvent(GUIEvent& event) override;

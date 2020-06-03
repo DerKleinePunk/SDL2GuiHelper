@@ -5,6 +5,7 @@
 #include "gui/GUIScreen.h"
 #include "gui/GUIElementManager.h"
 #include "KernelConfig.h"
+#include "sound/MiniAudioManager.h"
 
 typedef std::function<void(KernelState state)> KernelStateCallbackFunction;
 typedef std::function<void(AppEvent code, void* data1, void* data2)> ApplicationEventCallbackFunction;
@@ -22,6 +23,7 @@ private:
     GUIElementManager* _manager;
     std::string _errorMessage;
     KernelConfig _kernelConfig;
+    MiniAudioManager* _audioManager;
 
     void HandleEvent(const SDL_Event& event,bool& exitLoop);
 public:
@@ -40,5 +42,6 @@ public:
     SDLEventManager* GetEventManager() const;
     void ShowErrorMessage(const std::string& message);
     int PlaySound(const std::string& filename) const;
+    void SetConfig(KernelConfig config);
 };
 

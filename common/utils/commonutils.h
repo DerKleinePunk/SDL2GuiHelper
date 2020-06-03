@@ -60,4 +60,18 @@ namespace utils
 		snprintf( buf.get(), size, format.c_str(), args ... );
 		return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
 	}
+
+	template <typename T>
+	struct Callback;
+
+	template <typename Ret, typename... Params>
+	struct Callback<Ret(Params...)> {
+		template <typename... Args>
+		static Ret callback(Args... args) { return func(args...); }
+		static std::function<Ret(Params...)> func;
+	};
+
+	// Initialize the static member.
+	template <typename Ret, typename... Params>
+	std::function<Ret(Params...)> Callback<Ret(Params...)>::func;
 }

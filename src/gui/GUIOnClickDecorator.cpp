@@ -23,14 +23,14 @@ void GUIOnClickDecorator::ButtonUp(Uint8 button, Uint8 clicks)
 		auto now = SDL_GetTicks();
 		if (lastLeftButtonDow_ != 0) {
 			if (SDL_TICKS_PASSED(now, lastLeftButtonDow_ + long_click_time)) {
+				EventManager()->PushApplicationEvent(AppEvent::LongClick, nullptr, nullptr);
 				if (OnLongClick_) {
-                    EventManager()->PushApplicationEvent(AppEvent::LongClick, nullptr, nullptr);
-					OnLongClick_(wrapper_);
+                    OnLongClick_(wrapper_);
 				}
 			}
 			else {
+				EventManager()->PushApplicationEvent(AppEvent::Click, nullptr, nullptr);
 				if (OnClick_) {
-                    EventManager()->PushApplicationEvent(AppEvent::Click, nullptr, nullptr);
 					OnClick_(wrapper_);
 				}
 			}

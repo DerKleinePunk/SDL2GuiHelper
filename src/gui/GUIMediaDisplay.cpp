@@ -14,8 +14,8 @@
 #include "GUIRenderer.h"
 #include "GUITexture.h"
 
-#ifdef LIBFFMPEG
-#include "../sound/AudioManager.h"
+#ifdef ENABLEAUDIOMANAGER
+#include "../sound/IAudioManager.h"
 #endif
 
 void GUIMediaDisplay::GetFont() {
@@ -85,7 +85,7 @@ void GUIMediaDisplay::Init() {
 	textureMediadata_->SetBlendMode(blendMode::blend);
 }
 
-void GUIMediaDisplay::SetAudioManager(AudioManager* manager) {
+void GUIMediaDisplay::SetAudioManager(IAudioManager* manager) {
 	audioManager_ = manager;
 }
 

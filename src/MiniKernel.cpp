@@ -14,6 +14,7 @@
 #include "exception/TTFException.h"
 #include "../common/exception/IllegalStateException.h"
 #include "../common/exception/FileNotFoundException.h"
+#include "../common/exception/NullPointerException.h"
 #include "ErrorMessageDialog.h"
 #include "AppEvents.h"
 
@@ -90,11 +91,15 @@ void MiniKernel::HandleEvent(const SDL_Event& event,bool& exitLoop) {
                 _applicationEventCallbackFunction(code, nullptr, data2);
             } else if(code == AppEvent::Click) {
                 if(_kernelConfig.AudioFileForClick.length() > 0) {
-                    PlaySound(_kernelConfig.AudioFileForClick);
+                    if(PlaySound(_kernelConfig.AudioFileForClick) < 0) {
+                        LOG(ERROR) << "Fehler beim Abspielen von Sound " << _kernelConfig.AudioFileForClick;
+                    }
                 }
             } else if(code == AppEvent::LongClick) {
-                if(_kernelConfig.AudioFileForLongClick.length() > 0) {
-                    PlaySound(_kernelConfig.AudioFileForLongClick);
+                if(_kernelConfig.AudioFileForLongClick.length() < 0) {
+                    if(PlaySound(_kernelConfig.AudioFileForLongClick) < 0) {
+                        LOG(ERROR) << "Fehler beim Abspielen von Sound " << _kernelConfig.AudioFileForLongClick;
+                    }
                 }
             } else if (_applicationEventCallbackFunction != nullptr) {
                 _applicationEventCallbackFunction(code, data1, data2);
@@ -149,7 +154,7 @@ MiniKernel::~MiniKernel()
 
 bool MiniKernel::StartUp(int argc, char* argv[]) {
     LOG(INFO) << "Kernel is starting";
-
+    
     _base = new SDLBase();
     _base->Init();
 
@@ -332,8 +337,8 @@ int MiniKernel::StartAudio(const std::string& drivername) {
     _base->InitAudio(drivername);
 
 #ifdef ENABLEAUDIOMANAGER
-	audioManager_ = new AudioManager(eventManager_, configManager_->GetVolume());
-	auto result = audioManager_->Init();
+	_audioManager = new MiniAudioManager(_eventManager, _kernelConfig.lastMusikVolume);
+	auto result = _audioManager->Init();
 	if(result != 0) {
 		LOG(ERROR) << "Audio Init Failed";
 		//Todo show on screen
@@ -360,12 +365,16 @@ int MiniKernel::PlaySound(const std::string& filename) const {
     }
 
 #ifdef ENABLEAUDIOMANAGER
-    if(audioManager_ == nullptr) {
+    if(_audioManager == nullptr) {
         throw NullPointerException("No Audio Manager");
     }
-    return audioManager_->PlayBackground(filename);
+    return _audioManager->PlayBackground(filename);
 #else
     return 0;
 #endif
     
+}
+
+void MiniKernel::SetConfig(KernelConfig config) {
+    _kernelConfig = config;
 }
