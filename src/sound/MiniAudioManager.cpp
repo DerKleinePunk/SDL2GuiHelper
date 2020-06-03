@@ -111,7 +111,7 @@ int MiniAudioManager::PlayBackground(const std::string& fileName)
 		return -1;
 	}
 
-    auto result = Mix_FadeInChannel(-1, current_chunk, 0, FADING_TIME_MS);
+    auto result = Mix_PlayChannel(-1, current_chunk, 0);
     /*TODO if(!stopMedia_) {
         Mix_FadeOutMusic(FADING_TIME_MS, true);
         FadeOutMusic(FADING_TIME_MS, true);
