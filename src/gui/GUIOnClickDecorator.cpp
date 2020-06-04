@@ -3,8 +3,7 @@
 #include "GUIElement.h"
 #include "GUIOnClickDecorator.h"
 #include "../SDLEventManager.h"
-#include "../AppEvents.h"
-
+#include <AppEvents.h>
 
 void GUIOnClickDecorator::ButtonDown(Uint8 button, Uint8 clicks)
 {

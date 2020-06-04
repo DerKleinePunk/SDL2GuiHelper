@@ -16,7 +16,7 @@
 #include "../common/exception/FileNotFoundException.h"
 #include "../common/exception/NullPointerException.h"
 #include "ErrorMessageDialog.h"
-#include "AppEvents.h"
+#include <AppEvents.h>
 
 //#define MILLESECONDS_PER_FRAME 1000.0/120.0       /* about 120 frames per second */
 #define MILLESECONDS_PER_FRAME 1000.0/60.0       /* about 60 frames per second */

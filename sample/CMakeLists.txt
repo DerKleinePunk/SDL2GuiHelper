@@ -8,6 +8,7 @@ else()
     SET (project_BIN ${PROJECT_NAME}.bin)
 endif()
 
+INCLUDE_DIRECTORIES("${MAINFOLDER}/sample/")
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
 
 FILE(GLOB SRCS "*.cpp")
