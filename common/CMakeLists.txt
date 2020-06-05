@@ -1,4 +1,4 @@
-message(STATUS "common")
+message(STATUS "working on common dir")
 
 FILE (GLOB MAIN_common_SRCS "*.cpp" "*.cxx" "*.cc" "*.c")
 

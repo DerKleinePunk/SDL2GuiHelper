@@ -394,7 +394,8 @@ GUITexture* GUIRenderer::RenderTextBlended(TTF_Font* font, std::string text, SDL
 		throw TTFException("RenderUTF8_Blended");
 	}
 
-    LOG(DEBUG) << "RenderTextBlended " << text << " " << surfaceText->h << " " << surfaceText->w;
+    LOG(DEBUG) << "RenderTextBlended " << text << " " << surfaceText->h << " " << surfaceText->w << std::to_string(TTF_FontHeight(font));
+	
     if(surfaceText->w > max_texture_width_){
         //Todo Fix this
         LOG(ERROR) << "result surface is to width to render";
