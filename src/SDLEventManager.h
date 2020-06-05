@@ -3,10 +3,9 @@
 #include <SDL.h>
 #include "IBackendConnect.h"
 #include "../common/json/json.hpp"
+#include <AppEvents.h>
 
 using json = nlohmann::json;
-
-enum class AppEvent;
 
 enum class KernelState : unsigned char {
 	Startup,
@@ -21,16 +20,25 @@ enum class KernelEvent : Sint32 {
 std::ostream& operator<<(std::ostream& os, const KernelState c);
 std::ostream& operator<<(std::ostream& os, const KernelEvent c);
 
+class SDLEventManager;
+
+struct userTimer {
+	SDL_TimerID id;
+	AppEvent event;
+	SDLEventManager* Owner;
+};
+
 class SDLEventManager
 {
 	SDL_mutex* eventLock_;
 	SDL_cond* eventWait_;
-	SDL_TimerID eventTimer_;
 
 	Uint32 kernelEventType_;
 	Uint32 applicationEventType_;
 	SendToBackendDelegate _callback;
 	IBackendConnect* _backend;
+
+	userTimer _userTimers[10];
 
 public:
 	SDLEventManager();
@@ -49,6 +57,9 @@ public:
 	void RegisterBackend(SendToBackendDelegate callcack, IBackendConnect* backend);
 	bool PushBackendMessage(json const& Message) const;
 	bool RegisterMeForBackendMessage(MessageFromBackendDelegate callback);
+
+	SDL_TimerID CreateTimer(AppEvent event, Uint32 delay);
+	void RemoveTimer(SDL_TimerID id);
 };
 
 
