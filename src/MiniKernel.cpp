@@ -96,7 +96,7 @@ void MiniKernel::HandleEvent(const SDL_Event& event,bool& exitLoop) {
                     }
                 }
             } else if(code == AppEvent::LongClick) {
-                if(_kernelConfig.AudioFileForLongClick.length() < 0) {
+                if(_kernelConfig.AudioFileForLongClick.length() > 0) {
                     if(PlaySound(_kernelConfig.AudioFileForLongClick) < 0) {
                         LOG(ERROR) << "Fehler beim Abspielen von Sound " << _kernelConfig.AudioFileForLongClick;
                     }
