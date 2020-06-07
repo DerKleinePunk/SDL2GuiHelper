@@ -4,3 +4,5 @@
 #include "gui/GUITextButton.h"
 #include "gui/GUIListview.h"
 #include "gui/GUIIconview.h"
+#include "gui/GUIKeyboard.h"
+#include "gui/GUITextEdit.h"

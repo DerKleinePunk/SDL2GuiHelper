@@ -4,8 +4,9 @@
 #ifndef ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID
 #   define ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID ELPP_DEFAULT_LOGGER
 #endif
-#include "../../common/easylogging/easylogging++.h"
 
+#include "../../common/easylogging/easylogging++.h"
+#include "../exception/TTFException.h"
 #include "GUI.h"
 #include "GUIElement.h"
 #include "GUITextEdit.h"
@@ -19,10 +20,11 @@ GUITextEdit::GUITextEdit(GUIPoint position, GUISize size, SDL_Color background, 
     backgroundColor_ = background;
     text_ = "";
     textureText_ = nullptr;
-    cursorOn_ = true;
+    cursorOn_ = false;
     font_ = nullptr;
     lastCursorTick_ = 0;
-   
+    _OnFocus = nullptr;
+    buttonDownEvent_ = std::bind(&GUITextEdit::ButtonDown, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 }
 
 GUITextEdit::~GUITextEdit()
@@ -30,10 +32,27 @@ GUITextEdit::~GUITextEdit()
 }
 
 void GUITextEdit::Draw() {
+    int move = 1;
     renderer_->DrawRect(GUIRect(0,0,Size()), own_blue_color);
     auto posCursor = 2;
     if(textureText_ != nullptr) {
-        posCursor = textureText_->Size().width + 2; 
+        int posAfterText = textureText_->Size().width;
+        if(textureText_->Size().width > Size().width) {
+            int zeichenCount = 2;
+            int h = 0;
+            do
+            {
+                posAfterText = textureText_->Size().width;
+                std::string lastZeichen = text_.substr(text_.size() - zeichenCount, zeichenCount);
+                if(TTF_SizeUTF8(font_, lastZeichen.c_str(), &move, &h) != 0) {
+                    throw TTFException("SizeUTF8");
+                }
+                posAfterText -= move;
+                zeichenCount += 1;
+            } while (posAfterText > Size().width);
+            move = -move;
+        }
+        posCursor = posAfterText + 2; 
     }
 	if(cursorOn_) {
         renderer_->DrawLine(posCursor,2,posCursor,Size().height-4, own_blue_color);
@@ -41,12 +60,14 @@ void GUITextEdit::Draw() {
         renderer_->DrawLine(posCursor,2,posCursor,Size().height-4, backgroundColor_);
     }
     if(textureText_ != nullptr) {
-        renderer_->RenderCopy(textureText_, GUIPoint(1, 1));
+        renderer_->RenderCopy(textureText_, GUIPoint(move, 1));
     }
 	needRedraw_ = false;
 }
 
 void GUITextEdit::HandleEvent(GUIEvent& event) {
+    if(!selected_) return;
+
     bool renderText = false;
     switch (event.Type) {
          case SDL_KEYDOWN:{
@@ -106,6 +127,8 @@ void GUITextEdit::HandleEvent(GUIEvent& event) {
 
 void GUITextEdit::UpdateAnimation()
 {
+    if(!selected_) return;
+
     if(!SDL_TICKS_PASSED(SDL_GetTicks(), lastCursorTick_ + 800)){
         return;
     }
@@ -134,7 +157,14 @@ void GUITextEdit::RenderText() {
     textureText_ = renderer_->RenderTextBlended(font_, text_, own_blue_color);
 }
 
+void GUITextEdit::ButtonDown(Uint8 button, Uint8 clicks, const GUIPoint& point) {
+    if(_OnFocus != nullptr) {
+        _OnFocus(this);
+    }
+}
+
 void GUITextEdit::Select() {
+    cursorOn_ = true;
     GUIElement::Select();
     SDL_StartTextInput();
     GUIRect rect(0,0,Size());
@@ -142,6 +172,7 @@ void GUITextEdit::Select() {
 }
 
 void GUITextEdit::Unselect() {
+    cursorOn_ = false;
     GUIElement::Unselect();
     SDL_StopTextInput();
 }
@@ -152,4 +183,14 @@ void GUITextEdit::Unselect() {
  */
 std::string GUITextEdit::GetText() {
   return text_;
+}
+
+void GUITextEdit::SetText(const std::string& text) {
+    text_ = text;
+    RenderText();
+    needRedraw_ = true;
+}
+
+void GUITextEdit::RegisterOnFocus(FocusDelegate OnFocus) {
+    _OnFocus = OnFocus;
 }
