@@ -1,6 +1,6 @@
 #pragma once
 #include "GUI.h"
-#include "IMapManager.h"
+#include "../IMapManager.h"
 
 class GUIElement;
 class GUIElementManager;

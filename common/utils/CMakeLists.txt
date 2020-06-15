@@ -1,5 +1,10 @@
 message(STATUS "working on utils dir")
 
-FILE (GLOB_RECURSE SRCS "*.cpp")
+FILE (GLOB SRCS "commonutils.cpp" "Tokenizer.cpp")
+IF(OSMSCOUT_FOUND)
+    FILE (GLOB SRCS2 "osmsoutlogger.cpp")
+ENDIF()
 
-set(common_utils_SRCS ${SRCS} PARENT_SCOPE)
+message(STATUS "${OSMSCOUT_FOUND} result ${SRCS2}")
+
+set(common_utils_SRCS "${SRCS};${SRCS2}" PARENT_SCOPE)

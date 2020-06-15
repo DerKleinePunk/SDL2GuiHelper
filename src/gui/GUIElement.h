@@ -4,7 +4,7 @@
 #include "../rtti.h"
 #include "../../common/easylogging/easylogging++.h"
 #include "GUIScreen.h"
-#include "IMapManager.h"
+#include "../IMapManager.h"
 
 class GUIRenderer;
 class GUITexture;

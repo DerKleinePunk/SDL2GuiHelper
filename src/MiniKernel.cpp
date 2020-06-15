@@ -1,82 +1,80 @@
 #ifndef ELPP_DEFAULT_LOGGER
-#   define ELPP_DEFAULT_LOGGER "MiniKernel"
+#define ELPP_DEFAULT_LOGGER "MiniKernel"
 #endif
 #ifndef ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID
-#   define ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID ELPP_DEFAULT_LOGGER
+#define ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID ELPP_DEFAULT_LOGGER
 #endif
 
 #include "MiniKernel.h"
+#include <AppEvents.h>
 #include "../common/easylogging/easylogging++.h"
+#include "../common/exception/FileNotFoundException.h"
+#include "../common/exception/IllegalStateException.h"
+#include "../common/exception/NullPointerException.h"
 #include "../common/utils/commonutils.h"
-#include "gui/GUIScreen.h"
+#include "ErrorMessageDialog.h"
 #include "exception/GUIException.h"
 #include "exception/SDLException.h"
 #include "exception/TTFException.h"
-#include "../common/exception/IllegalStateException.h"
-#include "../common/exception/FileNotFoundException.h"
-#include "../common/exception/NullPointerException.h"
-#include "ErrorMessageDialog.h"
-#include <AppEvents.h>
+#include "gui/GUIScreen.h"
+#ifdef LIBOSMSCOUT
+#include "map/MapManager.h"
+#endif
 
 //#define MILLESECONDS_PER_FRAME 1000.0/120.0       /* about 120 frames per second */
-#define MILLESECONDS_PER_FRAME 1000.0/60.0       /* about 60 frames per second */
+#define MILLESECONDS_PER_FRAME 1000.0 / 60.0 /* about 60 frames per second */
 
-void MiniKernel::HandleEvent(const SDL_Event& event,bool& exitLoop) {
+void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
+{
     GUIScreen* screen = nullptr;
 
     if(event.type != SDL_QUIT) {
         auto winId = event.window.windowID;
-        if (winId == 0) {
+        if(winId == 0) {
             winId = event.user.windowID;
         }
-        
-        if (event.type == SDL_FINGERMOTION ||
-            event.type == SDL_FINGERDOWN ||
-            event.type == SDL_FINGERUP) {
-            //Todo how to map touchId to Window
+
+        if(event.type == SDL_FINGERMOTION || event.type == SDL_FINGERDOWN || event.type == SDL_FINGERUP) {
+            // Todo how to map touchId to Window
             LOG(DEBUG) << "Touch Id " << event.tfinger.touchId;
             winId = 1;
         }
 
-        if (_screens.find(winId) != _screens.end()) {
+        if(_screens.find(winId) != _screens.end()) {
             screen = _screens[winId];
         }
-        
+
         if(screen) {
             screen->HandleEvent(&event);
         }
-        
+
         KernelEvent type;
-        if (_eventManager->IsKernelEvent(&event, type)) {
-            switch (type)
-            {
-                case KernelEvent::Shutdown:
-                    {
-                        LOG(INFO) << "Kernel Event Shutdown";
-                        exitLoop = true;
-                        break;
-                    }
-                case KernelEvent::ShowError:
-                    {
-                        LOG(INFO) << "Kernel Event UpdateScreen";
-                        auto errorMessageDialog =  new ErrorMessageDialog(_manager);
-                        errorMessageDialog->SetMessage(_errorMessage);
-                        errorMessageDialog->Create(nullptr);
-                        break;
-                    }
-                default:
-                    {
-                        LOG(WARNING) << "Not Implemented Kernel Event " << type;
-                    }
+        if(_eventManager->IsKernelEvent(&event, type)) {
+            switch(type) {
+            case KernelEvent::Shutdown: {
+                LOG(INFO) << "Kernel Event Shutdown";
+                exitLoop = true;
+                break;
+            }
+            case KernelEvent::ShowError: {
+                LOG(INFO) << "Kernel Event UpdateScreen";
+                auto errorMessageDialog = new ErrorMessageDialog(_manager);
+                errorMessageDialog->SetMessage(_errorMessage);
+                errorMessageDialog->Create(nullptr);
+                break;
+            }
+            default: {
+                LOG(WARNING) << "Not Implemented Kernel Event " << type;
+            }
             }
         }
 
         AppEvent code;
         void* data1;
         void* data2;
-        if (_eventManager->IsApplicationEvent(&event, code, data1, data2)) {
-            //TODO better move to Kernel event ?
-            //TODO better move Interface ?
+        if(_eventManager->IsApplicationEvent(&event, code, data1, data2)) {
+            // TODO better move to Kernel event ?
+            // TODO better move Interface ?
             /*if(code == AppEvent::NewGeopos && mapManager_ != nullptr) {
                 KernelGPSMessage* message = (KernelGPSMessage*)data1;
                 configManager_->UpdateLastPosition(message->coord);
@@ -84,7 +82,7 @@ void MiniKernel::HandleEvent(const SDL_Event& event,bool& exitLoop) {
             }*/
             if(code == AppEvent::ClosePopup) {
                 const auto element = static_cast<IPopupDialog*>(data1);
-                if (element != nullptr) {
+                if(element != nullptr) {
                     element->Close();
                     delete element;
                 }
@@ -101,44 +99,44 @@ void MiniKernel::HandleEvent(const SDL_Event& event,bool& exitLoop) {
                         LOG(ERROR) << "Fehler beim Abspielen von Sound " << _kernelConfig.AudioFileForLongClick;
                     }
                 }
-            } else if (_applicationEventCallbackFunction != nullptr) {
+            } else if(_applicationEventCallbackFunction != nullptr) {
                 _applicationEventCallbackFunction(code, data1, data2);
             }
         }
     }
 
-	switch (event.type)
-	{
-		case SDL_QUIT:
-			exitLoop = true;
-			break;
-        case SDL_KEYDOWN: {
-                const Uint8 *state = SDL_GetKeyboardState(NULL);
-                switch (event.key.keysym.sym) {
-                    case SDLK_ESCAPE:
-                        exitLoop = true;
-                        break;
-                    case SDLK_q:
-                        if(state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL]) { 
-                            exitLoop = true;
-                        }
-                        break;
-                    case SDLK_f:
-                        if(state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL]) { 
-                            if(screen) {
-                                screen->ToggleFullscreen();
-                            }
-                        }
-                        break;
+    switch(event.type) {
+    case SDL_QUIT:
+        exitLoop = true;
+        break;
+    case SDL_KEYDOWN: {
+        const Uint8* state = SDL_GetKeyboardState(NULL);
+        switch(event.key.keysym.sym) {
+        case SDLK_ESCAPE:
+            exitLoop = true;
+            break;
+        case SDLK_q:
+            if(state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL]) {
+                exitLoop = true;
+            }
+            break;
+        case SDLK_f:
+            if(state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL]) {
+                if(screen) {
+                    screen->ToggleFullscreen();
                 }
             }
-		default:
-			//LOG(DEBUG) << event.type << " unhandelt event type";
-			break;
-	}
+            break;
+        }
+    }
+    default:
+        // LOG(DEBUG) << event.type << " unhandelt event type";
+        break;
+    }
 }
 
-MiniKernel::MiniKernel(){
+MiniKernel::MiniKernel()
+{
     el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
     _base = nullptr;
     _eventManager = nullptr;
@@ -146,15 +144,17 @@ MiniKernel::MiniKernel(){
     _callbackState = nullptr;
     _screenDpi = 0.0;
     _applicationEventCallbackFunction = nullptr;
+    _mapManager = nullptr;
 }
 
 MiniKernel::~MiniKernel()
 {
 }
 
-bool MiniKernel::StartUp(int argc, char* argv[]) {
+bool MiniKernel::StartUp(int argc, char* argv[])
+{
     LOG(INFO) << "Kernel is starting";
-    
+
     _base = new SDLBase();
     _base->Init();
 
@@ -168,88 +168,82 @@ bool MiniKernel::StartUp(int argc, char* argv[]) {
     return result;
 }
 
-void MiniKernel::UpdateScreens() {
+void MiniKernel::UpdateScreens()
+{
     auto screenPtr = _screens.begin();
-    while (screenPtr != _screens.end()) {
+    while(screenPtr != _screens.end()) {
         screenPtr->second->UpdateAnimationInternal();
-        if (screenPtr->second->NeedRedraw()) {
+        if(screenPtr->second->NeedRedraw()) {
             screenPtr->second->Draw();
         }
         ++screenPtr;
     }
 }
 
-void MiniKernel::Run() {
+void MiniKernel::Run()
+{
     SDL_Event event;
     auto quit = false;
     auto delay = static_cast<int>(MILLESECONDS_PER_FRAME);
 
-    while (!quit) {
+    while(!quit) {
         try {
             const auto startFrame = SDL_GetTicks();
             memset(&event, 0, sizeof(SDL_Event));
-                        
-            while (_eventManager->WaitEvent(&event, delay) != 0) {
+
+            while(_eventManager->WaitEvent(&event, delay) != 0) {
                 HandleEvent(event, quit);
                 if(!quit) {
                     auto winId = event.window.windowID;
-                    if (winId == 0) {
+                    if(winId == 0) {
                         winId = event.user.windowID;
                     }
 
-                    if (winId == 0) {
-                        //Update all Windows
+                    if(winId == 0) {
+                        // Update all Windows
                         auto screenPtr = _screens.begin();
-                        while (screenPtr != _screens.end()) {
+                        while(screenPtr != _screens.end()) {
                             screenPtr->second->UpdateAnimationInternal();
-                            if (screenPtr->second->NeedRedraw())
-                            {
+                            if(screenPtr->second->NeedRedraw()) {
                                 screenPtr->second->Draw();
                             }
                             ++screenPtr;
                         }
                     } else {
                         const auto screenPtr = _screens.find(winId);
-                        if (screenPtr != _screens.end()) {
+                        if(screenPtr != _screens.end()) {
                             screenPtr->second->UpdateAnimationInternal();
-                            if (screenPtr->second->NeedRedraw()) {
-                                    screenPtr->second->Draw();
+                            if(screenPtr->second->NeedRedraw()) {
+                                screenPtr->second->Draw();
                             }
                         }
                     }
                 }
             }
-            
+
             UpdateScreens();
 
             const auto endFrame = SDL_GetTicks();
 
             /* figure out how much time we have left, and then sleep */
             delay = static_cast<int>(MILLESECONDS_PER_FRAME - (endFrame - startFrame));
-            if (delay < 0) {
+            if(delay < 0) {
                 delay = 0;
-            }
-            else if (delay > MILLESECONDS_PER_FRAME) {
+            } else if(delay > MILLESECONDS_PER_FRAME) {
                 delay = static_cast<int>(MILLESECONDS_PER_FRAME);
             }
 
-            if (_callbackState != nullptr && _firstrun) {
+            if(_callbackState != nullptr && _firstrun) {
                 _firstrun = false;
                 _callbackState(KernelState::Startup);
             }
-        }
-        catch (GUIException &exp)
-        {
+        } catch(GUIException& exp) {
             LOG(ERROR) << "GUI Error " << exp.what();
             quit = true;
-        }
-        catch (SDLException &exp)
-        {
+        } catch(SDLException& exp) {
             LOG(ERROR) << "SDL Error " << exp.what();
             quit = true;
-        }
-        catch (TTFException &exp)
-        {
+        } catch(TTFException& exp) {
             LOG(ERROR) << "TTF Error " << exp.what();
             quit = true;
         }
@@ -258,27 +252,36 @@ void MiniKernel::Run() {
             LOG(ERROR) << "Sqlite Error " << exp.what();
             quit = true;
         }*/
-        catch (IllegalStateException &exp)
-        {
+        catch(IllegalStateException& exp) {
             LOG(ERROR) << "State Error " << exp.what();
             quit = true;
-        }
-        catch (std::exception &exp)
-        {
+        } catch(std::exception& exp) {
             LOG(ERROR) << "Error " << exp.what();
             quit = true;
         }
     }
 
-    if (_callbackState != nullptr) {
+    if(_callbackState != nullptr) {
         _callbackState(KernelState::Shutdown);
     }
 }
 
-void MiniKernel::Shutdown() {
+void MiniKernel::StartCoreServices()
+{
+#ifdef LIBOSMSCOUT
+    _mapManager = new MapManager();
+#endif
+}
+
+void MiniKernel::Shutdown()
+{
+    if(_mapManager != nullptr) {
+        _mapManager->DeInit();
+        delete _mapManager;
+    }
+
     auto screenEntry = _screens.begin();
-    while (screenEntry != _screens.end())
-    {
+    while(screenEntry != _screens.end()) {
         screenEntry->second->Shutdown();
         delete screenEntry->second;
         ++screenEntry;
@@ -291,75 +294,90 @@ void MiniKernel::Shutdown() {
     }
 }
 
-GUIElementManager* MiniKernel::CreateScreen(const std::string& title, const std::string& videoDriver) {
-    #ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
-    	TIMED_SCOPE_IF(timerInitVideo, "InitVideo", VLOG_IS_ON(4));
+GUIElementManager*
+MiniKernel::CreateScreen(const std::string& title, const std::string& videoDriver, const std::string& backgroundImage)
+{
+#ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
+    TIMED_SCOPE_IF(timerInitVideo, "InitVideo", VLOG_IS_ON(4));
 #endif
     _screenDpi = _base->InitVideo(videoDriver);
-	auto screen = new GUIScreen();
+    auto screen = new GUIScreen();
 
 #ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
-    	TIMED_SCOPE_IF(timerCreateScreen, "CreateScreen", VLOG_IS_ON(4));
+    TIMED_SCOPE_IF(timerCreateScreen, "CreateScreen", VLOG_IS_ON(4));
 #endif
 
-    IMapManager* mapManager = nullptr;
+    _manager = screen->Create(title, _eventManager, _mapManager, backgroundImage);
+    auto id = screen->GetId();
 
-	_manager = screen->Create(title, _eventManager, mapManager, "");
-	auto id = screen->GetId();
+    _screens.insert(std::make_pair(id, screen));
 
-	_screens.insert(std::make_pair(id, screen));
-    
-    //if(mapManager_ != nullptr) mapManager_->SetScreenDpi(screenDpi_);
+    if(_mapManager != nullptr) {
+        _mapManager->SetScreenDpi(_screenDpi);
+        if(!_kernelConfig.mapDataPath.empty()) {
+            if(_mapManager->Init(_kernelConfig.mapDataPath, _kernelConfig.mapStyle,
+                                 _kernelConfig.mapIconPaths) != 0) {
+                LOG(ERROR) << "mapManager Init Failed";
+            }
+        }
+    }
 
-	return _manager;
+    return _manager;
 }
 
-void MiniKernel::SetStateCallBack(KernelStateCallbackFunction callback) {
+void MiniKernel::SetStateCallBack(KernelStateCallbackFunction callback)
+{
     _callbackState = callback;
 }
 
-void MiniKernel::RegisterApplicationEvent(ApplicationEventCallbackFunction callbackFunction) {
-	_applicationEventCallbackFunction = callbackFunction;
+void MiniKernel::RegisterApplicationEvent(ApplicationEventCallbackFunction callbackFunction)
+{
+    _applicationEventCallbackFunction = callbackFunction;
 }
 
-void MiniKernel::DrawTextOnBootScreen(const std::string& text) {
+void MiniKernel::DrawTextOnBootScreen(const std::string& text)
+{
     const auto screenPtr = _screens.begin();
     if(screenPtr != _screens.end()) {
         screenPtr->second->DrawTextOnBootScreen(text);
         screenPtr->second->UpdateAnimationInternal();
-        if (screenPtr->second->NeedRedraw()) {
+        if(screenPtr->second->NeedRedraw()) {
             screenPtr->second->Draw();
         }
     }
 }
 
-int MiniKernel::StartAudio(const std::string& drivername) {
+int MiniKernel::StartAudio(const std::string& drivername)
+{
     _base->InitAudio(drivername);
 
 #ifdef ENABLEAUDIOMANAGER
-	_audioManager = new MiniAudioManager(_eventManager, _kernelConfig.lastMusikVolume);
-	auto result = _audioManager->Init();
-	if(result != 0) {
-		LOG(ERROR) << "Audio Init Failed";
-		//Todo show on screen
-		return result;
-	}
-	LOG(INFO) << "AudioManager Started";
+    _audioManager = new MiniAudioManager(_eventManager, _kernelConfig.lastMusikVolume);
+    auto result = _audioManager->Init();
+    if(result != 0) {
+        LOG(ERROR) << "Audio Init Failed";
+        // Todo show on screen
+        return result;
+    }
+    LOG(INFO) << "AudioManager Started";
 #endif
 
-	return 0;
+    return 0;
 }
 
-SDLEventManager* MiniKernel::GetEventManager() const {
+SDLEventManager* MiniKernel::GetEventManager() const
+{
     return _eventManager;
 }
 
-void MiniKernel::ShowErrorMessage(const std::string& message) {
-    _errorMessage = message; 
+void MiniKernel::ShowErrorMessage(const std::string& message)
+{
+    _errorMessage = message;
     _eventManager->PushKernelEvent(KernelEvent::ShowError);
 }
 
-int MiniKernel::PlaySound(const std::string& filename) const {
+int MiniKernel::PlaySound(const std::string& filename) const
+{
     if(!utils::FileExists(filename)) {
         throw FileNotFoundException("Audio File Not Exits");
     }
@@ -372,9 +390,9 @@ int MiniKernel::PlaySound(const std::string& filename) const {
 #else
     return 0;
 #endif
-    
 }
 
-void MiniKernel::SetConfig(KernelConfig config) {
+void MiniKernel::SetConfig(KernelConfig config)
+{
     _kernelConfig = config;
 }

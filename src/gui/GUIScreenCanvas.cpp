@@ -59,9 +59,12 @@ void GUIScreenCanvas::Draw()
 		auto x = centerX - size.width / 2;
 		auto y = centerY - size.height / 2;
 		renderer_->RenderCopy(imageTexture_, GUIPoint(x, y));
-	} else if(_textureText != nullptr) {
+	}
+
+	if(_textureText != nullptr) {
 		renderer_->RenderCopy(_textureText, GUIPoint((Size().width - _textureText->Size().width) / 2, 5));
 	}
+	
 	needRedraw_ = false;
 }
 

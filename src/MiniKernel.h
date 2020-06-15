@@ -24,6 +24,7 @@ private:
     std::string _errorMessage;
     KernelConfig _kernelConfig;
     MiniAudioManager* _audioManager;
+    IMapManager* _mapManager;
 
     void HandleEvent(const SDL_Event& event,bool& exitLoop);
 public:
@@ -34,7 +35,8 @@ public:
     void UpdateScreens();
     void Run();
     void Shutdown();
-    GUIElementManager* CreateScreen(const std::string& title, const std::string& videoDriver);
+    void StartCoreServices();
+    GUIElementManager* CreateScreen(const std::string& title, const std::string& videoDriver, const std::string& backgroundImage);
     void SetStateCallBack(KernelStateCallbackFunction callback);
     void RegisterApplicationEvent(ApplicationEventCallbackFunction callbackFunction);
     void DrawTextOnBootScreen(const std::string& text);

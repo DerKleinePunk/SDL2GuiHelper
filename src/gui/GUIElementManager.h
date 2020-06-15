@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <map>
-#include "IMapManager.h"
+#include "../IMapManager.h"
 
 struct GUIEvent;
 class GUIRenderer;
