@@ -275,11 +275,6 @@ void MiniKernel::StartCoreServices()
 
 void MiniKernel::Shutdown()
 {
-    if(_mapManager != nullptr) {
-        _mapManager->DeInit();
-        delete _mapManager;
-    }
-
     auto screenEntry = _screens.begin();
     while(screenEntry != _screens.end()) {
         screenEntry->second->Shutdown();
@@ -288,6 +283,11 @@ void MiniKernel::Shutdown()
     }
     _screens.clear();
 
+    if(_mapManager != nullptr) {
+        _mapManager->DeInit();
+        delete _mapManager;
+    }
+    
     if(_base != nullptr) {
         delete _base;
         _base = nullptr;

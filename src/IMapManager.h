@@ -3,6 +3,9 @@
 #include <string>
 #include <vector>
 
+typedef std::function<void(unsigned char* mapPixels, int mapWidth, int mapHeight)> NewMapImageDelegate;
+typedef std::function<void(const std::string& name, const int& maxSpeed, const int& currentSpeed)> NewStreetNameOrSpeedDelegate;
+
 class IMapManager
 {
 private:
@@ -14,5 +17,6 @@ public:
     virtual int Init(std::string dataPath, std::string mapStyle, std::vector<std::string> mapIconPaths) = 0;
     virtual void Unregister() = 0;
     virtual void DeInit() = 0;
+    virtual void RegisterMe(int width, int height, NewMapImageDelegate callback, NewStreetNameOrSpeedDelegate callbackName) = 0;
 };
 

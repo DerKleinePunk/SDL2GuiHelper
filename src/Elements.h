@@ -6,3 +6,4 @@
 #include "gui/GUIIconview.h"
 #include "gui/GUIKeyboard.h"
 #include "gui/GUITextEdit.h"
+#include "gui/GUIMapview.h"

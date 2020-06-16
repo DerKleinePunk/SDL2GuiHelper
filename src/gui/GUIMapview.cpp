@@ -80,7 +80,7 @@ void GUIMapview::RenderMap() {
 }
 
 void GUIMapview::InitMap(){
-#ifdef OSMSCOUT
+#ifdef LIBOSMSCOUT
     auto newMapPixeldelegate = std::bind(&GUIMapview::NewMapPixel, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     auto newNamedelegate = std::bind(&GUIMapview::NewMapNameOrSpeed, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     if(mapManager_ == nullptr) {
@@ -147,7 +147,7 @@ void GUIMapview::UpdateAnimation() {
 void GUIMapview::Close() {
 
 #ifdef LIBOSMSCOUT
-    mapManager_->Unregister();
+    if(mapManager_ != nullptr) mapManager_->Unregister();
 #endif
     
     if(mapPixels_ != nullptr) delete[] mapPixels_;
