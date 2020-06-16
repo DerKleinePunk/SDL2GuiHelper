@@ -25,8 +25,15 @@ void GUITextButton::GetFont()
 
 void GUITextButton::RenderText()
 {
-    if(textureText_ != nullptr) delete textureText_;
-    textureText_ = renderer_->RenderTextBlended(font_, text_, foregroundColor_);
+    if(textureText_ != nullptr) {
+        delete textureText_;
+        textureText_ = nullptr;
+    }
+    if(enabled_) {
+        textureText_ = renderer_->RenderTextBlended(font_, text_, foregroundColor_);
+    } else {
+        //textureText_ = renderer_->RenderTextBlended(font_, text_, foregroundColor_);
+    }
 }
 
 GUITextButton::GUITextButton(GUIPoint position, GUISize size, const std::string& name, SDL_Color background, SDL_Color textcolor)
@@ -84,12 +91,6 @@ void GUITextButton::Draw()
     if(selected_) {
         renderer_->DrawRoundRect(GUIRect(2, 2, Size().width - 4, Size().height - 4), GetCorner(), foregroundColor_);
     }
-    if(font_ == nullptr) {
-        font_ = fontManager_->GetDefaultFont(Size().height - 2);
-    }
-    if(text_.size() > 0 && textureText_ == nullptr) {
-        textureText_ = renderer_->RenderTextBlended(font_, text_, foregroundColor_);
-    }
     if(textureText_ != nullptr) {
         auto drawTextPosition = GUIPoint(0, 0);
         if(centertext_) {
@@ -136,4 +137,22 @@ int GUITextButton::GetCorner() const
 void GUITextButton::SetCorner(int corner)
 {
     _corner = corner;
+}
+
+void GUITextButton::Disable() 
+{
+    GUIElement::Disable();
+    if(font_ != nullptr) {
+        RenderText();
+        SetRedraw();
+    }
+}
+
+void GUITextButton::Enable()
+{
+    GUIElement::Enable();
+    if(font_ != nullptr) {
+        RenderText();
+        SetRedraw();
+    }
 }

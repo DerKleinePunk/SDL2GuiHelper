@@ -34,6 +34,8 @@ public:
 	void ChangeBackColor(SDL_Color color);
 	int GetCorner() const;
 	void SetCorner(int corner);
+	void Disable();
+	void Enable();
 };
 
 
