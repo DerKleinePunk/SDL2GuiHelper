@@ -5,6 +5,7 @@
 #include "MapManager.h"
 #include "../../common/easylogging/easylogging++.h"
 #include "../../common/utils/osmsoutlogger.h"
+#include "../../common/exception/ArgumentException.h"
 
 int MapManager::WorkerMain()
 {
@@ -165,12 +166,14 @@ int MapManager::Init(std::string dataPath, std::string mapStyle, std::vector<std
         return -1;
     }
 
-    _mapService.reset(new osmscout::MapService(_database));
-    _styleConfig.reset(new osmscout::StyleConfig(_database->GetTypeConfig()));
+    _mapService = std::make_shared<osmscout::MapService>(_database);
+    _styleConfig = std::make_shared<osmscout::StyleConfig>(_database->GetTypeConfig());
     if(!_styleConfig->Load(mapStyle)) {
         LOG(ERROR) << "Cannot open style";
         return -1;
     }
+
+    _painter = new osmscout::MapPainterCairo(_styleConfig);
 
     _drawParameter.SetIconPaths(paths);
     _drawParameter.SetPatternPaths(paths);
@@ -214,6 +217,8 @@ int MapManager::Init(std::string dataPath, std::string mapStyle, std::vector<std
 
 void MapManager::RegisterMe(int width, int height, NewMapImageDelegate callback, NewStreetNameOrSpeedDelegate callbackName) 
 {
+    if(_painter == nullptr) throw new ArgumentException("painter == nullptr");
+
     _width = width;
     _height = height;
 
@@ -252,5 +257,46 @@ void MapManager::DeInit()
 
         _jobQueue.add(mydata2);
         _worker.join();
+    }
+}
+
+void MapManager::CenterMap(const double& lat,const double& lon, const double& compass, const double& currentSpeed) 
+{
+    LOG(DEBUG) << "CenterMap Lat " << std::to_string(lat) << " Lon " << std::to_string(lon);
+    if (compass > -1) {
+        _mapAngle = -compass * (2.0 * M_PI) / 360.0;
+    }
+                
+    _mapCenter.Set(lat, lon);
+    _currentSpeed = currentSpeed;
+    //_paintMarker = true;
+    
+    _projectionCalc.Set(_mapCenter,
+                    _mapAngle,
+                    _magnification,
+                    _screenDpi,
+                    _mapWidth,
+                    _mapHeight);
+    
+    double x, y;
+    
+    // New Pos every second NMEA Standard i think
+    auto speedToDistance = _currentSpeed/3.6; //m/sec wenn speed km/h
+    
+    auto posIThink = _mapCenter.Add(osmscout::Bearing::Degrees(_mapAngle), osmscout::Distance::Of<osmscout::Meter>(speedToDistance));
+    
+    if(_projectionCalc.GeoToPixel(posIThink, x, y)) {
+        LOG(DEBUG) << "Neue Pos ist auf Karte X " << x << " Y " << y << " Geo " << posIThink.GetDisplayText();
+    }
+    
+    if(_jobQueue.size() == 0) {
+        auto mydata2 = new ThreadJobData();
+        mydata2->whattodo = "DrawMap";
+        mydata2->data1 = nullptr;
+        mydata2->data2 = nullptr;
+
+        _jobQueue.add(mydata2);
+    } else {
+        LOG(WARNING) << "Redraw lost";
     }
 }

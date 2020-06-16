@@ -24,6 +24,10 @@ class GUIMapview : public GUIElement {
     void RenderMap();
     void InitMap();
     void HandleMapEvent(GUIEvent& event);
+    int MapThreadMain();
+    void NewMapPixel(unsigned char* mapPixels, int mapWidth, int mapHeight);
+    void NewMapNameOrSpeed(const std::string& name, const int& maxSpeed, const int& currentSpeed);
+
 public:
     GUIMapview(GUIPoint position, GUISize size, const std::string& name, SDL_Color background, SDL_Color textcolor);
 
@@ -32,8 +36,6 @@ public:
     void HandleEvent(GUIEvent& event) override;
     void UpdateAnimation() override;
     void Close() override;
-    
-    int MapThreadMain();
-    void NewMapPixel(unsigned char* mapPixels, int mapWidth, int mapHeight);
-    void NewMapNameOrSpeed(const std::string& name, const int& maxSpeed, const int& currentSpeed);
+       
+    void CenterMap(const double& lat,const double& lon, const double& compass, const double& currentSpeed);
 };

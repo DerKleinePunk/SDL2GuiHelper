@@ -1,6 +1,6 @@
 message(STATUS "working on utils dir")
 
-FILE (GLOB SRCS "commonutils.cpp" "Tokenizer.cpp")
+FILE (GLOB SRCS "commonutils.cpp" "Tokenizer.cpp" "Geopos.cpp")
 IF(OSMSCOUT_FOUND)
     FILE (GLOB SRCS2 "osmsoutlogger.cpp")
 ENDIF()

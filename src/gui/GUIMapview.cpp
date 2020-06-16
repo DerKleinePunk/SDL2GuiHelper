@@ -34,12 +34,12 @@ void GUIMapview::HandleMapEvent(GUIEvent& event) {
         if(SDL_LockTexture(mapTexture_->operator SDL_Texture*(), NULL, &pixels, &pitch) == 0) {
             memcpy(pixels, mapPixels_, pitch * Size().height * 2);
             SDL_UnlockTexture(mapTexture_->operator SDL_Texture*());
-            SetRedraw();
             initOk_ = true;
         } else {
             LOG(ERROR) << SDL_GetError();
         }
         SDL_UnlockMutex(mapMemLock_);
+        SetRedraw();
     }
     
     if(event.Event.user.code == UPDATEADDDATA) {
@@ -195,4 +195,11 @@ void GUIMapview::NewMapNameOrSpeed(const std::string& name, const int& maxSpeed,
     }
     
     EventManager()->PushEvent(mapEvent_, windowId_, UPDATEADDDATA, nullptr, nullptr);
+}
+
+void GUIMapview::CenterMap(const double& lat,const double& lon, const double& compass, const double& currentSpeed)
+{
+    if(initOk_) {
+        mapManager_->CenterMap(lat, lon, compass, currentSpeed);
+    }
 }

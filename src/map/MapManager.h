@@ -34,7 +34,7 @@ class MapManager : public IMapManager
     waitingqueue<ThreadJobData*> _jobQueue;
     std::thread _worker;
     NewMapImageDelegate _callbackNewMapImage;
-    NewStreetNameOrSpeedDelegate  _callbackNewName;
+    NewStreetNameOrSpeedDelegate _callbackNewName;
     cairo_surface_t* _image_data_source;
     cairo_t* _cairoImage;
     cairo_surface_t* _image_data_marker;
@@ -45,13 +45,14 @@ class MapManager : public IMapManager
     int _height;
     int _mapWidth;
     int _mapHeight;
-    osmscout::MercatorProjection  _projectionDraw;
-    osmscout::MercatorProjection  _projectionCalc;
+    osmscout::MercatorProjection _projectionDraw;
+    osmscout::MercatorProjection _projectionCalc;
     osmscout::MapData _data;
-    std::list<osmscout::TileRef>  _mapTiles;
-    osmscout::GeoCoord            _mapCenter;
-    osmscout::GeoCoord            _mapCenterJobStart;
-    double                        _mapAngle;
+    std::list<osmscout::TileRef> _mapTiles;
+    osmscout::GeoCoord _mapCenter;
+    osmscout::GeoCoord _mapCenterJobStart;
+    double _mapAngle;
+    double _currentSpeed;
 
     int WorkerMain();
     void DrawMap();
@@ -66,4 +67,5 @@ class MapManager : public IMapManager
     void RegisterMe(int width, int height, NewMapImageDelegate callback, NewStreetNameOrSpeedDelegate callbackName);
     void Unregister();
     void DeInit();
+    void CenterMap(const double& lat, const double& lon, const double& compass, const double& currentSpeed);
 };

@@ -18,5 +18,6 @@ public:
     virtual void Unregister() = 0;
     virtual void DeInit() = 0;
     virtual void RegisterMe(int width, int height, NewMapImageDelegate callback, NewStreetNameOrSpeedDelegate callbackName) = 0;
+    virtual void CenterMap(const double& lat,const double& lon, const double& compass, const double& currentSpeed) = 0;
 };
 
