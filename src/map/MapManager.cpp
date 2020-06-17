@@ -9,6 +9,8 @@
 
 int MapManager::WorkerMain()
 {
+    el::Helpers::setThreadName("MapManager Worker");
+    
     LOG(DEBUG) << "Map Worker Started";
     while(true) {
         try {

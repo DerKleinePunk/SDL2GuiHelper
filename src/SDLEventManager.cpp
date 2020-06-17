@@ -43,7 +43,11 @@ std::ostream& operator<<(std::ostream& os, const KernelEvent c)
 
 Uint32 timerCallbackfunc(Uint32 interval, void *param) 
 {
-	auto entry = static_cast<userTimer*>(param);
+    auto entry = static_cast<userTimer*>(param);
+    std::string name("TimerID");
+    name += std::to_string((int32_t)entry->event);
+    el::Helpers::setThreadName(name);
+
 	entry->Owner->PushApplicationEvent(entry->event, nullptr, nullptr);
 
 	return interval; // wenn return 0 cancel Timer
