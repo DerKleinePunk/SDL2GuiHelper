@@ -423,17 +423,34 @@ GUITexture* GUIRenderer::RenderTextBlendedWrapped(TTF_Font* font, std::string te
 	//Make Textture Only so width the max Text width
 	int w = 0,h = 0;
 	Uint32 maxTextWidth = 0;
-	Tokenizer tokenizer(text, "\n");
-	while(tokenizer.NextToken()) {
-		
-		if(TTF_SizeUTF8(font,tokenizer.GetToken().c_str(),&w,&h) != 0) {
-			throw TTFException("SizeUTF8");
-		}
+	bool nextTry = false;
+	do {
+		Tokenizer tokenizer(text, "\n");
+		while(tokenizer.NextToken()) {
+			nextTry = false;
+			if(TTF_SizeUTF8(font,tokenizer.GetToken().c_str(),&w,&h) != 0) {
+				throw TTFException("SizeUTF8");
+			}
 
-		if((Uint32)w > maxTextWidth){
-			maxTextWidth = w;
+			if((Uint32)w > maxTextWidth){
+				maxTextWidth = w;
+				if(maxTextWidth > wrapLength) {
+					LOG(WARNING) << "Text to long break it hard";
+					auto token = tokenizer.GetToken();
+					while((Uint32)w > wrapLength) {
+						token = token.substr(0, token.size() -1);
+						if(TTF_SizeUTF8(font,token.c_str(),&w,&h) != 0) {
+							throw TTFException("SizeUTF8");
+						}
+					}
+					text.insert(text.find(token) + token.size(), 1, '\n');
+					nextTry = true;
+					maxTextWidth = 0;
+					break;
+				}
+			}
 		}
-	}
+	} while(nextTry);
 
 	if(maxTextWidth > wrapLength){
 		maxTextWidth = wrapLength;

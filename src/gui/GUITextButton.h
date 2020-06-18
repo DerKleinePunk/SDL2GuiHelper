@@ -17,6 +17,7 @@ class GUITextButton : public GUIElement, public GUIOnClickDecorator
 	bool smallFont_;
 	int _corner;
 	SDL_Color backgroundColorButton_;
+	SDL_Color _disablebackgroundColor;
 
     void GetFont();
     void RenderText();

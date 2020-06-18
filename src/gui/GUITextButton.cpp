@@ -42,6 +42,8 @@ GUITextButton::GUITextButton(GUIPoint position, GUISize size, const std::string&
     logger_ = el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
     backgroundColor_ = transparent_color;
     backgroundColorButton_ = background;
+    //Todo put it on Config
+    _disablebackgroundColor = lightgray_color;
     foregroundColor_ = textcolor;
     centertext_ = true;
     textureText_ = nullptr;
@@ -85,7 +87,11 @@ void GUITextButton::Init()
 void GUITextButton::Draw()
 {
 	if(_corner > 0) {
-		renderer_->DrawRoundFillRect(GUIRect(0, 0, Size().width, Size().height), GetCorner(), backgroundColorButton_);
+        if(enabled_) {
+		    renderer_->DrawRoundFillRect(GUIRect(0, 0, Size().width, Size().height), GetCorner(), backgroundColorButton_);
+        } else {
+            renderer_->DrawRoundFillRect(GUIRect(0, 0, Size().width, Size().height), GetCorner(), _disablebackgroundColor);
+        }
 		renderer_->DrawRoundRect(GUIRect(1, 1, Size().width - 2, Size().height - 2), GetCorner(), foregroundColor_);
 	}
     if(selected_) {

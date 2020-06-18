@@ -68,14 +68,14 @@ GUITextLabel::GUITextLabel(const GUIPoint position,
 void GUITextLabel::Select()
 {
     GUIElement::Select();
-    backgroundColor_ = selectedBackgroundColor_;
+    if(_corner == 0) backgroundColor_ = selectedBackgroundColor_;
     RenderText();
 }
 
 void GUITextLabel::Unselect()
 {
     GUIElement::Unselect();
-    backgroundColor_ = normalBackgroundColor_;
+    if(_corner == 0) backgroundColor_ = normalBackgroundColor_;
     RenderText();
 }
 
@@ -128,33 +128,22 @@ void GUITextLabel::Init()
 void GUITextLabel::RenderText()
 {
     if(textureText_ != nullptr) delete textureText_;
+
+    auto textColor = foregroundColor_;
+    if(selected_) textColor = selectedColor_;
+
     if(text_.find("\n") != std::string::npos) {
-        if(selected_) {
-            textureText_ = renderer_->RenderTextBlendedWrapped(font_, text_, selectedColor_, Size().width);
-        } else {
-            textureText_ =
-            renderer_->RenderTextBlendedWrapped(font_, text_, foregroundColor_, Size().width);
-        }
+        textureText_ = renderer_->RenderTextBlendedWrapped(font_, text_, textColor, Size().width);
     } else {
         int w = 0;
         int h = 0;
         if(TTF_SizeUTF8(font_, text_.c_str(), &w, &h) != 0) {
             throw TTFException("SizeUTF8");
         }
-        if(selected_) {
-            if(w <= Size().width) {
-                textureText_ = renderer_->RenderTextBlended(font_, text_, selectedColor_);
-            } else {
-                textureText_ =
-                renderer_->RenderTextBlendedWrapped(font_, text_, selectedColor_, Size().width);
-            }
+        if(w <= Size().width) {
+            textureText_ = renderer_->RenderTextBlended(font_, text_, textColor);
         } else {
-            if(w <= Size().width) {
-                textureText_ = renderer_->RenderTextBlended(font_, text_, foregroundColor_);
-            } else {
-                textureText_ =
-                renderer_->RenderTextBlendedWrapped(font_, text_, foregroundColor_, Size().width);
-            }
+            textureText_ = renderer_->RenderTextBlendedWrapped(font_, text_, textColor, Size().width);
         }
     }
     SetRedraw();
@@ -164,6 +153,13 @@ void GUITextLabel::RenderText()
 void GUITextLabel::Draw()
 {
     if(_corner != 0) {
+        if(selected_) {
+            renderer_->DrawRoundFillRect(GUIRect(0, 0, Size().width, Size().height), GetCorner(),
+                                         selectedBackgroundColor_);
+        } else {
+            renderer_->DrawRoundFillRect(GUIRect(0, 0, Size().width, Size().height), GetCorner(),
+                                         normalBackgroundColor_);
+        }
         renderer_->DrawRoundRect(GUIRect(0, 0, Size().width, Size().height), GetCorner(), foregroundColor_);
     }
 
@@ -233,5 +229,14 @@ int GUITextLabel::GetCorner() const
 
 void GUITextLabel::SetCorner(int corner)
 {
+    if(corner > 0) {
+        backgroundColor_ = transparent_color;
+    } else {
+        if(selected_) {
+            backgroundColor_ = selectedBackgroundColor_;
+        } else {
+            backgroundColor_ = normalBackgroundColor_;
+        }
+    }
     _corner = corner;
 }
