@@ -58,6 +58,16 @@ namespace utils
         return _longitude;
     }
 
+    void Geopos::SetLat(double value)
+    {
+        _latitude = value;
+    }
+
+    void Geopos::SetLon(double value)
+    {
+        _longitude = value;
+    }
+
     double Geopos::GetDistance(const Geopos &target) const 
     {
         return GetSphericalDistance(*this, target);
