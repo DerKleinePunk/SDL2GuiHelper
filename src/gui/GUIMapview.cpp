@@ -210,3 +210,15 @@ void GUIMapview::SetMarker(bool on)
         mapManager_->SetMarker(on);
     }
 }
+
+void GUIMapview::ZoomUp() {
+    if(mapManager_ != nullptr) {
+        mapManager_->ZoomUp();
+    }
+}
+
+void GUIMapview::ZoomDown() {
+    if(mapManager_ != nullptr) {
+        mapManager_->ZoomDown();
+    }
+}

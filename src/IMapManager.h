@@ -21,5 +21,7 @@ public:
     virtual void CenterMap(const double& lat,const double& lon, const double& compass, const double& currentSpeed) = 0;
     virtual void SetMarkerImageFile(const std::string& fileName) = 0;
     virtual void SetMarker(bool on) = 0;
+    virtual void ZoomUp() = 0;
+    virtual void ZoomDown() = 0;
 };
 

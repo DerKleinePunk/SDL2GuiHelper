@@ -135,6 +135,7 @@ MapManager::MapManager()
     _height = 0;
     _mapCenter.Set(50.094, 8.49617);
     _markerImageFile = "auto-day-icon.png";
+    _zoomValue = 18;
 }
 
 MapManager::~MapManager()
@@ -191,6 +192,7 @@ int MapManager::Init(std::string dataPath, std::string mapStyle, std::vector<std
     _breaker = std::make_shared<osmscout::ThreadedBreaker>();
     _drawParameter.SetBreaker(_breaker);
 
+    _zoomValue = 18;
     _magnification.SetLevel(osmscout::Magnification::magBlock);
 
     _searchParameter.SetUseMultithreading(true);
@@ -321,5 +323,112 @@ void MapManager::SetMarker(bool on)
         _paintMarker = true;
     } else {
         _paintMarker = false;
+    }
+}
+
+void MapManager::ZoomUp()
+{
+    if(_magnification.GetLevel() + 1 <= 20) {
+        _magnification++;
+        _zoomValue = _magnification.GetLevel();
+
+        auto mydata2 = new ThreadJobData();
+        mydata2->whattodo = "DrawMap";
+        mydata2->data1 = nullptr;
+        mydata2->data2 = nullptr;
+
+        _jobQueue.add(mydata2);
+    }
+}
+
+/*
+    static MagnificationLevel magWorld;     //  0
+    static MagnificationLevel magContinent; //  4
+    static MagnificationLevel magState;     //  5
+    static MagnificationLevel magStateOver; //  6
+    static MagnificationLevel magCounty;    //  7
+    static MagnificationLevel magRegion;    //  8
+    static MagnificationLevel magProximity; //  9
+    static MagnificationLevel magCityOver;  // 10
+    static MagnificationLevel magCity;      // 11
+    static MagnificationLevel magSuburb;    // 12
+    static MagnificationLevel magDetail;    // 13
+    static MagnificationLevel magClose;     // 14
+    static MagnificationLevel magCloser;    // 15
+    static MagnificationLevel magVeryClose; // 16
+    static MagnificationLevel magBlock;     // 18
+    static MagnificationLevel magStreet;    // 19
+    static MagnificationLevel magHouse;     // 20
+*/
+void MapManager::ZoomDown()
+{
+    if(_zoomValue - 1 >= 0) {
+        _zoomValue--;
+        switch (_zoomValue)
+        {
+            case 0:
+                _magnification.SetLevel(osmscout::Magnification::magWorld);
+                break;
+            case 3:
+                _magnification.SetLevel(osmscout::Magnification::magWorld);
+                break;
+            case 4:
+                _magnification.SetLevel(osmscout::Magnification::magContinent);
+                break;
+            case 5:
+                _magnification.SetLevel(osmscout::Magnification::magState);
+                break;
+            case 6:
+                _magnification.SetLevel(osmscout::Magnification::magStateOver);
+                break;
+            case 7:
+                _magnification.SetLevel(osmscout::Magnification::magCounty);
+                break;
+            case 8:
+                _magnification.SetLevel(osmscout::Magnification::magRegion);
+                break;
+            case 9:
+                _magnification.SetLevel(osmscout::Magnification::magProximity);
+                break;
+            case 10:
+                _magnification.SetLevel(osmscout::Magnification::magCityOver);
+                break;
+            case 11:
+                _magnification.SetLevel(osmscout::Magnification::magCity);
+                break;
+            case 12:
+                _magnification.SetLevel(osmscout::Magnification::magSuburb);
+                break;
+            case 13:
+                _magnification.SetLevel(osmscout::Magnification::magDetail);
+                break;
+            case 14:
+                _magnification.SetLevel(osmscout::Magnification::magClose);
+                break;
+            case 15:
+                _magnification.SetLevel(osmscout::Magnification::magCloser);
+                break;
+            case 16:
+                _magnification.SetLevel(osmscout::Magnification::magVeryClose);
+                break;
+            case 18:
+                _magnification.SetLevel(osmscout::Magnification::magBlock);
+                break;
+            case 19:
+                _magnification.SetLevel(osmscout::Magnification::magStreet);
+                break;
+            case 20:
+                _magnification.SetLevel(osmscout::Magnification::magHouse);
+                break;
+            default:
+                break;
+        }
+
+        auto mydata2 = new ThreadJobData();
+        mydata2->whattodo = "DrawMap";
+        mydata2->data1 = nullptr;
+        mydata2->data2 = nullptr;
+
+        _jobQueue.add(mydata2);
     }
 }

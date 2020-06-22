@@ -39,4 +39,6 @@ public:
        
     void CenterMap(const double& lat,const double& lon, const double& compass, const double& currentSpeed);
     void SetMarker(bool on);
+    void ZoomUp();
+    void ZoomDown();
 };
