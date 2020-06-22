@@ -63,7 +63,7 @@ void MapManager::DrawMap()
             _projectionDraw.GeoToPixel(_projectionDraw.GetCenter(), x, y);
             if(_image_data_marker == nullptr) {
                 //Todo put to Config Imnage File Name
-                _image_data_marker = cairo_image_surface_create_from_png("auto-day-icon.png");
+                _image_data_marker = cairo_image_surface_create_from_png(_markerImageFile.c_str());
                 auto status = cairo_surface_status(_image_data_marker);
                 if(status != CAIRO_STATUS_SUCCESS) {
                     LOG(ERROR) << "cairo load png " << cairo_status_to_string(status);
@@ -134,6 +134,7 @@ MapManager::MapManager()
     _width = 0;
     _height = 0;
     _mapCenter.Set(50.094, 8.49617);
+    _markerImageFile = "auto-day-icon.png";
 }
 
 MapManager::~MapManager()
@@ -144,9 +145,11 @@ MapManager::~MapManager()
     }
     if(_image_data_source != nullptr) {
         cairo_surface_destroy(_image_data_source);
+        _image_data_source = nullptr;
     }
     if(_image_data_marker != nullptr) {
         cairo_surface_destroy(_image_data_marker);
+         _image_data_marker = nullptr;
     }
 }
 
@@ -300,5 +303,23 @@ void MapManager::CenterMap(const double& lat,const double& lon, const double& co
         _jobQueue.add(mydata2);
     } else {
         LOG(WARNING) << "Redraw lost";
+    }
+}
+
+void MapManager::SetMarkerImageFile(const std::string& fileName) {
+    if(_image_data_marker != nullptr) {
+        cairo_surface_destroy(_image_data_marker);
+        _image_data_marker = nullptr;
+    }
+
+    _markerImageFile = fileName;
+}
+
+void MapManager::SetMarker(bool on)
+{
+    if(on && !_markerImageFile.empty()) {
+        _paintMarker = true;
+    } else {
+        _paintMarker = false;
     }
 }

@@ -53,6 +53,7 @@ class MapManager : public IMapManager
     osmscout::GeoCoord _mapCenterJobStart;
     double _mapAngle;
     double _currentSpeed;
+    std::string _markerImageFile;
 
     int WorkerMain();
     void DrawMap();
@@ -68,4 +69,6 @@ class MapManager : public IMapManager
     void Unregister();
     void DeInit();
     void CenterMap(const double& lat, const double& lon, const double& compass, const double& currentSpeed);
+    void SetMarkerImageFile(const std::string& fileName);
+    void SetMarker(bool on);
 };

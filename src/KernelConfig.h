@@ -9,4 +9,5 @@ struct KernelConfig
     std::string mapDataPath;
     std::string mapStyle;
     std::vector<std::string> mapIconPaths;
+    std::string markerImageFile;
 };

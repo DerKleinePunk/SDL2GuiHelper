@@ -203,3 +203,10 @@ void GUIMapview::CenterMap(const double& lat,const double& lon, const double& co
         mapManager_->CenterMap(lat, lon, compass, currentSpeed);
     }
 }
+
+void GUIMapview::SetMarker(bool on)
+{
+    if(mapManager_ != nullptr) {
+        mapManager_->SetMarker(on);
+    }
+}

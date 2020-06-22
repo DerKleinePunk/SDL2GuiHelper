@@ -314,6 +314,7 @@ MiniKernel::CreateScreen(const std::string& title, const std::string& videoDrive
 
     if(_mapManager != nullptr) {
         _mapManager->SetScreenDpi(_screenDpi);
+        _mapManager->SetMarkerImageFile(_kernelConfig.markerImageFile);
         if(!_kernelConfig.mapDataPath.empty()) {
             if(_mapManager->Init(_kernelConfig.mapDataPath, _kernelConfig.mapStyle,
                                  _kernelConfig.mapIconPaths) != 0) {
