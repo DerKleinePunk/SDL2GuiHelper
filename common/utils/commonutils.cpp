@@ -174,15 +174,13 @@ std::ostream& formatDateTime(std::ostream& out, const tm& t, const char* fmt)
 
 std::string dateTimeToString()
 {
-    timeval now;
-    gettimeofday(&now, 0);
-	return dateTimeToString(now);
+	return dateTimeToString(time(0));
 }
 
-std::string dateTimeToString(const timeval& t)
+std::string dateTimeToString(const time_t& t)
 {
-    auto result = dateTimeToString(*localtime(&t.tv_sec), "%Y-%m-%d %H:%M:%S");
-    int milli = t.tv_usec / 1000;
+    auto result = dateTimeToString(*localtime(&t), "%Y-%m-%d %H:%M:%S");
+    int milli = t / 1000;
     result += ",";
     auto milliString = std::to_string(milli);
     while(milliString.size() < 3) {

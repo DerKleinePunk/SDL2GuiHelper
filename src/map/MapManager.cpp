@@ -49,6 +49,7 @@ void MapManager::DrawMap()
 
     if(_mapPixels == nullptr)  {
         LOG(DEBUG) << "no graphic buffer not paint the map";
+        return;
     }
 
     if(_image_data_source == nullptr) {
@@ -237,6 +238,19 @@ int MapManager::Init(std::string dataPath, std::string mapStyle, std::vector<std
 void MapManager::RegisterMe(int width, int height, NewMapImageDelegate callback, NewStreetNameOrSpeedDelegate callbackName) 
 {
     if(_painter == nullptr) throw new ArgumentException("painter == nullptr");
+
+    if(_mapPixels != nullptr) delete[] _mapPixels;
+    if(_cairoImage != nullptr) {
+        cairo_destroy(_cairoImage);
+    }
+    if(_image_data_source != nullptr) {
+        cairo_surface_destroy(_image_data_source);
+        _image_data_source = nullptr;
+    }
+    if(_image_data_marker != nullptr) {
+        cairo_surface_destroy(_image_data_marker);
+         _image_data_marker = nullptr;
+    }
 
     _width = width;
     _height = height;

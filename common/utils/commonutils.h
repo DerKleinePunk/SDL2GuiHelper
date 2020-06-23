@@ -45,7 +45,7 @@ namespace utils
 	std::string u162hex(uint16_t inchar);
 	std::ostream& formatDateTime(std::ostream& out, const tm& t, const char* fmt);
 	std::string dateTimeToString();
-	std::string dateTimeToString(const timeval& t);
+	std::string dateTimeToString(const time_t& t);
 	std::string dateTimeToString(const tm& t, const char* format);
 	std::string dateTimeToJsonString(const timeval& t);
 	tm now();
