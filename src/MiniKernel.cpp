@@ -319,6 +319,10 @@ MiniKernel::CreateScreen(const std::string& title, const std::string& videoDrive
             if(_mapManager->Init(_kernelConfig.mapDataPath, _kernelConfig.mapStyle,
                                  _kernelConfig.mapIconPaths) != 0) {
                 LOG(ERROR) << "mapManager Init Failed";
+            } else {
+                if(_kernelConfig.startMapPosition.GetLat() != 0 || _kernelConfig.startMapPosition.GetLon() != 0) {
+                    _mapManager->CenterMap(_kernelConfig.startMapPosition.GetLat(), _kernelConfig.startMapPosition.GetLon(), -1, 0);
+                }
             }
         }
     }

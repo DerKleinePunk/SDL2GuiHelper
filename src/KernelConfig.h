@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "../common/utils/Geopos.h"
 
 struct KernelConfig
 {
@@ -10,4 +11,5 @@ struct KernelConfig
     std::string mapStyle;
     std::vector<std::string> mapIconPaths;
     std::string markerImageFile;
+    utils::Geopos startMapPosition;
 };

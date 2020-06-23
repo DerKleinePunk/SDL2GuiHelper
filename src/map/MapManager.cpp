@@ -7,11 +7,15 @@
 #include "../../common/utils/osmsoutlogger.h"
 #include "../../common/exception/ArgumentException.h"
 
+
+
 int MapManager::WorkerMain()
 {
     el::Helpers::setThreadName("MapManager Worker");
     
     LOG(DEBUG) << "Map Worker Started";
+    _cv.notify_one();
+
     while(true) {
         try {
             auto jobInfo = _jobQueue.remove();
@@ -43,7 +47,9 @@ void MapManager::DrawMap()
 {
     LoadMapData();
 
-    // memset(mapPixels_, 0xFF,  mapWidth_ * mapHeight_ * 4);
+    if(_mapPixels == nullptr)  {
+        LOG(DEBUG) << "no graphic buffer not paint the map";
+    }
 
     if(_image_data_source == nullptr) {
         _image_data_source =
@@ -136,6 +142,8 @@ MapManager::MapManager()
     _mapCenter.Set(50.094, 8.49617);
     _markerImageFile = "auto-day-icon.png";
     _zoomValue = 18;
+    _mapWidth = 100;
+    _mapHeight = 100;
 }
 
 MapManager::~MapManager()
@@ -217,7 +225,11 @@ int MapManager::Init(std::string dataPath, std::string mapStyle, std::vector<std
     maxSpeedReader_ = new osmscout::MaxSpeedFeatureValueReader(*typeConfig);
     refFeatureReader_ =  new osmscout::RefFeatureValueReader(*typeConfig);*/
 
+    std::unique_lock<std::mutex> startUpWait(_mutex);
     _worker = std::thread(&MapManager::WorkerMain, this);
+    _cv.wait(startUpWait);
+
+    LOG(DEBUG) << "Init Done";
 
     return 0;
 }
@@ -295,7 +307,7 @@ void MapManager::CenterMap(const double& lat,const double& lon, const double& co
     if(_projectionCalc.GeoToPixel(posIThink, x, y)) {
         LOG(DEBUG) << "Neue Pos ist auf Karte X " << x << " Y " << y << " Geo " << posIThink.GetDisplayText();
     }
-    
+       
     if(_jobQueue.size() == 0) {
         auto mydata2 = new ThreadJobData();
         mydata2->whattodo = "DrawMap";

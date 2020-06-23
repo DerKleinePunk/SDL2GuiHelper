@@ -55,6 +55,8 @@ class MapManager : public IMapManager
     double _currentSpeed;
     std::string _markerImageFile;
     uint32_t _zoomValue;
+    std::mutex _mutex;
+    std::condition_variable _cv;
 
     int WorkerMain();
     void DrawMap();
