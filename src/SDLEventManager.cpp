@@ -49,7 +49,10 @@ Uint32 timerCallbackfunc(Uint32 interval, void *param)
     el::Helpers::setThreadName(name);
 
 	entry->Owner->PushApplicationEvent(entry->event, nullptr, nullptr);
-
+    if(entry->oneTime) {
+        entry->Owner->RemoveTimer(entry->id, true);
+        return 0;
+    }
 	return interval; // wenn return 0 cancel Timer
 }
 
@@ -214,7 +217,7 @@ bool SDLEventManager::RegisterMeForBackendMessage(MessageFromBackendDelegate cal
     return false;
 }
 
-SDL_TimerID SDLEventManager::CreateTimer(AppEvent event, Uint32 delay)
+SDL_TimerID SDLEventManager::CreateTimer(AppEvent event, Uint32 delay, bool oneTime)
 {
 	auto freeTimerFound = false;
 	size_t i = 0;
@@ -232,15 +235,23 @@ SDL_TimerID SDLEventManager::CreateTimer(AppEvent event, Uint32 delay)
 	_userTimers[i].event = event;
 	_userTimers[i].Owner = this;
 	_userTimers[i].id = SDL_AddTimer(delay, timerCallbackfunc, &_userTimers[i]);
+    _userTimers[i].oneTime = oneTime;
 
 	return _userTimers[i].id;
 }
 
 void SDLEventManager::RemoveTimer(SDL_TimerID id)
 {
-	for(size_t i = 0; i < 10; i++) {
+	RemoveTimer(id, false);
+}
+
+void SDLEventManager::RemoveTimer(SDL_TimerID id, bool fromCallback)
+{
+    for(size_t i = 0; i < 10; i++) {
         if(_userTimers[i].id == id) {
-			SDL_RemoveTimer(_userTimers[i].id);
+            if(!fromCallback) {
+			    SDL_RemoveTimer(_userTimers[i].id);
+            }
 			_userTimers[i].id = -1;
 			return;
 		}

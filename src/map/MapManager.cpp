@@ -69,7 +69,6 @@ void MapManager::DrawMap()
             double x, y;
             _projectionDraw.GeoToPixel(_projectionDraw.GetCenter(), x, y);
             if(_image_data_marker == nullptr) {
-                //Todo put to Config Imnage File Name
                 _image_data_marker = cairo_image_surface_create_from_png(_markerImageFile.c_str());
                 auto status = cairo_surface_status(_image_data_marker);
                 if(status != CAIRO_STATUS_SUCCESS) {

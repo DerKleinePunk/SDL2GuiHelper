@@ -26,6 +26,7 @@ struct userTimer {
 	SDL_TimerID id;
 	AppEvent event;
 	SDLEventManager* Owner;
+	bool oneTime;
 };
 
 class SDLEventManager
@@ -39,7 +40,6 @@ class SDLEventManager
 	IBackendConnect* _backend;
 
 	userTimer _userTimers[10];
-
 public:
 	SDLEventManager();
 	~SDLEventManager();
@@ -58,8 +58,9 @@ public:
 	bool PushBackendMessage(json const& Message) const;
 	bool RegisterMeForBackendMessage(MessageFromBackendDelegate callback);
 
-	SDL_TimerID CreateTimer(AppEvent event, Uint32 delay);
+	SDL_TimerID CreateTimer(AppEvent event, Uint32 delay, bool oneTime);
 	void RemoveTimer(SDL_TimerID id);
+	void RemoveTimer(SDL_TimerID id, bool fromCallback);
 };
 
 

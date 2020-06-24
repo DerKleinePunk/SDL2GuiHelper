@@ -92,7 +92,8 @@ void GUIMapview::InitMap(){
 }
 
 GUIMapview::GUIMapview(const GUIPoint position, const GUISize size, const std::string& name, const SDL_Color background, const SDL_Color textcolor) :
-	GUIElement(position, size, name), 
+	GUIElement(position, size, name),
+    GUIOnClickDecorator(static_cast<GUIElement*>(this)), 
     font_(nullptr),
     mapPixels_(nullptr) {
     logger_ = el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
@@ -175,7 +176,7 @@ void GUIMapview::NewMapPixel(unsigned char* mapPixels, int mapWidth, int mapHeig
     if(mapPixels_ == nullptr) mapPixels_ = new unsigned char[mapWidth * mapHeight * 4];
     memcpy(mapPixels_, mapPixels, mapWidth * mapHeight * 4);
     SDL_UnlockMutex(mapMemLock_);
-    EventManager()->PushEvent(mapEvent_, windowId_, REDRAW, nullptr, nullptr);
+    GUIElement::EventManager()->PushEvent(mapEvent_, windowId_, REDRAW, nullptr, nullptr);
 }
 
 void GUIMapview::NewMapNameOrSpeed(const std::string& name, const int& maxSpeed, const int& currentSpeed) {
@@ -194,7 +195,7 @@ void GUIMapview::NewMapNameOrSpeed(const std::string& name, const int& maxSpeed,
         currentStreetName_ = name;
     }
     
-    EventManager()->PushEvent(mapEvent_, windowId_, UPDATEADDDATA, nullptr, nullptr);
+    GUIElement::EventManager()->PushEvent(mapEvent_, windowId_, UPDATEADDDATA, nullptr, nullptr);
 }
 
 void GUIMapview::CenterMap(const double& lat,const double& lon, const double& compass, const double& currentSpeed)

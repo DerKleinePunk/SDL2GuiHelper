@@ -1,11 +1,12 @@
 #pragma once
 #include <SDL_ttf.h>
+#include "GUIOnClickDecorator.h"
 
 struct GUIEvent;
 class GUITexture;
 class MapManager;
 
-class GUIMapview : public GUIElement {
+class GUIMapview : public GUIElement, public GUIOnClickDecorator {
     el::Logger* logger_;
     bool initOk_;
     SDL_Color textcolor_;
