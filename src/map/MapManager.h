@@ -57,6 +57,7 @@ class MapManager : public IMapManager
     uint32_t _zoomValue;
     std::mutex _mutex;
     std::condition_variable _cv;
+    IDrawObjectHandler* _objHandler;
 
     int WorkerMain();
     void DrawMap();
@@ -76,4 +77,5 @@ class MapManager : public IMapManager
     void SetMarker(bool on);
     void ZoomUp();
     void ZoomDown();
+    void SetOwnMapObjects(IDrawObjectHandler* handler);
 };

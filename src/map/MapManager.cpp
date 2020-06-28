@@ -65,9 +65,9 @@ void MapManager::DrawMap()
 
     if(_painter->DrawMap(_projectionDraw, _drawParameter, _data, _cairoImage)) {
         LOG(DEBUG) << "Map drawed on surface";
+        double x, y;
+        _projectionDraw.GeoToPixel(_projectionDraw.GetCenter(), x, y);
         if(_paintMarker) {
-            double x, y;
-            _projectionDraw.GeoToPixel(_projectionDraw.GetCenter(), x, y);
             if(_image_data_marker == nullptr) {
                 _image_data_marker = cairo_image_surface_create_from_png(_markerImageFile.c_str());
                 auto status = cairo_surface_status(_image_data_marker);
@@ -84,7 +84,16 @@ void MapManager::DrawMap()
                 cairo_paint(_cairoImage);
                 LOG(DEBUG) << "drawed marker on surface";
             }
+            
+
         }
+        
+        cairo_set_source_rgb (_cairoImage, 0.0, 0.0, 0.0);
+        cairo_select_font_face (_cairoImage, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+        cairo_set_font_size (_cairoImage, 20.0);
+        cairo_move_to (_cairoImage, x-50, y-50);
+        cairo_show_text (_cairoImage, "Michael");
+
         cairo_surface_flush(_image_data_source);
     }
 
@@ -144,6 +153,7 @@ MapManager::MapManager()
     _zoomValue = 18;
     _mapWidth = 100;
     _mapHeight = 100;
+    _objHandler = nullptr;
 }
 
 MapManager::~MapManager()
@@ -456,4 +466,9 @@ void MapManager::ZoomDown()
 
         _jobQueue.add(mydata2);
     }
+}
+
+void MapManager::SetOwnMapObjects(IDrawObjectHandler* handler)
+{
+    _objHandler = handler;
 }
