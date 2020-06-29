@@ -57,6 +57,7 @@ void MapManager::DrawMap()
         cairo_image_surface_create_for_data(_mapPixels, CAIRO_FORMAT_ARGB32, _mapWidth, _mapHeight,
                                             cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, _mapWidth));
         _cairoImage = cairo_create(_image_data_source);
+        _mapObjects = new MapObjects(_cairoImage);
         if(_cairoImage == nullptr) {
             LOG(ERROR) << "cairoImage == nullptr";
             return;
@@ -88,12 +89,8 @@ void MapManager::DrawMap()
 
         }
         
-        cairo_set_source_rgb (_cairoImage, 0.0, 0.0, 0.0);
-        cairo_select_font_face (_cairoImage, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
-        cairo_set_font_size (_cairoImage, 20.0);
-        cairo_move_to (_cairoImage, x-50, y-50);
-        cairo_show_text (_cairoImage, "Michael");
-
+        _mapObjects->DrawFilledLabel(x-50, y-50, "Michael");
+      
         cairo_surface_flush(_image_data_source);
     }
 
@@ -154,6 +151,7 @@ MapManager::MapManager()
     _mapWidth = 100;
     _mapHeight = 100;
     _objHandler = nullptr;
+    _mapObjects = nullptr;
 }
 
 MapManager::~MapManager()

@@ -10,6 +10,7 @@
 #include "../../common/utils/osmsoutlogger.h"
 #include "../../common/utils/waitingqueue.h"
 #include "../IMapManager.h"
+#include "MapObjects.h"
 
 
 struct ThreadJobData {
@@ -58,6 +59,7 @@ class MapManager : public IMapManager
     std::mutex _mutex;
     std::condition_variable _cv;
     IDrawObjectHandler* _objHandler;
+    MapObjects* _mapObjects;
 
     int WorkerMain();
     void DrawMap();
