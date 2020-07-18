@@ -1,4 +1,12 @@
+#ifndef ELPP_DEFAULT_LOGGER
+#define ELPP_DEFAULT_LOGGER "MapObjects"
+#endif
+#ifndef ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID
+#define ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID ELPP_DEFAULT_LOGGER
+#endif
+
 #include "MapObjects.h"
+#include "../../common/easylogging/easylogging++.h"
 
 PangoFontDescription* MapObjects::GetFont(double size,std::string fontName)
 {
@@ -20,7 +28,9 @@ PangoFontDescription* MapObjects::GetFont(double size,std::string fontName)
 
 MapObjects::MapObjects(cairo_t* mapImage)
 {
+    el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
     _mapImage = mapImage;
+    
 }
 
 MapObjects::~MapObjects()
@@ -34,8 +44,7 @@ MapObjects::~MapObjects()
 
 void MapObjects::DrawFilledLabel(double x, double y, std::string text)
 {
-    auto font = GetFont(20.0, "Inconsolata");
-
+    auto font = GetFont(13.0, "Inconsolata");
     
     //Aufpassen wert zwischen 0.0 und 1.0
     int textWidth, textHeight;
@@ -77,4 +86,8 @@ void MapObjects::DrawFilledLabel(double x, double y, std::string text)
     cairo_set_font_size (_mapImage, 20.0);
     cairo_move_to (_mapImage, x-50, y-50);
     cairo_show_text (_mapImage, text.c_str());*/
+}
+
+void MapObjects::DrawAll(osmscout::MercatorProjection projection) {
+    //_mapObjects->DrawFilledLabel(x-50, y-50, "Michael");
 }

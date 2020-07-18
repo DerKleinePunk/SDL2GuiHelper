@@ -12,6 +12,8 @@
 #include <pango/pangocairo.h>
 #include <pango/pango-glyph.h>
 
+#include <osmscout/util/Projection.h>
+
 class MapObjects
 {
 private:
@@ -24,6 +26,7 @@ public:
     ~MapObjects();
 
     void DrawFilledLabel(double x, double y, std::string text);
+    void DrawAll(osmscout::MercatorProjection projection);
 };
 
 

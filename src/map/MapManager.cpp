@@ -1,6 +1,9 @@
 #ifndef ELPP_DEFAULT_LOGGER
 #define ELPP_DEFAULT_LOGGER "MapManager"
 #endif
+#ifndef ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID
+#define ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID ELPP_DEFAULT_LOGGER
+#endif
 
 #include "MapManager.h"
 #include "../../common/easylogging/easylogging++.h"
@@ -88,8 +91,8 @@ void MapManager::DrawMap()
             
 
         }
-        
-        _mapObjects->DrawFilledLabel(x-50, y-50, "Michael");
+
+        _mapObjects->DrawAll(_projectionDraw);
       
         cairo_surface_flush(_image_data_source);
     }
