@@ -17,10 +17,13 @@ class GUITextButton : public GUIElement, public GUIOnClickDecorator
 	bool smallFont_;
 	int _corner;
 	SDL_Color backgroundColorButton_;
-	SDL_Color _disablebackgroundColor;
+	SDL_Color _disableBackgroundColor;
+	SDL_Color _downbackgroundColor;
+	bool _buttonDown;
 
     void GetFont();
     void RenderText();
+	
 public:
 	GUITextButton(GUIPoint position, GUISize size, const std::string& name, SDL_Color background, SDL_Color textcolor);
 
@@ -37,6 +40,9 @@ public:
 	void SetCorner(int corner);
 	void Disable();
 	void Enable();
+
+	void ButtonDownUpdate(Uint8 button) override;
+	void ButtonUpUpdate(Uint8 button) override;
 };
 
 

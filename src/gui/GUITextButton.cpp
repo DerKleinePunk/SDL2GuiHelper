@@ -43,7 +43,7 @@ GUITextButton::GUITextButton(GUIPoint position, GUISize size, const std::string&
     backgroundColor_ = transparent_color;
     backgroundColorButton_ = background;
     //Todo put it on Config
-    _disablebackgroundColor = lightgray_color;
+    _disableBackgroundColor = lightgray_color;
     foregroundColor_ = textcolor;
     centertext_ = true;
     textureText_ = nullptr;
@@ -51,6 +51,9 @@ GUITextButton::GUITextButton(GUIPoint position, GUISize size, const std::string&
     fontHeight_ = -1;
     smallFont_ = true;
     _corner = 0;
+    //Todo put it on Config
+    _downbackgroundColor = buttondown_green_color;
+	_buttonDown = false;
 }
 
 void GUITextButton::Text(const std::string& text)
@@ -88,9 +91,13 @@ void GUITextButton::Draw()
 {
 	if(_corner > 0) {
         if(enabled_) {
-		    renderer_->DrawRoundFillRect(GUIRect(0, 0, Size().width, Size().height), GetCorner(), backgroundColorButton_);
+            if(_buttonDown) {
+                renderer_->DrawRoundFillRect(GUIRect(0, 0, Size().width, Size().height), GetCorner(), _downbackgroundColor);
+            } else {
+		        renderer_->DrawRoundFillRect(GUIRect(0, 0, Size().width, Size().height), GetCorner(), backgroundColorButton_);
+            }
         } else {
-            renderer_->DrawRoundFillRect(GUIRect(0, 0, Size().width, Size().height), GetCorner(), _disablebackgroundColor);
+            renderer_->DrawRoundFillRect(GUIRect(0, 0, Size().width, Size().height), GetCorner(), _disableBackgroundColor);
         }
 		renderer_->DrawRoundRect(GUIRect(1, 1, Size().width - 2, Size().height - 2), GetCorner(), foregroundColor_);
 	}
@@ -159,6 +166,22 @@ void GUITextButton::Enable()
     GUIElement::Enable();
     if(font_ != nullptr) {
         RenderText();
+        SetRedraw();
+    }
+}
+
+void GUITextButton::ButtonDownUpdate(Uint8 button)
+{
+    if (button == SDL_BUTTON_LEFT) {
+        _buttonDown = true;
+        SetRedraw();
+    }
+}
+
+void GUITextButton::ButtonUpUpdate(Uint8 button)
+{
+    if (button == SDL_BUTTON_LEFT) {
+        _buttonDown = false;
         SetRedraw();
     }
 }

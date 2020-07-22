@@ -223,3 +223,13 @@ void GUIMapview::ZoomDown() {
         mapManager_->ZoomDown();
     }
 }
+
+void GUIMapview::ButtonDownUpdate(Uint8 button)
+{
+
+}
+
+void GUIMapview::ButtonUpUpdate(Uint8 button)
+{
+
+}

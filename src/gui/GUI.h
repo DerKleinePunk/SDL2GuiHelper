@@ -103,6 +103,7 @@ struct GUIEvent
 	explicit GUIEvent();
 };
 
+//https://www.w3schools.com/colors/colors_rgb.asp
 const SDL_Color black_color = { 0, 0, 0, 0xff };
 const SDL_Color white_color = { 0xff, 0xff, 0xff, 0xff };
 const SDL_Color lightblack_color = { 25, 25, 26, 0xff };
@@ -118,6 +119,7 @@ const SDL_Color transparent_color = { 0x00, 0x00, 0x00, 0x00 };
 const SDL_Color transparent_white_color = { 0xFF, 0xFF, 0xFF, 0x00 };
 const SDL_Color own_blue_color = { 0x28, 0x5B, 0x78, 0xFF }; //285B78
 const SDL_Color own_red_color = { 0x84, 0x14, 0x28, 0xFF }; //841428
+const SDL_Color buttondown_green_color = { 0x00, 0xAF, 0x64, 0xFF }; //#00af64
 const Uint32 long_click_time = 500;
 
 double frac(double value);

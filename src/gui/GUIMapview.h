@@ -42,4 +42,7 @@ public:
     void SetMarker(bool on);
     void ZoomUp();
     void ZoomDown();
+
+    void ButtonDownUpdate(Uint8 button) override;
+	void ButtonUpUpdate(Uint8 button) override;
 };

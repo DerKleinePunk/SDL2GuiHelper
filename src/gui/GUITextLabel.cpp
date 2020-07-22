@@ -240,3 +240,13 @@ void GUITextLabel::SetCorner(int corner)
     }
     _corner = corner;
 }
+
+void GUITextLabel::ButtonDownUpdate(Uint8 button)
+{
+
+}
+
+void GUITextLabel::ButtonUpUpdate(Uint8 button)
+{
+
+}

@@ -439,36 +439,34 @@ bool GUIElement::ButtonDownBase(Uint8 button, Uint8 clicks, const GUIPoint& poin
 {
 	if (!enabled_) return false;
 
-	if (button == SDL_BUTTON_LEFT) {
-		if (mouseOver_) {
-			if (!buttonDown_)
-			{
-				if (buttonDownEvent_) {
-					buttonDownEvent_(button, clicks, point);
-				}
-				LOG(DEBUG) << "Button down on " << ToString();
+	if (mouseOver_) {
+		if (!buttonDown_)
+		{
+			if (buttonDownEvent_) {
+				buttonDownEvent_(button, clicks, point);
 			}
-			buttonDown_ = true;
-			return true;
+			LOG(DEBUG) << "Button down on " << ToString();
 		}
+		buttonDown_ = true;
+		return true;
 	}
+	
 	return false;
 }
 
 bool GUIElement::ButtonUpBase(Uint8 button, Uint8 clicks,const GUIPoint& point)
 {
 	if (!enabled_) return false;
-
-	if (button == SDL_BUTTON_LEFT) {
-		if (buttonDown_) {
-			buttonDown_ = false;
-			LOG(DEBUG) << "Button up on " << ToString();
-			if (buttonUpEvent_) {
-				buttonUpEvent_(button, clicks, point);
-			}
-			return true;
+	
+	if (buttonDown_) {
+		buttonDown_ = false;
+		LOG(DEBUG) << "Button up on " << ToString();
+		if (buttonUpEvent_) {
+			buttonUpEvent_(button, clicks, point);
 		}
+		return true;
 	}
+	
 	return false;
 }
 

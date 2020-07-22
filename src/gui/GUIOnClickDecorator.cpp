@@ -8,6 +8,8 @@
 void GUIOnClickDecorator::ButtonDown(Uint8 button, Uint8 clicks)
 {
     UNUSED(clicks);
+	_lastButton = button;
+	ButtonDownUpdate(button);
 
 	if (button == SDL_BUTTON_LEFT) {
 		lastLeftButtonDow_ = SDL_GetTicks();
@@ -17,6 +19,7 @@ void GUIOnClickDecorator::ButtonDown(Uint8 button, Uint8 clicks)
 void GUIOnClickDecorator::ButtonUp(Uint8 button, Uint8 clicks)
 {
     UNUSED(clicks);
+	ButtonUpUpdate(button);
 
 	if (button == SDL_BUTTON_LEFT) {
 		auto now = SDL_GetTicks();
@@ -38,11 +41,18 @@ void GUIOnClickDecorator::ButtonUp(Uint8 button, Uint8 clicks)
 	}
 }
 
+void GUIOnClickDecorator::MouseLeave(const GUIPoint& point)
+{
+	UNUSED(point);
+	ButtonUpUpdate(_lastButton);
+}
+
 GUIOnClickDecorator::GUIOnClickDecorator(IGUIElement* wrapper)
 	: GUIElementDecorator(wrapper)
 {
 	wrapper->buttonDownEvent_ = std::bind(&GUIOnClickDecorator::ButtonDown, this, std::placeholders::_1, std::placeholders::_2);
 	wrapper->buttonUpEvent_ = std::bind(&GUIOnClickDecorator::ButtonUp, this, std::placeholders::_1, std::placeholders::_2);
+	wrapper->mouseLeaveEvent_ = std::bind(&GUIOnClickDecorator::MouseLeave, this, std::placeholders::_1);
 }
 
 void GUIOnClickDecorator::RegisterOnClick(ClickDelegate OnClick)
