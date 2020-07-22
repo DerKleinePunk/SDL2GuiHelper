@@ -153,7 +153,6 @@ MapManager::MapManager()
     _zoomValue = 18;
     _mapWidth = 100;
     _mapHeight = 100;
-    _objHandler = nullptr;
     _mapObjects = nullptr;
 }
 
@@ -469,7 +468,7 @@ void MapManager::ZoomDown()
     }
 }
 
-void MapManager::SetOwnMapObjects(IDrawObjectHandler* handler)
+void MapManager::SetTargetPos(const double& lat,const double& lon)
 {
-    _objHandler = handler;
+    _mapObjects->SetTargetPos(lat, lon);
 }

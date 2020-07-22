@@ -6,11 +6,6 @@
 typedef std::function<void(unsigned char* mapPixels, int mapWidth, int mapHeight)> NewMapImageDelegate;
 typedef std::function<void(const std::string& name, const int& maxSpeed, const int& currentSpeed)> NewStreetNameOrSpeedDelegate;
 
-class IDrawObjectHandler
-{
-    virtual void GetObjects(const double& lat,const double& lon, const double& lat2,const double& lon2) = 0;
-};
-
 class IMapManager
 {
 private:
@@ -28,6 +23,6 @@ public:
     virtual void SetMarker(bool on) = 0;
     virtual void ZoomUp() = 0;
     virtual void ZoomDown() = 0;
-    virtual void SetOwnMapObjects(IDrawObjectHandler* handler) = 0;
+    virtual void SetTargetPos(const double& lat,const double& lon) = 0;
 };
 

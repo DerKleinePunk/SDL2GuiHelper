@@ -224,6 +224,13 @@ void GUIMapview::ZoomDown() {
     }
 }
 
+void GUIMapview::SetTargetPos(const double& lat,const double& lon)
+{
+    if(mapManager_ != nullptr) {
+        mapManager_->SetTargetPos(lat, lon);
+    }
+}
+
 void GUIMapview::ButtonDownUpdate(Uint8 button)
 {
 

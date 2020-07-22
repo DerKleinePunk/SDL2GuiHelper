@@ -42,6 +42,7 @@ public:
     void SetMarker(bool on);
     void ZoomUp();
     void ZoomDown();
+    void SetTargetPos(const double& lat,const double& lon);
 
     void ButtonDownUpdate(Uint8 button) override;
 	void ButtonUpUpdate(Uint8 button) override;
