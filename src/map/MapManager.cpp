@@ -471,4 +471,15 @@ void MapManager::ZoomDown()
 void MapManager::SetTargetPos(const double& lat,const double& lon)
 {
     _mapObjects->SetTargetPos(lat, lon);
+    
+    if(_jobQueue.size() == 0) {
+        auto mydata2 = new ThreadJobData();
+        mydata2->whattodo = "DrawMap";
+        mydata2->data1 = nullptr;
+        mydata2->data2 = nullptr;
+
+        _jobQueue.add(mydata2);
+    } else {
+        LOG(WARNING) << "Redraw lost";
+    }
 }

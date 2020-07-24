@@ -13,6 +13,9 @@ namespace utils
         return rad*180.0/M_PI;
     }
 
+    /**
+     * Return value Distance in KM
+     */
     double GetSphericalDistance(const Geopos& a, const Geopos& b)
     {
         double r = 6371.01; // Average radius of earth in km

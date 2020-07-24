@@ -14,8 +14,14 @@
 
 #include <osmscout/util/Projection.h>
 
+enum class LabelType : int32_t {
+    Target,
+    Car,
+    Helicopter
+};
+
 struct GeoLabel {
-  std::string type;
+  LabelType type;
   osmscout::GeoCoord position;
 };
 
@@ -25,15 +31,17 @@ private:
     cairo_t* _mapImage;
     std::unordered_map<size_t,PangoFontDescription*> _fontMap;
     std::unordered_map<std::string, GeoLabel> _labelList;
+    std::unordered_map<std::string, cairo_surface_t*> _imageList;
 
     PangoFontDescription* GetFont(double size,std::string fontName);
+    void PaintImageOnMap(std::string fileName, double x, double y);
 public:
     MapObjects(cairo_t* mapImage);
     ~MapObjects();
 
     void DrawFilledLabel(double x, double y, std::string text);
-    void DrawLabel(std::string type, double x, double y);
-    void DrawAll(osmscout::MercatorProjection projection);
+    void DrawLabel(LabelType type, double x, double y);
+    void DrawAll(const osmscout::MercatorProjection& projection);
     void SetTargetPos(const double& lat,const double& lon);
 };
 
