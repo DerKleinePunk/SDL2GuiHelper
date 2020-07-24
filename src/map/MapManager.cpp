@@ -9,16 +9,17 @@
 #include "../../common/easylogging/easylogging++.h"
 #include "../../common/utils/osmsoutlogger.h"
 #include "../../common/exception/ArgumentException.h"
-
+#include <chrono>
+using namespace std::chrono_literals;
 
 
 int MapManager::WorkerMain()
 {
-    el::Helpers::setThreadName("MapManager Worker");
-    
-    LOG(DEBUG) << "Map Worker Started";
-    _cv.notify_one();
+    _cv.notify_all();
 
+    el::Helpers::setThreadName("MapManager Worker");
+    LOG(DEBUG) << "Map Worker Started";
+    
     while(true) {
         try {
             auto jobInfo = _jobQueue.remove();
@@ -237,7 +238,7 @@ int MapManager::Init(std::string dataPath, std::string mapStyle, std::vector<std
 
     std::unique_lock<std::mutex> startUpWait(_mutex);
     _worker = std::thread(&MapManager::WorkerMain, this);
-    _cv.wait(startUpWait);
+    _cv.wait_for(startUpWait, 500ms);
 
     LOG(DEBUG) << "Init Done";
 
