@@ -26,6 +26,10 @@
 
 void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
 {
+#ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
+    TIMED_SCOPE_IF(timerBlkObjPresent, "HandleEvent", VLOG_IS_ON(4));
+#endif
+
     GUIScreen* screen = nullptr;
 
     if(event.type != SDL_QUIT) {

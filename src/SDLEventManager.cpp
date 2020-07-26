@@ -253,6 +253,7 @@ void SDLEventManager::RemoveTimer(SDL_TimerID id, bool fromCallback)
 			    SDL_RemoveTimer(_userTimers[i].id);
             }
 			_userTimers[i].id = -1;
+            _userTimers[i].Owner = nullptr;
 			return;
 		}
     }
