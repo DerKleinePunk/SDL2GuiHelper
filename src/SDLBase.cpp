@@ -62,8 +62,9 @@ void SDLBase::Init()
     SDL_StopTextInput();
     LogSystemsRunning();
 
-    const auto touches = SDL_GetNumTouchDevices();
-    LOG(INFO) << "TouchDevices " << std::to_string(touches);
+    _touches = SDL_GetNumTouchDevices();
+    LOG(INFO) << "TouchDevices " << std::to_string(_touches);
+
 
     initDone_ = true;
 }
@@ -110,9 +111,16 @@ float SDLBase::InitVideo(const std::string& videoDriver)
 
     initVideoDone_ = true;
 
-    if(strcmp(driver, "RPI") == 0) {
+    if(strcmp(driver, "RPI") == 0 || strcmp(driver, "KMSDRM") ) {
         // todo Change thinks we are on Raspberry without X driver var MemoryLeak ?
         LOG(INFO) << "Raspberry without X";
+
+#ifndef DEBUG 
+        if(_touches > 0) {
+            SDL_ShowCursor(SDL_DISABLE);
+        }
+#endif
+
     }
     // Todo https://wiki.libsdl.org/SDL_GetWindowWMInfo
 

@@ -9,7 +9,8 @@ class SDLBase
 	bool initAudioDone_;
     el::Logger* logger_;
 	el::Logger* sdlLogger_;
-
+	int _touches;
+	
 	static int InitSubsystem(uint32_t flags);
 	static void LogSystemsRunning();
 	void SdlLogEntry(void *userdata, int category, SDL_LogPriority priority, const char *message);
