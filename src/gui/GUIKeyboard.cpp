@@ -218,5 +218,7 @@ void GUIKeyboard::UpdateAnimation() {
 }
 
 void GUIKeyboard::Close() {
-    
+    for (auto layer = keyboard_.begin(); layer != keyboard_.end(); ++layer) {
+        delete layer->texture;
+    }
 }

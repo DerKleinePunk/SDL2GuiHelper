@@ -19,7 +19,7 @@ class MiniAudioManager : public IAudioManager
 
   public:
     MiniAudioManager(const SDLEventManager* eventManager, const int musikVolume);
-    ~MiniAudioManager();
+    virtual ~MiniAudioManager();
 
     int Init();
 

@@ -160,13 +160,21 @@ MapManager::MapManager()
 MapManager::~MapManager()
 {
     if(_mapPixels != nullptr) delete[] _mapPixels;
+
+    if(_mapObjects != nullptr) {
+        delete _mapObjects;
+        _mapObjects = nullptr;
+    }
+
     if(_cairoImage != nullptr) {
         cairo_destroy(_cairoImage);
     }
+
     if(_image_data_source != nullptr) {
         cairo_surface_destroy(_image_data_source);
         _image_data_source = nullptr;
     }
+
     if(_image_data_marker != nullptr) {
         cairo_surface_destroy(_image_data_marker);
          _image_data_marker = nullptr;
@@ -250,13 +258,16 @@ void MapManager::RegisterMe(int width, int height, NewMapImageDelegate callback,
     if(_painter == nullptr) throw new ArgumentException("painter == nullptr");
 
     if(_mapPixels != nullptr) delete[] _mapPixels;
+    
     if(_cairoImage != nullptr) {
         cairo_destroy(_cairoImage);
     }
+
     if(_image_data_source != nullptr) {
         cairo_surface_destroy(_image_data_source);
         _image_data_source = nullptr;
     }
+
     if(_image_data_marker != nullptr) {
         cairo_surface_destroy(_image_data_marker);
          _image_data_marker = nullptr;
@@ -301,6 +312,14 @@ void MapManager::DeInit()
         _jobQueue.add(mydata2);
         _worker.join();
     }
+
+    if(_painter != nullptr) {
+        delete _painter;
+        _painter = nullptr;
+    }
+
+    _database->Close();
+
 }
 
 void MapManager::CenterMap(const double& lat,const double& lon, const double& compass, const double& currentSpeed) 

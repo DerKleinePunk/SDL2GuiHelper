@@ -4,6 +4,9 @@
 
 struct KernelConfig
 {
+    KernelConfig(){
+        lastMusikVolume = 128;//Value 0 - 128
+    }
     std::string AudioFileForClick;
     std::string AudioFileForLongClick;
     int lastMusikVolume;

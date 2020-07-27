@@ -48,7 +48,7 @@ void GUIOnClickDecorator::MouseLeave(const GUIPoint& point)
 }
 
 GUIOnClickDecorator::GUIOnClickDecorator(IGUIElement* wrapper)
-	: GUIElementDecorator(wrapper)
+	: GUIElementDecorator(wrapper),_lastButton(SDL_BUTTON_LEFT)
 {
 	wrapper->buttonDownEvent_ = std::bind(&GUIOnClickDecorator::ButtonDown, this, std::placeholders::_1, std::placeholders::_2);
 	wrapper->buttonUpEvent_ = std::bind(&GUIOnClickDecorator::ButtonUp, this, std::placeholders::_1, std::placeholders::_2);

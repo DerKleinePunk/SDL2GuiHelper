@@ -20,15 +20,16 @@ void MiniAudioManager::BackgroundChannelDone(const int channel)
 }
 
 MiniAudioManager::MiniAudioManager(const SDLEventManager* eventManager, const int musikVolume):
+    _initDone(false),
+    _musikVolume(musikVolume),
     _hardwareChannels(2),
     _audioBufferSize(0),
     _hardwareFormat(AUDIO_S16SYS),
-    _hardwareRate(HW_SAMPE_RATE)
+    _hardwareRate(HW_SAMPE_RATE),
+    _eventManager(eventManager)
+    
 {
     el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
-    _initDone = false;
-    _eventManager = eventManager;
-    _musikVolume = musikVolume;
 }
 
 MiniAudioManager::~MiniAudioManager()

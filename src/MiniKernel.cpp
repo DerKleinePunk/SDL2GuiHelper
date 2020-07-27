@@ -291,7 +291,17 @@ void MiniKernel::Shutdown()
         _mapManager->DeInit();
         delete _mapManager;
     }
-    
+
+    if(_audioManager != nullptr) {
+        delete _audioManager;
+        _audioManager = nullptr;
+    }
+
+    if(_eventManager != nullptr) {
+        delete _eventManager;
+        _eventManager = nullptr;
+    }
+
     if(_base != nullptr) {
         delete _base;
         _base = nullptr;
