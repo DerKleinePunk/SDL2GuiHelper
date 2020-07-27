@@ -172,9 +172,11 @@ int SDLEventManager::WaitEvent(SDL_Event* event, Uint32 timeout) const
     result = SDL_PollEvent(event);
     if(result == 0) {
         if(SDL_CondWaitTimeout(eventWait_, eventLock_, timeout) == SDL_MUTEX_TIMEDOUT) {
-            result = 0;
+            result = SDL_PollEvent(event);
+            VLOG(4) << std::to_string(timeout) << " ms we have wait";
         } else {
             result = SDL_PollEvent(event);
+            VLOG(4) << "wakeup from mutex";
         }
     }
     SDL_UnlockMutex(eventLock_);
