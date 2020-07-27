@@ -257,7 +257,7 @@ void MapManager::RegisterMe(int width, int height, NewMapImageDelegate callback,
 {
     if(_painter == nullptr) throw new ArgumentException("painter == nullptr");
 
-    if(_mapPixels != nullptr) delete[] _mapPixels;
+    if(_mapPixels != nullptr) delete [] _mapPixels;
     
     if(_cairoImage != nullptr) {
         cairo_destroy(_cairoImage);
@@ -318,8 +318,9 @@ void MapManager::DeInit()
         _painter = nullptr;
     }
 
-    _database->Close();
-
+    if(_database->IsOpen()) {
+        _database->Close();
+    }
 }
 
 void MapManager::CenterMap(const double& lat,const double& lon, const double& compass, const double& currentSpeed) 
