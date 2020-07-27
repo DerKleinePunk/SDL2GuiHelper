@@ -192,40 +192,23 @@ void MiniKernel::Run()
 
     while(!quit) {
         try {
-            const auto startFrame = SDL_GetTicks();
+            auto startFrame = SDL_GetTicks();
             memset(&event, 0, sizeof(SDL_Event));
+            auto screenUpdateDone = false;
 
             while(_eventManager->WaitEvent(&event, delay) != 0) {
+                startFrame = SDL_GetTicks();
                 HandleEvent(event, quit);
                 if(!quit) {
-                    auto winId = event.window.windowID;
-                    if(winId == 0) {
-                        winId = event.user.windowID;
-                    }
-
-                    if(winId == 0) {
-                        // Update all Windows
-                        auto screenPtr = _screens.begin();
-                        while(screenPtr != _screens.end()) {
-                            screenPtr->second->UpdateAnimationInternal();
-                            if(screenPtr->second->NeedRedraw()) {
-                                screenPtr->second->Draw();
-                            }
-                            ++screenPtr;
-                        }
-                    } else {
-                        const auto screenPtr = _screens.find(winId);
-                        if(screenPtr != _screens.end()) {
-                            screenPtr->second->UpdateAnimationInternal();
-                            if(screenPtr->second->NeedRedraw()) {
-                                screenPtr->second->Draw();
-                            }
-                        }
-                    }
+                    UpdateScreens();
+                    screenUpdateDone = true;
                 }
             }
-
-            UpdateScreens();
+            
+            if(!screenUpdateDone) {
+                startFrame = SDL_GetTicks();
+                UpdateScreens();
+            } 
 
             const auto endFrame = SDL_GetTicks();
 

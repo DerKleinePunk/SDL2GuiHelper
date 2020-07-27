@@ -164,6 +164,15 @@ bool SDLEventManager::PushEvent(Uint32 type, Uint32 windowID, Sint32 code, void*
     return true;
 }
 
+/**
+ *  \brief Waits timeout max for new event
+ *
+ *  \return 1, or 0 if there was an error while waiting for events.
+ *
+ *  \param event not null
+ * 
+ *  \param timeout in ms
+ */
 int SDLEventManager::WaitEvent(SDL_Event* event, Uint32 timeout) const
 {
     auto result = 0;
