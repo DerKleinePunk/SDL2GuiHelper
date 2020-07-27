@@ -157,7 +157,7 @@ bool SDLEventManager::PushEvent(Uint32 type, Uint32 windowID, Sint32 code, void*
         SDL_UnlockMutex(eventLock_);
         return false;
     } else {
-        LOG(DEBUG) << "Event Pushed";
+        LOG(DEBUG) << "Event Pushed " << std::to_string(type);
     }
     SDL_UnlockMutex(eventLock_);
     SDL_CondSignal(eventWait_);

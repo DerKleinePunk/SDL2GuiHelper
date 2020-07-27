@@ -111,7 +111,7 @@ float SDLBase::InitVideo(const std::string& videoDriver)
 
     initVideoDone_ = true;
 
-    if(strcmp(driver, "RPI") == 0 || strcmp(driver, "KMSDRM") ) {
+    if(strcmp(driver, "RPI") == 0 || strcmp(driver, "KMSDRM") == 0 ) {
         // todo Change thinks we are on Raspberry without X driver var MemoryLeak ?
         LOG(INFO) << "Raspberry without X";
 
