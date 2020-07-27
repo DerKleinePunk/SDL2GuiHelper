@@ -97,7 +97,7 @@ GUIElementManager* GUIScreen::Create(std::string title, SDLEventManager* eventMa
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, OPENGL_MINOR_VERSION);*/
 
 	//todo Check Windows Enbaled or not (Android/Raspbarry and so on)
-	window_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size_.width, size_.height, SDL_WINDOW_OPENGL| SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+	window_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size_.width, size_.height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 	if(window_ == nullptr)
 	{
 		throw GUIException("SDL_CreateWindow");
