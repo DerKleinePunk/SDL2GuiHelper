@@ -81,6 +81,9 @@ void GUIMapview::RenderMap() {
 
 void GUIMapview::InitMap(){
 #ifdef LIBOSMSCOUT
+    
+    if(!mapManager_->InitOk()) return;
+
     auto newMapPixeldelegate = std::bind(&GUIMapview::NewMapPixel, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     auto newNamedelegate = std::bind(&GUIMapview::NewMapNameOrSpeed, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     if(mapManager_ == nullptr) {

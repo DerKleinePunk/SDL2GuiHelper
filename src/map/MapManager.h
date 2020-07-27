@@ -59,6 +59,7 @@ class MapManager : public IMapManager
     std::mutex _mutex;
     std::condition_variable _cv;
     MapObjects* _mapObjects;
+    bool _initOk;
 
     int WorkerMain();
     void DrawMap();
@@ -70,6 +71,7 @@ class MapManager : public IMapManager
 
     void SetScreenDpi(float screenDpi);
     int Init(std::string dataPath, std::string mapStyle, std::vector<std::string> mapIconPaths);
+    bool InitOk() const;
     void RegisterMe(int width, int height, NewMapImageDelegate callback, NewStreetNameOrSpeedDelegate callbackName);
     void Unregister();
     void DeInit();

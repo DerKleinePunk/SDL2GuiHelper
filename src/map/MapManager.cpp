@@ -155,6 +155,7 @@ MapManager::MapManager()
     _mapWidth = 100;
     _mapHeight = 100;
     _mapObjects = nullptr;
+    _initOk = false;
 }
 
 MapManager::~MapManager()
@@ -249,8 +250,14 @@ int MapManager::Init(std::string dataPath, std::string mapStyle, std::vector<std
     _cv.wait_for(startUpWait, 500ms);
 
     LOG(DEBUG) << "Init Done";
+    _initOk = true;
 
     return 0;
+}
+
+bool MapManager::InitOk() const
+{
+    return _initOk;
 }
 
 void MapManager::RegisterMe(int width, int height, NewMapImageDelegate callback, NewStreetNameOrSpeedDelegate callbackName) 
@@ -299,6 +306,8 @@ void MapManager::Unregister()
 
 void MapManager::DeInit()
 {
+    LOG(DEBUG) << "DeInit ->";
+
     _callbackNewMapImage = nullptr;
 
     if(_worker.joinable()) {
@@ -318,9 +327,11 @@ void MapManager::DeInit()
         _painter = nullptr;
     }
 
-    if(_database->IsOpen()) {
+    if(_database && _database->IsOpen()) {
         _database->Close();
+        LOG(DEBUG) << "Map DB Closed";
     }
+    LOG(DEBUG) << "<- DeInit";
 }
 
 void MapManager::CenterMap(const double& lat,const double& lon, const double& compass, const double& currentSpeed) 

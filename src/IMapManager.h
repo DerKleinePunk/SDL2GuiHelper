@@ -15,6 +15,7 @@ public:
 
     virtual void SetScreenDpi(float screenDpi ) = 0;
     virtual int Init(std::string dataPath, std::string mapStyle, std::vector<std::string> mapIconPaths) = 0;
+    virtual bool InitOk() const = 0;
     virtual void Unregister() = 0;
     virtual void DeInit() = 0;
     virtual void RegisterMe(int width, int height, NewMapImageDelegate callback, NewStreetNameOrSpeedDelegate callbackName) = 0;
