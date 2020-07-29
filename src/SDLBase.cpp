@@ -117,6 +117,7 @@ float SDLBase::InitVideo(const std::string& videoDriver)
 
 #ifndef DEBUG 
         if(_touches > 0) {
+            LOG(INFO) << "Try Disable the Mouse Cursor";
             SDL_ShowCursor(SDL_DISABLE);
         }
 #endif

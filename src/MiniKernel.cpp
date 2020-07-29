@@ -21,8 +21,8 @@
 #include "map/MapManager.h"
 #endif
 
-//#define MILLESECONDS_PER_FRAME 1000.0/120.0       /* about 120 frames per second */
-#define MILLESECONDS_PER_FRAME 1000.0 / 60.0 /* about 60 frames per second */
+#define MILLESECONDS_PER_FRAME 1000.0/120.0       /* about 120 frames per second */
+//#define MILLESECONDS_PER_FRAME 1000.0 / 60.0 /* about 60 frames per second */
 
 void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
 {

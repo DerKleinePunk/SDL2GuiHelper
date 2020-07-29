@@ -133,6 +133,10 @@ GUIElementManager* GUIScreen::Create(std::string title, SDLEventManager* eventMa
     manager_ = new GUIElementManager(renderer_, canvas_, eventManager_, imageManager_, mapManager, id_);
     canvas_->imageManager_ = imageManager_;
 
+	auto info = renderer_->GetInfo();
+
+	LOG(INFO) << "Using Renderer " << info.name;
+
 	canvas_->Init();
 
 	return manager_;
