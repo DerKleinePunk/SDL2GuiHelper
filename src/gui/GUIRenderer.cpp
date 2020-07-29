@@ -24,7 +24,7 @@ void GUIRenderer::CheckThreadId() const {
 
 void GUIRenderer::Create(SDL_Window* window)
 {
-	renderer_ = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	renderer_ = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 	if (renderer_ == nullptr)
 	{
 		throw GUIException("SDL_CreateRenderer");
