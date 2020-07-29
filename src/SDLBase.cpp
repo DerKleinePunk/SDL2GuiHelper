@@ -16,7 +16,7 @@ namespace utils
 extern LOGCALLBACK logCallback;
 }
 
-SDLBase::SDLBase() : initDone_(false), initVideoDone_(false), initAudioDone_(false)
+SDLBase::SDLBase() : initDone_(false), initVideoDone_(false), initAudioDone_(false), _touches(0)
 {
     logger_ = el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
     sdlLogger_ = el::Loggers::getLogger("SDL");
@@ -62,10 +62,6 @@ void SDLBase::Init()
     SDL_StopTextInput();
     LogSystemsRunning();
 
-    _touches = SDL_GetNumTouchDevices();
-    LOG(INFO) << "TouchDevices " << std::to_string(_touches);
-
-
     initDone_ = true;
 }
 
@@ -86,7 +82,7 @@ float SDLBase::InitVideo(const std::string& videoDriver)
         }
         VLOG(1) << logLine;
 
-        logLine = "SDL_VIDEODRIVER usable   :";
+        logLine = "SDL_VIDEODRIVER usable:";
         for(std::size_t i = 0; i < drivers.size(); ++i) {
             if(!drivers[i]) continue;
             logLine += " " + std::string(SDL_GetVideoDriver(i));
@@ -110,6 +106,9 @@ float SDLBase::InitVideo(const std::string& videoDriver)
     LOG(INFO) << "Using " << driver << " Video driver";
 
     initVideoDone_ = true;
+
+    _touches = SDL_GetNumTouchDevices();
+    LOG(INFO) << "TouchDevices " << std::to_string(_touches);
 
     if(strcmp(driver, "RPI") == 0 || strcmp(driver, "KMSDRM") == 0 ) {
         // todo Change thinks we are on Raspberry without X driver var MemoryLeak ?
