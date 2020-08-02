@@ -12,6 +12,7 @@ private:
     void KernelstateChanged(KernelState state);
     void BuildFirstScreen();
     void LoadSdsList();
+    void SendRadioState(int state);
 public:
     SampleApp(MiniKernel* kernel);
     virtual ~SampleApp();

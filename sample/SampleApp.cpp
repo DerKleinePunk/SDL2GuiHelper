@@ -58,16 +58,23 @@ void SampleApp::BuildFirstScreen() {
     uhrTextlabel->Anchor(AnchorFlags::Left, AnchorFlags::Right);
     uhrTextlabel->TextAnchor(AnchorFlags::Left & AnchorFlags::Right);
     
-    auto status1Button = new GUITextButton(GUIPoint(40, 40), GUISize(40, 40), "STATUS-1", own_blue_color, white_color);
+    auto status1Button = new GUITextButton(GUIPoint(30, 40), GUISize(200, 80), "STATUS-1", own_blue_color, white_color);
     _manager->AddElement(status1Button);
+    status1Button->FontHeight(48);
+    status1Button->SetCorner(5);
     status1Button->Text("1");
+    status1Button->RegisterOnClick([this](IGUIElement* sender) { SendRadioState(1); });
     
-    auto status2Button = new GUITextButton(GUIPoint(85, 40), GUISize(40, 40), "STATUS-2", own_blue_color, white_color);
+    auto status2Button = new GUITextButton(GUIPoint(30, 125), GUISize(200, 80), "STATUS-2", own_blue_color, white_color);
     _manager->AddElement(status2Button);
+    status2Button->FontHeight(48);
+    status2Button->SetCorner(5);
     status2Button->Text("2");
 
-    auto status3Button = new GUITextButton(GUIPoint(130, 40), GUISize(40, 40), "STATUS-3", own_blue_color, white_color);
+    auto status3Button = new GUITextButton(GUIPoint(30, 210), GUISize(200, 80), "STATUS-3", own_blue_color, white_color);
     _manager->AddElement(status3Button);
+    status3Button->FontHeight(48);
+    status3Button->SetCorner(5);
     status3Button->Text("3");
 
     auto sdsListview = new GUIListview(GUIPoint(250, 40), GUISize(700, 400),"sdsListview", lightgray_t_color,lightblack_color);
@@ -107,6 +114,11 @@ void SampleApp::LoadSdsList() {
     element->AddRow(row2);
 
     element->EndUpdate();
+}
+
+void SampleApp::SendRadioState(int state) 
+{
+    _kernel->ShowErrorMessage("Button gedrückt");
 }
 
 SampleApp::SampleApp(MiniKernel* kernel) {
