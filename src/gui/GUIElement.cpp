@@ -224,8 +224,7 @@ void GUIElement::HandleEventBase(GUIEvent& event)
 			break;
 		}
 		case SDL_FINGERMOTION: {
-			//Todo Fix not hardcodet Screen resultion
-			GUIPoint point(static_cast<int>(1024 * event.Event.tfinger.x), static_cast<int>(600 * event.Event.tfinger.y));
+			GUIPoint point(static_cast<int>(event.DisplayWidth * event.Event.tfinger.x), static_cast<int>(event.DisplayHeight * event.Event.tfinger.y));
 			if (event.Handled) {
 				MouseNotOverElement(point);
 				break;
@@ -246,8 +245,7 @@ void GUIElement::HandleEventBase(GUIEvent& event)
             if(event.Handled) {
                 break;
             }
-            //Todo Fix not hardcodet Screen resultion
-	        const GUIPoint point(static_cast<int>(1024 * event.Event.tfinger.x), static_cast<int>(600 * event.Event.tfinger.y));
+	        const GUIPoint point(static_cast<int>(event.DisplayWidth * event.Event.tfinger.x), static_cast<int>(event.DisplayHeight * event.Event.tfinger.y));
             VLOG(3) << "FINGERDOWN at " << point.x << " x " << point.y;
 #ifdef DEBUG
             SDL_WarpMouseInWindow(nullptr, point.x, point.y);
@@ -263,8 +261,7 @@ void GUIElement::HandleEventBase(GUIEvent& event)
             if(event.Handled) {
                 break;
             }
-            //Todo Fix not hardcodet Screen resultion
-	        const GUIPoint point(static_cast<int>(1024 * event.Event.tfinger.x), static_cast<int>(600 * event.Event.tfinger.y));
+	        const GUIPoint point(static_cast<int>(event.DisplayWidth * event.Event.tfinger.x), static_cast<int>(event.DisplayHeight * event.Event.tfinger.y));
             if (HitTest(point)) {
                 event.Handled = ButtonUpBase(SDL_BUTTON_LEFT, 1, point);
                 if (event.Handled) LOG(DEBUG) << ToString() << "handled the SDL_FINGERUP";

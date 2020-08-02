@@ -112,12 +112,16 @@ GUIEvent::GUIEvent()
 	Event.type = 0xFFFFF;
 	Type = Event.type;
 	Handled = false;
+	DisplayWidth = -1;
+	DisplayHeight = -1;	
 }
 
-GUIEvent::GUIEvent(const SDL_Event* base):
+GUIEvent::GUIEvent(const SDL_Event* base, int displayWidth, int displayHeight):
     Event(*base) {
     Type = Event.type;
     Handled = false;
+	DisplayWidth = displayWidth;
+	DisplayHeight = displayHeight;	
 }
 
 double frac(double value)

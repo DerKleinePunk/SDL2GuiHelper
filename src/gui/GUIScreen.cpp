@@ -25,7 +25,8 @@ constexpr int OPENGL_MINOR_VERSION = 1;
 
 constexpr SDL_GLprofile OPENGL_PROFILE = SDL_GLprofile::SDL_GL_CONTEXT_PROFILE_CORE;
 
-bool GUIScreen::HandleWindowEvent(const SDL_Event* event) const {
+bool GUIScreen::HandleWindowEvent(const SDL_Event* event) 
+{
 	switch (event->window.event) {
 		case SDL_WINDOWEVENT_SIZE_CHANGED:
 		case SDL_WINDOWEVENT_RESIZED:
@@ -38,10 +39,31 @@ bool GUIScreen::HandleWindowEvent(const SDL_Event* event) const {
 			manager_->Invalidate();
 			Draw();
 			break;
+		case SDL_WINDOWEVENT_MOVED:
+			GetScreenSize();
+			break;
 		default:
 			return false;
 	}
 	return true;
+}
+
+void GUIScreen::GetScreenSize(){
+	SDL_DisplayMode DM;
+	const auto dispIndex = SDL_GetWindowDisplayIndex(window_);
+	if(dispIndex >= 0) 
+	{
+		if(dispIndex != _lastDisplayIndex) {
+			SDL_GetCurrentDisplayMode(dispIndex, &DM);
+			_displayWidth = DM.w;
+			_displayHeight = DM.h;
+
+			LOG(INFO) << "Display  " << _displayWidth << " x " << _displayHeight;
+			_lastDisplayIndex = dispIndex;
+		}
+	} else {
+		LOG(ERROR) << "SDL_GetWindowDisplayIndex failed:" << SDL_GetError();
+	}
 }
 
 GUIScreen::GUIScreen():
@@ -51,7 +73,8 @@ GUIScreen::GUIScreen():
 	imageManager_(nullptr),
 	id_(0),
 	canvas_(nullptr),
-	eventManager_(nullptr) {
+	eventManager_(nullptr),
+	_lastDisplayIndex(-1) {
 	el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
 	size_.set(0,0);
 }
@@ -118,6 +141,7 @@ GUIElementManager* GUIScreen::Create(std::string title, SDLEventManager* eventMa
 		renderer_ = new GUIRenderer();
 		renderer_->Create(window_);
 		imageManager_ = new GUIImageManager(renderer_);
+		
 	}
 	catch (std::exception const& exp)
 	{
@@ -138,6 +162,7 @@ GUIElementManager* GUIScreen::Create(std::string title, SDLEventManager* eventMa
 	LOG(INFO) << "Using Renderer " << info.name;
 
 	canvas_->Init();
+	GetScreenSize();
 
 	return manager_;
 }
@@ -177,7 +202,7 @@ void GUIScreen::Resize(Sint32 width, Sint32 height) const {
 	manager_->Invalidate();
 }
 
-void GUIScreen::HandleEvent(const SDL_Event* event) const
+void GUIScreen::HandleEvent(const SDL_Event* event)
 {
 	switch (event->type)
 	{
@@ -188,7 +213,7 @@ void GUIScreen::HandleEvent(const SDL_Event* event) const
 			if (HandleWindowEvent(event))
 				break;
 		default:
-			auto currentEvent = GUIEvent(event);
+			auto currentEvent = GUIEvent(event, _displayWidth, _displayHeight);
 			manager_->HandleEvent(currentEvent);
 	}
 	

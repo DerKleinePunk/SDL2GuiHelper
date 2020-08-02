@@ -99,7 +99,9 @@ struct GUIEvent
 	Uint32 Type;
 	bool Handled;
 	SDL_Event Event;
-	explicit GUIEvent(const SDL_Event* event);
+	int DisplayWidth;
+	int DisplayHeight;
+	explicit GUIEvent(const SDL_Event* event, int displayWidth, int displayHeight);
 	explicit GUIEvent();
 };
 
