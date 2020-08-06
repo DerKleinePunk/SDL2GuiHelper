@@ -41,7 +41,7 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
         if(event.type == SDL_FINGERMOTION || event.type == SDL_FINGERDOWN || event.type == SDL_FINGERUP) {
             // Todo how to map touchId to Window
             LOG(DEBUG) << "Finger Event on Touch Id " << event.tfinger.touchId << " Event " << event.type;
-            winId = 1;
+            winId = _screens.begin()->first;
         }
 
         if(_screens.find(winId) != _screens.end()) {
@@ -149,6 +149,7 @@ MiniKernel::MiniKernel()
     _screenDpi = 0.0;
     _applicationEventCallbackFunction = nullptr;
     _mapManager = nullptr;
+    _audioManager = nullptr;
 }
 
 MiniKernel::~MiniKernel()
@@ -273,6 +274,7 @@ void MiniKernel::Shutdown()
     if(_mapManager != nullptr) {
         _mapManager->DeInit();
         delete _mapManager;
+        _mapManager = nullptr;
     }
 
     if(_audioManager != nullptr) {

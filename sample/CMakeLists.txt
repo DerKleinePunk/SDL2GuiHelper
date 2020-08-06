@@ -17,6 +17,16 @@ add_executable(${project_BIN} ${SRCS} ${GUI_SRCS} ${MAIN_common_SRCS})
 
 TARGET_LINK_LIBRARIES(${project_BIN} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 
+IF("${TARGET}" STREQUAL "PI")
+    # Why i need this ?!? Cross Compile
+    TARGET_LINK_LIBRARIES(${project_BIN} ${RPIROOT}/opt/vc/lib/libmmal_core.so)
+    TARGET_LINK_LIBRARIES(${project_BIN} ${RPIROOT}/opt/vc/lib/libmmal_util.so)
+    TARGET_LINK_LIBRARIES(${project_BIN} ${RPIROOT}/opt/vc/lib/libmmal_vc_client.so)
+    TARGET_LINK_LIBRARIES(${project_BIN} ${RPIROOT}/opt/vc/lib/libvcos.so)
+    TARGET_LINK_LIBRARIES(${project_BIN} ${RPIROOT}/opt/vc/lib/libvchiq_arm.so)
+    TARGET_LINK_LIBRARIES(${project_BIN} ${RPIROOT}/opt/vc/lib/libvcsm.so)
+ENDIF()
+
 message(STATUS "Generating Copy Rule for Resources")
 set(MAINFONTSOURCE "${MAINFOLDER}/resources/font/Inconsolata-Bold.ttf")
 add_custom_command(TARGET ${project_BIN} POST_BUILD # Adds a post-build event to MyTest
