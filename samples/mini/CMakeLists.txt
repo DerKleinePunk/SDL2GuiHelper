@@ -1,6 +1,8 @@
-message(STATUS "working on sample dir")
+message(STATUS "working on mini dir")
 
-project("SDL2GuiHelperSample")
+project("SDL2GuiHelperMini")
+
+ADD_SUBDIRECTORY(${MAINFOLDER}/common ${MAINFOLDER}/build/${TARGET}/mini)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" )
     SET (project_BIN ${PROJECT_NAME})
@@ -8,7 +10,7 @@ else()
     SET (project_BIN ${PROJECT_NAME}.bin)
 endif()
 
-INCLUDE_DIRECTORIES("${MAINFOLDER}/sample/")
+INCLUDE_DIRECTORIES("${MAINFOLDER}/samples/mini")
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
 
 FILE(GLOB SRCS "*.cpp")

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../src/MiniKernel.h"
-#include "../src/gui/GUIElementManager.h"
+#include "../../src/MiniKernel.h"
+#include "../../src/gui/GUIElementManager.h"
 
 class SampleApp
 {

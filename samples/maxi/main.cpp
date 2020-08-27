@@ -6,9 +6,9 @@
 
 #define SDL_MAIN_HANDLED
 #include <iostream>
-#include "../common/easylogging/easylogging++.h"
-#include "../common/utils/commonutils.h"
-#include "../src/MiniKernel.h"
+#include "../../common/easylogging/easylogging++.h"
+#include "../../common/utils/commonutils.h"
+#include "../../src/MiniKernel.h"
 #include "SampleApp.h"
 
 INITIALIZE_EASYLOGGINGPP
