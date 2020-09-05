@@ -4,6 +4,13 @@
 * @brief Mainentry
 */
 
+#ifndef ELPP_DEFAULT_LOGGER
+#   define ELPP_DEFAULT_LOGGER "main"
+#endif
+#ifndef ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID
+#   define ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID ELPP_DEFAULT_LOGGER
+#endif
+
 #define SDL_MAIN_HANDLED
 #include <iostream>
 #include "../../common/easylogging/easylogging++.h"

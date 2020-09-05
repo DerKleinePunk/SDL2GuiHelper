@@ -13,6 +13,7 @@
 #include "GUITexture.h"
 #include "GUIRenderer.h"
 #include "../SDLEventManager.h"
+#include "../../common/exception/NullPointerException.h"
 
 #ifdef LIBOSMSCOUT
     #include "../map/MapManager.h"
@@ -82,6 +83,8 @@ void GUIMapview::RenderMap() {
 void GUIMapview::InitMap(){
 #ifdef LIBOSMSCOUT
     
+    if(mapManager_ == nullptr) throw NullPointerException("mapManager can not be null"); 
+
     if(!mapManager_->InitOk()) return;
 
     auto newMapPixeldelegate = std::bind(&GUIMapview::NewMapPixel, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);

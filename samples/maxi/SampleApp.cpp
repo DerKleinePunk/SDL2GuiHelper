@@ -1,3 +1,10 @@
+#ifndef ELPP_DEFAULT_LOGGER
+#   define ELPP_DEFAULT_LOGGER "SampleApp"
+#endif
+#ifndef ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID
+#   define ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID ELPP_DEFAULT_LOGGER
+#endif
+
 #include "SampleApp.h"
 #include "../../src/Elements.h"
 #include <chrono>
@@ -9,6 +16,12 @@ void SampleApp::ApplicationEvent(AppEvent event, void* data1, void* data2) {
 
 void SampleApp::KernelstateChanged(KernelState state) {
     if (state == KernelState::Startup) {
+        LOG(INFO) << "Kernel Start Core Services";
+#ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
+        TIMED_SCOPE_IF(timerCoreServices, "StartCoreServices", VLOG_IS_ON(4));
+#endif
+        _kernel->StartCoreServices();
+
         LOG(INFO) << "Kernel is up Create Screen";
 
 #ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
@@ -25,7 +38,7 @@ void SampleApp::KernelstateChanged(KernelState state) {
 #endif
         StartServices();
 */
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
         _kernel->DrawTextOnBootScreen("Services Started\nStarting Audio");
 
@@ -58,33 +71,9 @@ void SampleApp::BuildFirstScreen() {
     uhrTextlabel->Anchor(AnchorFlags::Left, AnchorFlags::Right);
     uhrTextlabel->TextAnchor(AnchorFlags::Left & AnchorFlags::Right);
     
-    auto status1Button = new GUITextButton(GUIPoint(30, 40), GUISize(200, 80), "STATUS-1", own_blue_color, white_color);
-    _manager->AddElement(status1Button);
-    status1Button->FontHeight(48);
-    status1Button->SetCorner(5);
-    status1Button->Text("1");
-    status1Button->RegisterOnClick([this](IGUIElement* sender) { SendRadioState(1); });
-    
-    auto status2Button = new GUITextButton(GUIPoint(30, 125), GUISize(200, 80), "STATUS-2", own_blue_color, white_color);
-    _manager->AddElement(status2Button);
-    status2Button->FontHeight(48);
-    status2Button->SetCorner(5);
-    status2Button->Text("2");
-
-    auto status3Button = new GUITextButton(GUIPoint(30, 210), GUISize(200, 80), "STATUS-3", own_blue_color, white_color);
-    _manager->AddElement(status3Button);
-    status3Button->FontHeight(48);
-    status3Button->SetCorner(5);
-    status3Button->Text("3");
-
-    auto sdsListview = new GUIListview(GUIPoint(250, 40), GUISize(700, 400),"sdsListview", lightgray_t_color,lightblack_color);
-	//auto songlistLongClickdelegate = std::bind(&CarPC::SongListLongClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-	//songListview->RegisterOnLongClick(songlistLongClickdelegate);
-	_manager->AddElement(sdsListview);
-    sdsListview->ChangeRowHasImage(false);
-    sdsListview->ChangeRowHasDetails(false);
-    
-    LoadSdsList();
+    BuildMainScreen();
+    BuildMapScreen();
+    BuildCommandBar();
 
     //Clear Boot Log
     _kernel->DrawTextOnBootScreen("");
@@ -93,6 +82,12 @@ void SampleApp::BuildFirstScreen() {
     _manager->PrintVisualTree();
 #endif
 
+    UpdateUI(UiState::home);
+
+    auto element = _manager->GetElementByName("commandBar");
+    if(element != nullptr) {
+        _manager->VisibleElement(element);
+    }
 }
 
 void SampleApp::LoadSdsList() {
@@ -121,12 +116,180 @@ void SampleApp::SendRadioState(int state)
     _kernel->ShowErrorMessage("Button gedrückt");
 }
 
+void SampleApp::BuildMainScreen()
+{
+    auto mainScreenBackground =
+    new GUITestElement(GUIPoint(0, 0), GUISize(100, 100, sizeType::relative), transparent_color, "mainScreen");
+    mainScreenBackground->Invisible();
+    _manager->AddElement(mainScreenBackground);
+
+
+    auto status1Button = new GUITextButton(GUIPoint(30, 40), GUISize(200, 80), "STATUS-1", own_blue_color, white_color);
+    _manager->AddElement(mainScreenBackground, status1Button);
+    status1Button->FontHeight(48);
+    status1Button->SetCorner(5);
+    status1Button->Text("1");
+    status1Button->RegisterOnClick([this](IGUIElement* sender) { SendRadioState(1); });
+    
+    auto status2Button = new GUITextButton(GUIPoint(30, 125), GUISize(200, 80), "STATUS-2", own_blue_color, white_color);
+    _manager->AddElement(mainScreenBackground, status2Button);
+    status2Button->FontHeight(48);
+    status2Button->SetCorner(5);
+    status2Button->Text("2");
+
+    auto status3Button = new GUITextButton(GUIPoint(30, 210), GUISize(200, 80), "STATUS-3", own_blue_color, white_color);
+    _manager->AddElement(mainScreenBackground, status3Button);
+    status3Button->FontHeight(48);
+    status3Button->SetCorner(5);
+    status3Button->Text("3");
+
+    auto sdsListview = new GUIListview(GUIPoint(250, 40), GUISize(700, 400),"sdsListview", lightgray_t_color,lightblack_color);
+	//auto songlistLongClickdelegate = std::bind(&CarPC::SongListLongClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	//songListview->RegisterOnLongClick(songlistLongClickdelegate);
+	_manager->AddElement(mainScreenBackground, sdsListview);
+    sdsListview->ChangeRowHasImage(false);
+    sdsListview->ChangeRowHasDetails(false);
+    
+    LoadSdsList();
+
+}
+
+void SampleApp::BuildMapScreen()
+{
+    auto mapScreenBackground =
+    new GUITestElement(GUIPoint(0, 0), GUISize(100, 100, sizeType::relative), transparent_color, "mapScreen");
+    _manager->AddElement(mapScreenBackground);
+    mapScreenBackground->Invisible();
+
+    _mapDialog = new MapDialog(mapScreenBackground, _manager, _kernel->GetEventManager());
+    _mapDialog->Init();
+}
+
+void SampleApp::BuildCommandBar()
+{
+    auto commandBar = new GUITestElement(GUIPoint(0, 500), GUISize(1024, 100), transparent_color, "commandBar");
+    _manager->AddElement(commandBar);
+    commandBar->Invisible();
+
+    auto tempButton = new GUITextButton(GUIPoint(15, 5), GUISize(150, 90), "homeCommandButton",
+                                        own_red_color, white_color);
+    tempButton->FontHeight(40);
+    tempButton->Text("Home");
+    tempButton->RegisterOnClick([this](IGUIElement* sender) { UpdateUI(UiState::home); });
+    _manager->AddElement(commandBar, tempButton);
+
+    auto buttonstartPos = 175;
+
+    tempButton = new GUITextButton(GUIPoint(buttonstartPos, 5), GUISize(150, 90),
+                                   "mapCommandButton", own_red_color, white_color);
+    tempButton->FontHeight(40);
+    tempButton->Text("Karte");
+    tempButton->RegisterOnClick([this](IGUIElement* sender) { UpdateUI(UiState::map); });
+    _manager->AddElement(commandBar, tempButton);
+}
+
+void SampleApp::UpdateUI(UiState newUIState)
+{
+    if(_appUiStateCurrent == newUIState) return;
+
+    GUIElement* element = nullptr;
+    switch(newUIState) {
+    case UiState::home:
+        element = _manager->GetElementByName("mainScreen");
+        if(element != nullptr) {
+            _manager->VisibleElement(element);
+        }
+        /*element = _manager->GetElementByName("sdsScreen");
+        if(element != nullptr) {
+            _sendSdsDialog->Hide();
+        }*/
+        element = _manager->GetElementByName("mapScreen");
+        if(element != nullptr) {
+            _mapDialog->Hide();
+        }
+        element = _manager->GetElementByName("homeCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
+        }
+        element = _manager->GetElementByName("sdsCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("mapCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        break;
+    case UiState::sds:
+        element = _manager->GetElementByName("mainScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
+        /*element = _manager->GetElementByName("sdsScreen");
+        if(element != nullptr) {
+            _sendSdsDialog->Show();
+        }*/
+        element = _manager->GetElementByName("mapScreen");
+        if(element != nullptr) {
+            _mapDialog->Hide();
+        }
+        element = _manager->GetElementByName("homeCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("sdsCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
+        }
+        element = _manager->GetElementByName("mapCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        break;
+    case UiState::map:
+        element = _manager->GetElementByName("mainScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
+        /*element = _manager->GetElementByName("sdsScreen");
+        if(element != nullptr) {
+            _sendSdsDialog->Hide();
+        }*/
+        element = _manager->GetElementByName("mapScreen");
+        if(element != nullptr) {
+            _mapDialog->Show();
+        }
+        element = _manager->GetElementByName("homeCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("sdsCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("mapCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
+        }
+        break;
+    default:
+        LOG(ERROR) << "Unkown UI State";
+        break;
+    }
+    _appUiStateCurrent = newUIState;
+}
+
+
 SampleApp::SampleApp(MiniKernel* kernel) {
     if(kernel == nullptr) {
 
     }
 
     _kernel = kernel;
+    _appUiStateCurrent = UiState::undefined;
+    _mapDialog = nullptr;
+
+    el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
 }
 
 SampleApp::~SampleApp() {
@@ -138,8 +301,25 @@ void SampleApp::Startup() {
     _kernel->SetStateCallBack(statedelegate);
     auto eventdelegate = std::bind(&SampleApp::ApplicationEvent, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     _kernel->RegisterApplicationEvent(eventdelegate);
+
+    KernelConfig config;
+    //config.AudioFileForClick = _config->GetSoundForClick();
+    //config.AudioFileForLongClick = _config->GetSoundForClick();
+    config.mapDataPath = "/home/punky/develop/sdl2guitests/src/maps/europe/germany";
+    std::vector<std::string> iconPaths;
+    iconPaths.push_back("/home/punky/develop/libosmscout-code/libosmscout/data/icons/14x14/standard/");
+    iconPaths.push_back("/home/punky/develop/libosmscout-code/libosmscout/data/icons/svg/standard/");
+    config.mapIconPaths = iconPaths;
+    config.mapStyle = "/home/punky/develop/libosmscout-code/stylesheets/standard.oss";
+    //config.markerImageFile = _config->GetMarkerImageFile();
+    config.startMapPosition.Set(50.4090,9.3671);
+
+    _kernel->SetConfig(config);
 }
 
 void SampleApp::Shutdown() {
-
+    if(_mapDialog != nullptr) {
+        delete _mapDialog;
+        _mapDialog = nullptr;
+    }
 }
