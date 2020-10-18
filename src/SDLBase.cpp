@@ -8,7 +8,7 @@
 #include "SDLBase.h"
 #include <SDL.h>
 #include <SDL_image.h>
-#include "../common/SDL2Helper.h"
+#include "../common/utils/SDL2Helper.h"
 #include "exception/SDLException.h"
 
 namespace utils

@@ -3,8 +3,6 @@
 #include <exception>
 #include <string>
 
-static const bool DELETE_MSG = true;
-
 class SqliteException : public std::exception
 {
 public:
