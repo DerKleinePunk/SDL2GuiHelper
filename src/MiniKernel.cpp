@@ -294,7 +294,7 @@ void MiniKernel::Shutdown()
 }
 
 GUIElementManager*
-MiniKernel::CreateScreen(const std::string& title, const std::string& videoDriver, const std::string& backgroundImage)
+MiniKernel::CreateScreen(const std::string& title, const std::string& videoDriver, const std::string& backgroundImage, bool fullscreen)
 {
 #ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
     TIMED_SCOPE_IF(timerInitVideo, "InitVideo", VLOG_IS_ON(4));
@@ -306,7 +306,7 @@ MiniKernel::CreateScreen(const std::string& title, const std::string& videoDrive
     TIMED_SCOPE_IF(timerCreateScreen, "CreateScreen", VLOG_IS_ON(4));
 #endif
 
-    _manager = screen->Create(title, _eventManager, _mapManager, backgroundImage);
+    _manager = screen->Create(title, _eventManager, _mapManager, backgroundImage, fullscreen);
     auto id = screen->GetId();
 
     _screens.insert(std::make_pair(id, screen));

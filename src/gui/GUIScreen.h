@@ -30,7 +30,7 @@ public:
 	GUIScreen();
 	virtual ~GUIScreen();
 
-	GUIElementManager* Create(std::string title, SDLEventManager* eventManager, IMapManager* mapManager, const std::string& backgroundImage);
+	GUIElementManager* Create(std::string title, SDLEventManager* eventManager, IMapManager* mapManager, const std::string& backgroundImage, bool fullscreen);
 	Uint32 GetId() const;
 	void UpdateAnimationInternal() const;
 	void Draw() const;

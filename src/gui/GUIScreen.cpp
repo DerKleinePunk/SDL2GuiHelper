@@ -106,7 +106,7 @@ GUIScreen::~GUIScreen()
 	}
 }
 
-GUIElementManager* GUIScreen::Create(std::string title, SDLEventManager* eventManager, IMapManager* mapManager, const std::string& backgroundImage)
+GUIElementManager* GUIScreen::Create(std::string title, SDLEventManager* eventManager, IMapManager* mapManager, const std::string& backgroundImage, bool fullscreen)
 {
 	if (eventManager == nullptr) {
 		throw NullPointerException("eventManager can not be null");
@@ -118,9 +118,14 @@ GUIElementManager* GUIScreen::Create(std::string title, SDLEventManager* eventMa
     /*SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, OPENGL_PROFILE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, OPENGL_MAJOR_VERSION);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, OPENGL_MINOR_VERSION);*/
+	
+	auto windowFlags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
+	if(fullscreen) {
+		windowFlags |= SDL_WINDOW_FULLSCREEN;
+	}
 
 	//todo Check Windows Enbaled or not (Android/Raspbarry and so on)
-	window_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size_.width, size_.height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+	window_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, size_.width, size_.height, windowFlags);
 	if(window_ == nullptr)
 	{
 		throw GUIException("SDL_CreateWindow");

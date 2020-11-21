@@ -36,7 +36,7 @@ public:
     void Run();
     void Shutdown();
     void StartCoreServices();
-    GUIElementManager* CreateScreen(const std::string& title, const std::string& videoDriver, const std::string& backgroundImage);
+    GUIElementManager* CreateScreen(const std::string& title, const std::string& videoDriver, const std::string& backgroundImage, bool fullscreen);
     void SetStateCallBack(KernelStateCallbackFunction callback);
     void RegisterApplicationEvent(ApplicationEventCallbackFunction callbackFunction);
     void DrawTextOnBootScreen(const std::string& text);
