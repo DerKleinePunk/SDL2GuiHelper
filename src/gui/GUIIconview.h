@@ -3,7 +3,10 @@
 struct GUIEvent;
 class GUITexture;
 
-class GUIIconview : public GUIElement {
+#include "GUIOnClickDecorator.h"
+
+class GUIIconview : public GUIElement, public GUIOnClickDecorator {
+    RTTI_DERIVED(GUIIconview);
     el::Logger* logger_;
 	GUITexture* imageTexture_;
 public:
@@ -16,4 +19,7 @@ public:
     void Close() override;
 
 	void SetCurrentIcon(const std::string& fileName);
+
+    void ButtonDownUpdate(Uint8 button) override;
+	void ButtonUpUpdate(Uint8 button) override;
 };

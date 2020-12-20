@@ -24,6 +24,7 @@
 #include "GUIElement.h"
 #include "GUIRenderer.h"
 #include "GUIFontManager.h"
+#include "IPopupDialog.h"
 
 #ifdef LIBOSMSCOUT
 #include "../map/MapManager.h"
@@ -61,7 +62,7 @@ void GUIElementTreeNode::Add(GUIElementTreeNode* element) {
     }
 }
 
-GUIElementTreeNode* GUIElementTreeNode::Find(GUIElement* element)
+GUIElementTreeNode* GUIElementTreeNode::Find(const GUIElement* element)
 {
 	if (element == element_) return this;
 	auto child = children_.begin();
@@ -250,6 +251,17 @@ void GUIElementTreeNode::InvisibleElement() const {
 	element_->Invisible();
 }
 
+bool GUIElementManager::IsMouseEvent(GUIEvent& event)
+{
+	if(event.Type == SDL_MOUSEBUTTONDOWN || 
+		event.Type == SDL_MOUSEBUTTONUP ||
+		event.Type == SDL_FINGERDOWN ||
+		event.Type == SDL_FINGERUP) {
+		return true;
+	}
+	return false;
+}
+
 GUIElementManager::GUIElementManager(GUIRenderer* renderer,GUIScreenCanvas* canvas, SDLEventManager* eventManager, GUIImageManager* imageManager, IMapManager* mapManager, Uint32 windowId):
 	rootNode_(GUIElementTreeNode(reinterpret_cast<GUIElement*>(canvas))),
 	inEvent_(false)
@@ -398,6 +410,12 @@ void GUIElementManager::UpdateAnimation() {
 * @param event  the event
 */
 void GUIElementManager::HandleEvent(GUIEvent& event) {
+
+	if(_modalElement != nullptr && IsMouseEvent(event)) {
+		_modalElement->HandleEvent(event);
+		return;
+	};
+
 	inEvent_ = true;
 	rootNode_.HandleEvent(event);
 	inEvent_ = false;
@@ -478,4 +496,14 @@ void GUIElementManager::DrawTree(){
     renderer_->RenderTarget(nullptr);
 	const auto texture = rootNode_.Element()->Texture();
     renderer_->RenderCopy(texture, rootNode_.Element()->TopLeft());
+}
+
+void GUIElementManager::SetModalElement(const GUIElement* element) 
+{
+	if(element == nullptr) {
+		_modalElement = nullptr;
+		return;
+	}
+
+	_modalElement = rootNode_.Find(element);
 }

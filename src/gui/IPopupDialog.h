@@ -3,6 +3,7 @@
 
 class GUIElementManager;
 class GUIElement;
+class GUIEvent;
 
 typedef std::function<void()> CloseDelegate;
 
@@ -20,5 +21,7 @@ public:
 
     GUIElement* Create(CloseDelegate closeAction);
     void Close();
+
+    void HandleEvent(GUIEvent& event);
 };
 

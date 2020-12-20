@@ -55,21 +55,21 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
         KernelEvent type;
         if(_eventManager->IsKernelEvent(&event, type)) {
             switch(type) {
-            case KernelEvent::Shutdown: {
-                LOG(INFO) << "Kernel Event Shutdown";
-                exitLoop = true;
-                break;
-            }
-            case KernelEvent::ShowError: {
-                LOG(INFO) << "Kernel Event UpdateScreen";
-                auto errorMessageDialog = new ErrorMessageDialog(_manager);
-                errorMessageDialog->SetMessage(_errorMessage);
-                errorMessageDialog->Create(nullptr);
-                break;
-            }
-            default: {
-                LOG(WARNING) << "Not Implemented Kernel Event " << type;
-            }
+                case KernelEvent::Shutdown: {
+                    LOG(INFO) << "Kernel Event Shutdown";
+                    exitLoop = true;
+                    break;
+                }
+                case KernelEvent::ShowError: {
+                    LOG(INFO) << "Kernel Event UpdateScreen";
+                    auto errorMessageDialog = new ErrorMessageDialog(_manager);
+                    errorMessageDialog->SetMessage(_errorMessage);
+                    errorMessageDialog->Create(nullptr);
+                    break;
+                }
+                default: {
+                    LOG(WARNING) << "Not Implemented Kernel Event " << type;
+                }
             }
         }
 

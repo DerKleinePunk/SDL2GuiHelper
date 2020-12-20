@@ -25,7 +25,7 @@ public:
 	~GUIElementTreeNode();
 	void Add(GUIElement* element);
 	void Add(GUIElementTreeNode* element);
-	GUIElementTreeNode* Find(GUIElement* element);
+	GUIElementTreeNode* Find(const GUIElement* element);
 	GUIElement* Element() const;
 	bool IsVisible() const;
 	bool Draw(GUIRenderer* renderer);
@@ -54,6 +54,9 @@ class GUIElementManager
 	GUIImageManager* imageManager_;
     IMapManager* mapManager_;
     uint32_t windowId_;
+	GUIElementTreeNode* _modalElement;
+
+	bool IsMouseEvent(GUIEvent& event);
 public:
 	GUIElementManager(GUIRenderer* renderer, GUIScreenCanvas* canvas, SDLEventManager* eventManager, GUIImageManager* imageManager, IMapManager* mapManager, uint32_t windowId);
 	virtual ~GUIElementManager();
@@ -74,4 +77,5 @@ public:
 	void EnableElement(GUIElement* element);
 	void VisibleElement(GUIElement* element);
 	void InvisibleElement(GUIElement* element);
+	void SetModalElement(const GUIElement* element);
 };

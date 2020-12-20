@@ -8,13 +8,17 @@
 
 #include "GUI.h"
 #include "GUIElement.h"
+#include "GUIOnClickDecorator.h"
 #include "GUIIconview.h"
 #include "GUITexture.h"
 #include "GUIRenderer.h"
 #include "GUIImageManager.h"
 
+
 GUIIconview::GUIIconview(const GUIPoint position, const GUISize size, const std::string& name, const SDL_Color background) :
-	GUIElement(position, size, name), imageTexture_(nullptr) {
+	GUIElement(position, size, name),
+	GUIOnClickDecorator(static_cast<GUIElement*>(this)),
+	imageTexture_(nullptr) {
 	logger_ = el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
 	backgroundColor_ = background;
 }
@@ -54,4 +58,14 @@ void GUIIconview::Close() {
 void GUIIconview::SetCurrentIcon(const std::string& fileName) {
 	imageTexture_ = imageManager_->GetImage(fileName);
 	SetRedraw();
+}
+
+void GUIIconview::ButtonDownUpdate(Uint8 button)
+{
+
+}
+
+void GUIIconview::ButtonUpUpdate(Uint8 button)
+{
+
 }
