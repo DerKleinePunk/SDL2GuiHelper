@@ -44,6 +44,6 @@ public:
     SDLEventManager* GetEventManager() const;
     void ShowErrorMessage(const std::string& message);
     int PlaySound(const std::string& filename) const;
-    void SetConfig(KernelConfig config);
+    void SetConfig(const KernelConfig& config);
 };
 

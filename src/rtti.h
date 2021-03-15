@@ -1,3 +1,4 @@
+#pragma once
 #ifndef SDL2GUITEST_SRC_FRAMEWORK_RTTI
 #define SDL2GUITEST_SRC_FRAMEWORK_RTTI
 
@@ -8,7 +9,7 @@
 		public: \
 			static const std::string& getClassTypeName() { static std::string type = #Type; return type; } \
 			/** Get type name as string */ \
-			virtual const std::string& getTypeName() const { return getClassTypeName(); }
+			const std::string& getTypeName() const { return getClassTypeName(); }
 
 #define RTTI_BASE(BaseType) \
 		public: \

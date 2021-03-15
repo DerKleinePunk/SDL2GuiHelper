@@ -7,7 +7,7 @@ private:
 	std::string sdl_error_;
 	std::string message_;
 
-	static std::string CreateText(std::string function, std::string errormsg);
+	static std::string CreateText(const std::string& function, const std::string& errormsg);
 
 public:
 	explicit TTFException(const char* function);

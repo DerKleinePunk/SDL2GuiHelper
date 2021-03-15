@@ -3,20 +3,20 @@
 #include <exception>
 #include <string>
 
-class NotImplementedException: public std::exception
+class NotImplementedException : public std::exception
 {
-public:
-	explicit NotImplementedException(const char* message);
-	virtual ~NotImplementedException() throw();
+  public:
+    explicit NotImplementedException(const char* message);
+    virtual ~NotImplementedException() throw();
 
-	const char* what() const throw() override
-	{
-		return mMessage.c_str();
-	}
+    const char* what() const throw() override
+    {
+        return _message.c_str();
+    }
 
-protected:
-	std::string mMessage;
+  protected:
+    std::string _message;
 
-private:
-	NotImplementedException();
+  private:
+    NotImplementedException();
 };

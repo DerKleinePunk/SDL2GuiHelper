@@ -11,11 +11,11 @@ public:
 
 	const char* what() const throw() override
 	{
-		return mMessage.c_str();
+		return _message.c_str();
 	}
 
 protected:
-	std::string mMessage;
+	std::string _message;
 
 private:
 	IllegalStateException();

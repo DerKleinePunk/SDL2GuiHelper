@@ -4,8 +4,7 @@
 FileNotFoundException::FileNotFoundException() {
 }
 
-FileNotFoundException::FileNotFoundException(const char* message) {
-	mMessage = message;
+FileNotFoundException::FileNotFoundException(const char* message):_message(message) {
 	LOG(ERROR) << "FileNotFoundException " << message;
 }
 

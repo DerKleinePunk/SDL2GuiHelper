@@ -4,8 +4,7 @@
 IllegalStateException::IllegalStateException() {
 }
 
-IllegalStateException::IllegalStateException(const char* message) {
-	mMessage = message;
+IllegalStateException::IllegalStateException(const char* message):_message(message) {
 	LOG(ERROR) << "NullPointerException " << message;
 }
 

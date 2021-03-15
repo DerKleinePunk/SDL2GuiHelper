@@ -74,9 +74,12 @@ GUIScreen::GUIScreen():
 	id_(0),
 	canvas_(nullptr),
 	eventManager_(nullptr),
+	_displayWidth(0),
+	_displayHeight(0),
 	_lastDisplayIndex(-1) {
 	el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
 	size_.set(0,0);
+	
 }
 
 GUIScreen::~GUIScreen()

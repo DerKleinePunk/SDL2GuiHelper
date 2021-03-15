@@ -58,9 +58,8 @@ Uint32 timerCallbackfunc(Uint32 interval, void *param)
 
 SDLEventManager::SDLEventManager()
     : eventLock_(nullptr), eventWait_(nullptr), kernelEventType_(static_cast<Uint32>(-1)),
-      applicationEventType_(static_cast<Uint32>(-1))
+      applicationEventType_(static_cast<Uint32>(-1)),_backend(nullptr)
 {
-    // logger_ =
     el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
     for(size_t i = 0; i < 10; i++) {
         _userTimers[i].id = -1;

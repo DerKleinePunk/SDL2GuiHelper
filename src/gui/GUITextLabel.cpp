@@ -52,13 +52,12 @@ GUITextLabel::GUITextLabel(const GUIPoint position,
                            const SDL_Color selectedColor,
                            const SDL_Color selectedBackgroundColor)
     : GUIElement(position, size, name), GUIOnClickDecorator(static_cast<GUIElement*>(this)),
-      showTime_(false), smallFont_(smallFont), font_(nullptr), textureText_(nullptr)
+      showTime_(false), smallFont_(smallFont), font_(nullptr), textureText_(nullptr),
+      selectedColor_(selectedColor), selectedBackgroundColor_(selectedBackgroundColor),
+      normalBackgroundColor_(background)
 {
     backgroundColor_ = background;
     foregroundColor_ = textcolor;
-    selectedColor_ = selectedColor;
-    selectedBackgroundColor_ = selectedBackgroundColor;
-    normalBackgroundColor_ = background;
     angle_ = 0;
     fontHeight_ = -1;
     textAnchor_ = AnchorFlags::Right;
@@ -243,10 +242,8 @@ void GUITextLabel::SetCorner(int corner)
 
 void GUITextLabel::ButtonDownUpdate(Uint8 button)
 {
-
 }
 
 void GUITextLabel::ButtonUpUpdate(Uint8 button)
 {
-
 }

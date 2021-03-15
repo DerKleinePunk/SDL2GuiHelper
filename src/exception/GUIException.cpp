@@ -3,7 +3,7 @@
 #include "../../common/easylogging/easylogging++.h"
 
 
-std::string GUIException::CreateText(std::string function, std::string errormsg)
+std::string GUIException::CreateText(const std::string& function, const std::string& errormsg)
 {
 	auto tmp(function);
 	tmp += " failed with: ";
@@ -11,16 +11,12 @@ std::string GUIException::CreateText(std::string function, std::string errormsg)
 	return tmp;
 }	
 
-GUIException::GUIException(const char* function) {
-	sdl_error_ = SDL_GetError();
-	sdl_function_ = function;
+GUIException::GUIException(const char* function):sdl_error_(SDL_GetError()), sdl_function_(function){
 	message_ = CreateText(sdl_function_, sdl_error_);
     LOG(ERROR) << "GUIException " << message_;
 }
 
-GUIException::GUIException(const std::string& function) {
-	sdl_error_ = SDL_GetError();
-	sdl_function_ = function;
+GUIException::GUIException(const std::string& function):sdl_error_(SDL_GetError()), sdl_function_(function) {
 	message_ = CreateText(sdl_function_, sdl_error_);
     LOG(ERROR) << "GUIException " << message_;
 }

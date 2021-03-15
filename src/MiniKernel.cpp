@@ -150,6 +150,7 @@ MiniKernel::MiniKernel()
     _applicationEventCallbackFunction = nullptr;
     _mapManager = nullptr;
     _audioManager = nullptr;
+    _manager = nullptr;
 }
 
 MiniKernel::~MiniKernel()
@@ -194,6 +195,7 @@ void MiniKernel::Run()
     while(!quit) {
         try {
             auto startFrame = SDL_GetTicks();
+            // cppcheck-suppress memsetClassFloat
             memset(&event, 0, sizeof(SDL_Event));
             auto screenUpdateDone = false;
 
@@ -396,7 +398,7 @@ int MiniKernel::PlaySound(const std::string& filename) const
 #endif
 }
 
-void MiniKernel::SetConfig(KernelConfig config)
+void MiniKernel::SetConfig(const KernelConfig& config)
 {
     _kernelConfig = config;
 }

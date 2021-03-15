@@ -264,7 +264,7 @@ bool GUIElementManager::IsMouseEvent(GUIEvent& event)
 
 GUIElementManager::GUIElementManager(GUIRenderer* renderer,GUIScreenCanvas* canvas, SDLEventManager* eventManager, GUIImageManager* imageManager, IMapManager* mapManager, Uint32 windowId):
 	rootNode_(GUIElementTreeNode(reinterpret_cast<GUIElement*>(canvas))),
-	inEvent_(false)
+	inEvent_(false), _modalElement(nullptr)
 {
 	el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
 

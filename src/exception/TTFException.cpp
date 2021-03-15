@@ -9,7 +9,7 @@
 #include <SDL_ttf.h>
 #include "TTFException.h"
 
-std::string TTFException::CreateText(std::string function, std::string errormsg)
+std::string TTFException::CreateText(const std::string& function, const std::string& errormsg)
 {
 	auto tmp(function);
 	tmp += " failed with: ";
