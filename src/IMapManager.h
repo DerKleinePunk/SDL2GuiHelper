@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 
 typedef std::function<void(unsigned char* mapPixels, int mapWidth, int mapHeight)> NewMapImageDelegate;
 typedef std::function<void(const std::string& name, const int& maxSpeed, const int& currentSpeed)> NewStreetNameOrSpeedDelegate;
