@@ -13,6 +13,7 @@ namespace utils
                 Level level_;
             public:
                 void Print(const std::string& value);
+                void Print(const std::string_view& value);
                 void Print(const char* value);
                 void Print(bool value);
                 void Print(short value);

@@ -49,6 +49,10 @@ void osmsoutlogger::StringDestination::Print(const std::string& value){
     line_ += value;
 }
 
+void osmsoutlogger::StringDestination::Print(const std::string_view& value) {
+    line_ += value;
+}
+
 void osmsoutlogger::StringDestination::Print(const char* value){
     line_ += value;
 }
