@@ -133,6 +133,10 @@ GUIElementManager* GUIScreen::Create(std::string title, SDLEventManager* eventMa
 	{
 		throw GUIException("SDL_CreateWindow");
 	}
+
+	if(fullscreen) {
+		SDL_GetWindowSize(window_, &size_.width, &size_.height);
+	}
 	
 	if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
 	{
