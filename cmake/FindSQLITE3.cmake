@@ -26,6 +26,7 @@ SET(SQLITE3_SEARCH_PATHS
 	/opt/csw # Blastwave
 	/opt
     /usr/lib/arm-linux-gnueabihf/
+	$ENV{VCPKG_ROOT}\\installed\\x86-windows
 )
     
 # Look for the header file.
@@ -43,9 +44,19 @@ FIND_LIBRARY(SQLITE3_LIBRARY NAMES sqlite3
 	PATHS ${SQLITE3_SEARCH_PATHS}
 )
 
+# Extract version information from the header file
+if(SQLITE3_INCLUDE_DIR)
+    file(STRINGS ${SQLITE3_INCLUDE_DIR}/sqlite3.h _ver_line
+         REGEX "^#define SQLITE_VERSION  *\"[0-9]+\\.[0-9]+\\.[0-9]+\""
+         LIMIT_COUNT 1)
+    string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+"
+		 SQLITE3_VERSION "${_ver_line}")
+    unset(_ver_line)
+endif()
+
 # Handle the QUIETLY and REQUIRED arguments and set SQLITE3_FOUND to TRUE if all listed variables are TRUE.
 INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(SQLITE3 DEFAULT_MSG SQLITE3_LIBRARY SQLITE3_INCLUDE_DIR)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(SQLITE3 DEFAULT_MSG SQLITE3_LIBRARY SQLITE3_INCLUDE_DIR SQLITE3_VERSION)
 
 # Copy the results to the output variables.
 IF(SQLITE3_FOUND)

@@ -1,7 +1,7 @@
 message(STATUS "working on utils dir")
 
 FILE (GLOB SRCS "commonutils.cpp" "Tokenizer.cpp" "Geopos.cpp")
-IF(OSMSCOUT_FOUND)
+IF(OSMScout_FOUND)
     FILE (GLOB SRCS2 "osmsoutlogger.cpp")
 ENDIF()
 
@@ -9,7 +9,7 @@ IF(SDL2_FOUND)
     FILE (GLOB SRCS3 "SDL2Helper.cpp")
 ENDIF()
 
-message(STATUS "${OSMSCOUT_FOUND} result ${SRCS2}")
+message(STATUS "${OSMScout_FOUND} result ${SRCS2}")
 message(STATUS "${SDL2_FOUND} result ${SRCS3}")
 
 set(common_utils_SRCS ${SRCS} PARENT_SCOPE)
