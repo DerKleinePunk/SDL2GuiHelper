@@ -156,6 +156,7 @@ MapManager::MapManager()
     _mapHeight = 100;
     _mapObjects = nullptr;
     _initOk = false;
+    _painter = nullptr;
 }
 
 MapManager::~MapManager()
