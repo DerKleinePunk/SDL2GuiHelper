@@ -18,7 +18,8 @@ GUITestElement::GUITestElement(GUIPoint position, GUISize size, const std::strin
 	GUIElement(position, size, name)
 {
 	backgroundColor_ = green_color;
-	transparency_ = false;
+	_transparency = false;
+	_border = false;
 	imageTextureBackground_ = nullptr;
 }
 
@@ -26,15 +27,15 @@ GUITestElement::GUITestElement(GUIPoint position, GUISize size, SDL_Color backgr
 	GUIElement(position, size, name)
 {
 	backgroundColor_ = background;
-	transparency_ = false;
+	_transparency = false;
+	_border = false;
 	imageTextureBackground_ = nullptr;
 }
 
 void GUITestElement::Draw() {
-	/*if (transparency_) {
-		renderer_->DrawLine(0, 0, Size().with, Size().height-1, lightblack_color);
-		renderer_->DrawLine(Size().with-1, 0, Size().with-1, Size().height-1, lightblack_color);
-	}*/
+	if (_border) {
+		renderer_->DrawRect(GUIRect(0, 0, Size().width, Size().height), lightblack_color);
+	}
 	if (imageTextureBackground_ != nullptr) {
 		auto centerX = Size().width / 2;
 		auto centerY = Size().height / 2;
@@ -63,7 +64,7 @@ void GUITestElement::Close()
 void GUITestElement::Transparent() {
 	Texture()->SetBlendMode(blendMode::blend);
 	Texture()->SetTextureAlphaMod(backgroundColor_.a );
-	transparency_ = true;
+	_transparency = true;
 	needRedraw_ = true;
 }
 
@@ -74,4 +75,9 @@ void GUITestElement::Init() {
 void GUITestElement::ImageBackground(const std::string fileName) {
 	imageTextureBackground_ = imageManager_->GetImage(fileName);
 	SetRedraw();
+}
+
+void GUITestElement::SetBorder(bool on) {
+	_border = on;
+	needRedraw_ = true;
 }

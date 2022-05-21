@@ -27,7 +27,11 @@ ErrorMessageDialog::~ErrorMessageDialog()
 }
 
 void ErrorMessageDialog::CreateIntern() {
-    screenElement_ = new GUITestElement(GUIPoint(112, 100), GUISize(800, 400), white_color, "ErrorScreen");
+    auto dialog = new GUITestElement(GUIPoint(112, 100), GUISize(800, 400), white_color, "ErrorScreen");
+    dialog->SetBorder(true);
+
+    screenElement_ = dialog;
+
     manager_->AddElement(screenElement_);
     
     auto errorTextLabel = new GUITextLabel(GUIPoint(30, 35), GUISize(740, 300), "errorTextLabel", lightgray_t_color, own_red_color);

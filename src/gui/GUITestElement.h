@@ -6,21 +6,25 @@ struct GUIEvent;
 
 class GUITestElement : public GUIElement
 {
-	bool transparency_;
-	GUITexture* imageTextureBackground_;
+    bool _transparency;
+    bool _border;
 
-	RTTI_DERIVED(GUITestElement);
+    GUITexture* imageTextureBackground_;
 
-public:
-	GUITestElement(GUIPoint position, GUISize size, const std::string& name);
-	GUITestElement(GUIPoint position, GUISize size, SDL_Color background, const std::string& name);
-		
-	void Transparent();
-	void ImageBackground(std::string fileName);
+    RTTI_DERIVED(GUITestElement);
 
-	void Init() override;
-	void Draw() override;
-	void HandleEvent(GUIEvent& event) override;
-	void UpdateAnimation() override;
-	void Close() override;
+  public:
+    GUITestElement(GUIPoint position, GUISize size, const std::string& name);
+    GUITestElement(GUIPoint position, GUISize size, SDL_Color background, const std::string& name);
+
+    void Transparent();
+    void ImageBackground(std::string fileName);
+
+    void Init() override;
+    void Draw() override;
+    void HandleEvent(GUIEvent& event) override;
+    void UpdateAnimation() override;
+    void Close() override;
+
+	void SetBorder(bool on);
 };
