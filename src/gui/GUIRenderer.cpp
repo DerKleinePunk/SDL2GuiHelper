@@ -31,6 +31,12 @@ void GUIRenderer::Create(SDL_Window* window)
 	}
     
 	windowPixleFormat_ = SDL_GetWindowPixelFormat(window);
+	if(SDL_ISPIXELFORMAT_ALPHA(windowPixleFormat_)) {
+		LOG(INFO) << "Window Pixel Format has ALPHA";
+	} else {
+		LOG(WARNING) << "Window Pixel Format has no ALPHA";
+		windowPixleFormat_ = SDL_PIXELFORMAT_ARGB8888;
+	}
 
     SDL_RendererInfo info;
     if(SDL_GetRendererInfo(renderer_,&info) != 0) {

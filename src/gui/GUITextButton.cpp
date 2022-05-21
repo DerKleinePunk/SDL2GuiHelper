@@ -150,6 +150,10 @@ int GUITextButton::GetCorner() const
 void GUITextButton::SetCorner(int corner)
 {
     _corner = corner;
+    if(_corner > 0) {
+        Texture()->SetBlendMode(blendMode::blend);
+        Texture()->SetTextureAlphaMod(0xFF);
+    }
 }
 
 void GUITextButton::Disable() 

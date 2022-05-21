@@ -86,6 +86,13 @@ void SampleApp::BuildFirstScreen() {
     
     LoadSdsList();
 
+    auto menuButton = new GUIRoundPictureButton(GUIPoint(30, 300), GUISize(48, 48), "MapMenuButton", own_blue_color, white_color);
+        _manager->AddElement(menuButton);
+        menuButton->Image("map_menu.png");
+        menuButton->Border(false);
+        menuButton->PictureSize(GUISize(30, 30));
+        menuButton->Visible();
+
     //Clear Boot Log
     _kernel->DrawTextOnBootScreen("");
 
@@ -100,14 +107,14 @@ void SampleApp::LoadSdsList() {
     element->BeginUpdate();
     element->Clear();
     GUIListviewRow row;
-    std::shared_ptr<GUIListviewColumn> column(new GUIListviewColumn("SDS mit einem Text ist angekommen"));
+    std::shared_ptr<GUIListviewColumn> column(new GUIListviewColumn("SMS mit einem Text ist angekommen"));
     //column->SetDetailText("SDS mit einem Text ist angekommen");
     row.AddColumn(column);
     row.Tag = (void*)1;
     element->AddRow(row);
     
     GUIListviewRow row2;
-    std::shared_ptr<GUIListviewColumn> column2(new GUIListviewColumn("Zweite SDS mit einem Anderen Text"));
+    std::shared_ptr<GUIListviewColumn> column2(new GUIListviewColumn("Zweite SMS mit einem Anderen Text"));
     //column->SetDetailText("SDS mit einem Text ist angekommen");
     row2.AddColumn(column2);
     row2.Tag = (void*)2;

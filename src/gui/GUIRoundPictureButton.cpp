@@ -168,3 +168,19 @@ void GUIRoundPictureButton::UpdateAnimation()
 
 void GUIRoundPictureButton::Close() {
 }
+
+void GUIRoundPictureButton::ButtonDownUpdate(Uint8 button)
+{
+    if (button == SDL_BUTTON_LEFT) {
+        _buttonDown = true;
+        SetRedraw();
+    }
+}
+
+void GUIRoundPictureButton::ButtonUpUpdate(Uint8 button)
+{
+    if (button == SDL_BUTTON_LEFT) {
+        _buttonDown = false;
+        SetRedraw();
+    }
+}

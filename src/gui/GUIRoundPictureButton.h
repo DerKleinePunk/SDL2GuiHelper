@@ -6,6 +6,7 @@ class GUIRoundPictureButton : public GUIElement, public GUIOnClickDecorator
 	el::Logger* logger_;
 	int centerX_;
 	int centerY_;
+	bool _buttonDown;
 	SDL_Color backgroundColorCircle_;
 	GUITexture* imageTexture_;
 	GUITexture* imageTextureDisable_;
@@ -30,6 +31,8 @@ public:
 	void HandleEvent(GUIEvent& event) override;
 	void UpdateAnimation() override;
 	void Close() override;
+	void ButtonDownUpdate(Uint8 button) override;
+	void ButtonUpUpdate(Uint8 button) override;
 };
 
 

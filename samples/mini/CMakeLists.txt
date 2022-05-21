@@ -40,3 +40,8 @@ add_custom_command(TARGET ${project_BIN} POST_BUILD # Adds a post-build event to
                     COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
                        "${MAINFONTSOURCE}"      # <--this is in-file
                        $<TARGET_FILE_DIR:${project_BIN}>)
+set(MAINFONTSOURCE "${MAINFOLDER}/resources/images/map_menu.png")
+add_custom_command(TARGET ${project_BIN} POST_BUILD # Adds a post-build event to MyTest
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
+                        "${MAINFONTSOURCE}"      # <--this is in-file
+                        $<TARGET_FILE_DIR:${project_BIN}>)
