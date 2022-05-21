@@ -155,8 +155,10 @@ void SampleApp::LoadSdsList()
 
     for(auto i = 6; i < 30; i++) {
         GUIListviewRow row7;
-        std::shared_ptr<GUIListviewColumn> column7(new GUIListviewColumn(std::to_string(i)));
-        // column->SetDetailText("DetailText in Column");
+        std::shared_ptr<GUIListviewColumn> column7(new GUIListviewColumn(std::to_string(i) + " Zeile"));
+        if(i % 2 == 0) {
+            column7->SetDetailText("DetailText in Column");
+        }
         row7.AddColumn(column7);
         row7.Tag = (void*)i;
         element->AddRow(row7);

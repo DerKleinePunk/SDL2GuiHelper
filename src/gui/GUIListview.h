@@ -1,8 +1,13 @@
 #pragma once
 #include <SDL_ttf.h>
+#include <string>
+#include <functional>
+#include <memory>
 
 struct GUIEvent;
 class GUITexture;
+class IGUIElement;
+class GUIRenderer;
 
 typedef std::function<void(IGUIElement* sender, int row, void* tag)> ClickListViewDelegate;
 
@@ -35,6 +40,7 @@ public:
 
 class GUIListviewRow {
 	std::vector<std::shared_ptr<GUIListviewColumn>> columns_;
+	int _height;
 public:
 	bool selected;
 	void* Tag;
@@ -65,10 +71,12 @@ class GUIListview : public GUIElement {
 	int selectedRow_;
 	int quickJumpEntryHeight_;
 	int downOnRow_;
+	int _rowListHeight;
 	bool _rowHasImage;
 	bool _rowHasDetails;
 	RTTI_DERIVED(GUIListview);
 
+	int GetRowListHeight();
 	void DrawData();
 	bool PointOnScrollBar(const GUIPoint& gui_point) const;
 	void ButtonDown(Uint8 button, Uint8 clicks, const GUIPoint& point);

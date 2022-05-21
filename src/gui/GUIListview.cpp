@@ -4,8 +4,8 @@
 #ifndef ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID
 #define ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID ELPP_DEFAULT_LOGGER
 #endif
-#include "../../common/easylogging/easylogging++.h"
 
+#include "../../common/easylogging/easylogging++.h"
 #include "../exception/GUIException.h"
 #include "GUI.h"
 #include "GUIElement.h"
@@ -65,8 +65,7 @@ GUITexture* GUIListviewColumn::GetTexture(GUIRenderer* renderer,
     textureText_ = renderer->RenderTextBlended(font, GetText().c_str(), color);
 
     if(detailText_.size() > 0) {
-        textureTextDetails_ =
-        renderer->RenderTextBlendedWrapped(smallFont, detailText_.c_str(), color, maxWith);
+        textureTextDetails_ = renderer->RenderTextBlendedWrapped(smallFont, detailText_.c_str(), color, maxWith);
         *textureTextDetails = textureTextDetails_;
     }
 
@@ -127,6 +126,7 @@ void GUIListviewColumn::SetImageData(const char* imageData, const int size)
 
 GUIListviewRow::GUIListviewRow() : selected(false), Tag(nullptr)
 {
+    _height = -1;
 }
 
 std::vector<std::shared_ptr<GUIListviewColumn>> GUIListviewRow::GetColumns() const
@@ -136,21 +136,39 @@ std::vector<std::shared_ptr<GUIListviewColumn>> GUIListviewRow::GetColumns() con
 
 void GUIListviewRow::AddColumn(const std::shared_ptr<GUIListviewColumn> column)
 {
+    _height = -1;
     columns_.push_back(column);
 }
 
 int GUIListviewRow::GetHeight()
 {
-    auto height = 0;
+    if(_height != -1) {
+        return _height;
+    }
+
+    _height = 0;
     for(const auto column : columns_) {
         const auto temp = column->GetHeight();
-        if(temp > height){ 
-            height = temp;
+        if(temp > _height) {
+            _height = temp;
         }
     }
-    return height;
+    return _height;
 }
 
+int GUIListview::GetRowListHeight()
+{
+    if(_rowListHeight != -1) {
+        return _rowListHeight;
+    }
+
+    _rowListHeight = 0;
+    for(size_t i = 0; i < rows_.size(); i++) {
+        _rowListHeight += rows_[i].GetHeight();
+    }
+
+    return _rowListHeight;
+}
 
 void GUIListview::DrawData()
 {
@@ -160,15 +178,14 @@ void GUIListview::DrawData()
     TIMED_SCOPE_IF(timerBlkObjDrawData, "DrawListViewData", VLOG_IS_ON(4));
 #endif
 
-    // Big Problem Texture size is Limit to 16000 Pixel Long list can't rendert fullsize On Pi Only 2048
-    const int height = rows_.size() * ENTRYHEIGHT_PIXEL + 1;
-
     if(textureData_ == nullptr) {
         textureData_ = renderer_->CreateTexture(Size());
     }
 
     renderer_->RenderTarget(textureData_);
     renderer_->Clear(lightgray_t_color);
+
+    const auto height = GetRowListHeight();
 
     if(height > Size().height) {
         scrollEnabled_ = true;
@@ -246,7 +263,7 @@ void GUIListview::DrawData()
                 const auto textureText = renderer_->RenderTextBlended(font_, quickJump, own_blue_color);
                 const auto point = GUIPoint(2, textPos);
                 renderer_->RenderCopy(textureText, point);
-                textPos += SMALLFONT_HEIGHT;
+                textPos += FONT_HEIGHT;
                 delete textureText;
             }
             renderer_->RenderTarget(textureData_);
@@ -287,7 +304,7 @@ void GUIListview::UpdateScrollSize(const GUIPoint& pointInElement)
 {
     const auto yDelta = downOnY_ - pointInElement.y;
     VLOG(3) << "yDelta " << yDelta;
-    const int height = rows_.size() * ENTRYHEIGHT_PIXEL + 1;
+    const int height = GetRowListHeight() + 1;
     movepixel_ += yDelta;
     if(movepixel_ < 0) movepixel_ = 0;
     if(height - Size().height < movepixel_) movepixel_ = height - Size().height;
@@ -301,32 +318,34 @@ int GUIListview::GetRowAtPoint(const GUIPoint& pointInElement) const
         return -1;
     }
     if(rows_.size() == 0) return -1;
-    
-    auto heightClick = movepixel_;
+
+    auto heightClick = -movepixel_;
     int rowId = 0;
-    for(auto row : rows_)
-    {
+    for(auto row : rows_) {
         heightClick += row.GetHeight();
         if(pointInElement.y < heightClick) {
             return rowId;
         }
         rowId++;
     }
-    //const size_t rowId = (pointInElement.y + movepixel_) / ENTRYHEIGHT_PIXEL;
     return rowId;
 }
 
 void GUIListview::CheckRowClick(const int rowId)
 {
     auto now = SDL_GetTicks();
-    const auto test = -movepixel_ + (rowId * ENTRYHEIGHT_PIXEL);
+    auto heightClick = 0;
+    for(auto i = 0; i < rowId; i++) {
+        heightClick += rows_[i].GetHeight();
+    }
+    const auto test = -movepixel_ + heightClick;
     if(test < 0) {
         // Test row on Top is visible
-        movepixel_ = rowId * ENTRYHEIGHT_PIXEL;
+        movepixel_ = heightClick;
     }
-    if((test + ENTRYHEIGHT_PIXEL) > Size().height) {
+    if((test + rows_[rowId].GetHeight()) > Size().height) {
         // Test row on bottown is visible
-        movepixel_ = movepixel_ + ((test + ENTRYHEIGHT_PIXEL) - Size().height) + 1;
+        movepixel_ = movepixel_ + ((test + rows_[rowId].GetHeight()) - Size().height) + 1;
     }
     for(auto i = 0; i < static_cast<int>(rows_.size()); i++) {
         if(rowId == i) {
@@ -355,15 +374,23 @@ void GUIListview::CheckRowClick(const int rowId)
 void GUIListview::CheckScrolling(const GUIPoint& point)
 {
     const auto pointInElement = ScreenToElementCoords(point);
-    const auto entryNumber = pointInElement.y / SMALLFONT_HEIGHT;
+    const auto entryNumber = pointInElement.y / FONT_HEIGHT;
+    if(entryNumber >= static_cast<int>(quickJumpList_.size())) {
+        return;
+    }
     VLOG(3) << "entryNumber " << entryNumber << " " << quickJumpList_[entryNumber];
 
+    auto pixel = 0;
     for(size_t i = 0; i < rows_.size(); i++) {
         auto text = rows_[i].GetColumns()[0]->GetText();
         if(text.substr(0, 1) == quickJumpList_[entryNumber]) {
-            movepixel_ = i * ENTRYHEIGHT_PIXEL;
+            movepixel_ = pixel;
+            if(-movepixel_ + GetRowListHeight() < Size().height + 1) {
+                movepixel_ = GetRowListHeight() - Size().height + 1;
+            }
             break;
         }
+        pixel += rows_[i].GetHeight();
     }
     scrolling_ = false;
     if(!inUpdate_) {
@@ -433,25 +460,19 @@ void GUIListview::MouseLeaveEvent(const GUIPoint& point)
     }
 }
 
-GUIListview::GUIListview(const GUIPoint position,
-                         const GUISize size,
-                         const std::string& name,
-                         const SDL_Color background,
-                         const SDL_Color textcolor)
-    : GUIElement(position, size, name), font_(nullptr), textureQuickJumpList_(nullptr),
-      textureNoDataText_(nullptr), textureData_(nullptr)
+GUIListview::GUIListview(const GUIPoint position, const GUISize size, const std::string& name, const SDL_Color background, const SDL_Color textcolor)
+    : GUIElement(position, size, name), font_(nullptr), textureQuickJumpList_(nullptr), textureNoDataText_(nullptr),
+      textureData_(nullptr)
 {
     logger_ = el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
     backgroundColor_ = background;
     foregroundColor_ = textcolor;
     inUpdate_ = false;
 
-    buttonDownEvent_ = std::bind(&GUIListview::ButtonDown, this, std::placeholders::_1,
-                                 std::placeholders::_2, std::placeholders::_3);
-    buttonUpEvent_ = std::bind(&GUIListview::ButtonUp, this, std::placeholders::_1,
-                               std::placeholders::_2, std::placeholders::_3);
-    mouseMoveEvent_ =
-    std::bind(&GUIListview::MouseMoveEvent, this, std::placeholders::_1, std::placeholders::_2);
+    buttonDownEvent_ =
+    std::bind(&GUIListview::ButtonDown, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    buttonUpEvent_ = std::bind(&GUIListview::ButtonUp, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    mouseMoveEvent_ = std::bind(&GUIListview::MouseMoveEvent, this, std::placeholders::_1, std::placeholders::_2);
     mouseLeaveEvent_ = std::bind(&GUIListview::MouseLeaveEvent, this, std::placeholders::_1);
     movepixel_ = 0;
     selectedRow_ = -1;
@@ -459,6 +480,7 @@ GUIListview::GUIListview(const GUIPoint position,
     downOnY_ = 0;
     _rowHasImage = true;
     _rowHasDetails = true;
+    _rowListHeight = -1;
 }
 
 void GUIListview::Init()
@@ -517,13 +539,14 @@ void GUIListview::BeginUpdate()
 
 void GUIListview::EndUpdate()
 {
+    _rowListHeight = -1;
+
     for(size_t i = 0; i < rows_.size(); i++) {
         auto text = rows_[i].GetColumns()[0]->GetText();
         const auto firstChar = text.substr(0, 1);
         // TODO: Is skiping empty string a good idea? It at least prevent crash if the element is not displayed right away, but still crash when scrolling over it.
         // TODO: I think it should be handled somewhere else, handling it there isn't sufficient. The drawing function might be the key.
-        if(firstChar != "" && std::find(quickJumpList_.begin(), quickJumpList_.end(), firstChar) ==
-                              quickJumpList_.end()) {
+        if(firstChar != "" && std::find(quickJumpList_.begin(), quickJumpList_.end(), firstChar) == quickJumpList_.end()) {
             quickJumpList_.push_back(firstChar);
         }
     }
