@@ -30,6 +30,8 @@ void GUIRenderer::Create(SDL_Window* window)
 		throw GUIException("SDL_CreateRenderer");
 	}
     
+	//TODO Find a way set form right it muss be an ALPHA vormat for this Software
+	
 	windowPixleFormat_ = SDL_GetWindowPixelFormat(window);
 	if(SDL_ISPIXELFORMAT_ALPHA(windowPixleFormat_)) {
 		LOG(INFO) << "Window Pixel Format has ALPHA";

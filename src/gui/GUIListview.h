@@ -41,7 +41,7 @@ public:
 	GUIListviewRow();
 	std::vector<std::shared_ptr<GUIListviewColumn>> GetColumns() const;
 	void AddColumn(std::shared_ptr<GUIListviewColumn> column);
-	
+	int GetHeight();
 };
 
 class GUIListview : public GUIElement {

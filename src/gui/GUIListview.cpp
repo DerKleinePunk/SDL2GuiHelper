@@ -28,7 +28,7 @@ GUIListviewColumn::GUIListviewColumn(const std::string& text) : text_(text), ima
     textureText_ = nullptr;
     textureTextDetails_ = nullptr;
     width_ = 0;
-    height_ = 0;
+    height_ = FONT_HEIGHT + 2;
     detailheight_ = 0;
     detailwidth_ = 0;
     imageSize_ = 0;
@@ -87,6 +87,8 @@ int GUIListviewColumn::GetHeight() const
 void GUIListviewColumn::SetDetailText(const std::string& text)
 {
     detailText_ = text;
+    height_ += SMALLFONT_HEIGHT;
+
     if(textureText_ == nullptr) return;
 
     delete textureText_;
@@ -120,6 +122,7 @@ void GUIListviewColumn::SetImageData(const char* imageData, const int size)
     imageData_.reset(new char[size], std::default_delete<char[]>());
     memcpy(imageData_.get(), imageData, size);
     imageSize_ = size;
+    height_ = ENTRYHEIGHT_PIXEL;
 }
 
 GUIListviewRow::GUIListviewRow() : selected(false), Tag(nullptr)
@@ -135,6 +138,19 @@ void GUIListviewRow::AddColumn(const std::shared_ptr<GUIListviewColumn> column)
 {
     columns_.push_back(column);
 }
+
+int GUIListviewRow::GetHeight()
+{
+    auto height = 0;
+    for(const auto column : columns_) {
+        const auto temp = column->GetHeight();
+        if(temp > height){ 
+            height = temp;
+        }
+    }
+    return height;
+}
+
 
 void GUIListview::DrawData()
 {
@@ -163,8 +179,9 @@ void GUIListview::DrawData()
     // Ho can me explan why for(row : rows_) take 40ms and this 1 ms ?
     // http://cpc110.blogspot.de/2017/02/c-iterator-much-slower-than-indexing.html
     for(size_t i = 0; i < rows_.size(); i++) {
-        if(actHight + ENTRYHEIGHT_PIXEL > 0 && actHight < Size().height) {
-            auto rect = GUIRect(0, actHight, Size().width, ENTRYHEIGHT_PIXEL);
+        auto entryHeight = rows_[i].GetHeight();
+        if(actHight + entryHeight > 0 && actHight < Size().height) {
+            auto rect = GUIRect(0, actHight, Size().width, entryHeight);
             if(scrollEnabled_) {
                 rect.w = rect.w - SCROLL_BAR_WIDTH_PIXEL;
             }
@@ -212,11 +229,7 @@ void GUIListview::DrawData()
             renderer_->ClearClipRect();
         }
 
-        if(_rowHasDetails || _rowHasImage) {
-            actHight += ENTRYHEIGHT_PIXEL;
-        } else {
-            actHight += 1 + FONT_HEIGHT;
-        }
+        actHight += entryHeight;
     }
 
     if(scrollEnabled_) {
@@ -288,7 +301,18 @@ int GUIListview::GetRowAtPoint(const GUIPoint& pointInElement) const
         return -1;
     }
     if(rows_.size() == 0) return -1;
-    const size_t rowId = (pointInElement.y + movepixel_) / ENTRYHEIGHT_PIXEL;
+    
+    auto heightClick = movepixel_;
+    int rowId = 0;
+    for(auto row : rows_)
+    {
+        heightClick += row.GetHeight();
+        if(pointInElement.y < heightClick) {
+            return rowId;
+        }
+        rowId++;
+    }
+    //const size_t rowId = (pointInElement.y + movepixel_) / ENTRYHEIGHT_PIXEL;
     return rowId;
 }
 
