@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Transfer Build to RPI and start",
+            "group": "build",
+            "command": "${workspaceFolder}/tools/scripts/TransferBuildAddDebug.sh",
+            "type": "shell",
+            "args": [],
+            "presentation": { 
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
