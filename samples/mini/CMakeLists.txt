@@ -1,6 +1,6 @@
 message(STATUS "working on mini dir")
 
-project("SDL2GuiHelperMini")
+project("SampleMini")
 
 ADD_SUBDIRECTORY(${MAINFOLDER}/common ${MAINFOLDER}/build/${TARGET}/mini)
 
@@ -15,7 +15,7 @@ INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
 
 FILE(GLOB SRCS "*.cpp")
 
-add_executable(${project_BIN} ${SRCS} ${GUI_SRCS} ${MAIN_common_SRCS})
+add_executable(${project_BIN} ${SRCS} ${GUI_SRCS} ${MAIN_common_SRCS} ${common_utils_SRCS_SDL2} ${common_SDL2_gfx_SRCS})
 
 TARGET_LINK_LIBRARIES(${project_BIN} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 

@@ -1,6 +1,6 @@
 message(STATUS "working on maxi dir")
 
-project("SDL2GuiHelperMaxi")
+project("SampleMaxi")
 
 FIND_PACKAGE(OSMScout REQUIRED)
 if(OSMScout_FOUND)
@@ -9,7 +9,7 @@ if(OSMScout_FOUND)
     MESSAGE(STATUS "OSMScout ${OSMSCOUT_INCLUDE_DIRS}")
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLIBOSMSCOUT")
 endif()
-FIND_PACKAGE(SQLITE REQUIRED)
+FIND_PACKAGE(SQLITE3 REQUIRED)
 
 ADD_SUBDIRECTORY(${MAINFOLDER}/common ${MAINFOLDER}/build/${TARGET}/maxi)
 
@@ -30,12 +30,12 @@ ENDIF()
 
 FILE(GLOB SRCS "*.cpp")
 
-add_executable(${project_BIN} ${SRCS} ${GUI_SRCS} ${MAIN_common_SRCS} ${MAP_SRCS} ${common_database_SRCS})
+add_executable(${project_BIN} ${SRCS} ${GUI_SRCS} ${MAIN_common_SRCS} ${MAP_SRCS} ${common_utils_SRCS_OSMSCOUT} ${common_database_SRCS} ${common_utils_SRCS_SDL2} ${common_SDL2_gfx_SRCS})
 
 TARGET_LINK_LIBRARIES(${project_BIN} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 
-if(OSMScout_FOUND)
-    TARGET_LINK_LIBRARIES(${project_BIN} ${OSMSCOUT_LIBRARIES})
+if(OSMSCOUT_FOUND)
+    TARGET_LINK_LIBRARIES(${project_BIN} ${OSMScout_LIBRARIES})
     TARGET_LINK_LIBRARIES(${project_BIN} ${CAIRO_LIBRARIES})
     TARGET_LINK_LIBRARIES(${project_BIN} ${PANGO_LIBRARIES})
 endif()

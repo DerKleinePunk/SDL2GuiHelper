@@ -27,7 +27,7 @@ void SampleApp::KernelstateChanged(KernelState state) {
 #ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
     	TIMED_SCOPE_IF(timerCreateScreen, "CreateScreen", VLOG_IS_ON(4));
 #endif
-        _manager = _kernel->CreateScreen("SDL2 Gui Maxi Sample", "", "");
+        _manager = _kernel->CreateScreen("SDL2 Gui Maxi Sample", "", "", false);
         _kernel->UpdateScreens();
         _kernel->DrawTextOnBootScreen("Starting Services");
 
@@ -38,7 +38,7 @@ void SampleApp::KernelstateChanged(KernelState state) {
 #endif
         StartServices();
 */
-        //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
         _kernel->DrawTextOnBootScreen("Services Started\nStarting Audio");
 
@@ -95,15 +95,13 @@ void SampleApp::LoadSdsList() {
     element->BeginUpdate();
     element->Clear();
     GUIListviewRow row;
-    std::shared_ptr<GUIListviewColumn> column(new GUIListviewColumn("SDS mit einem Text ist angekommen"));
-    //column->SetDetailText("SDS mit einem Text ist angekommen");
+    std::shared_ptr<GUIListviewColumn> column(new GUIListviewColumn("SMS mit einem Text ist angekommen"));
     row.AddColumn(column);
     row.Tag = (void*)1;
     element->AddRow(row);
     
     GUIListviewRow row2;
-    std::shared_ptr<GUIListviewColumn> column2(new GUIListviewColumn("Zweite SDS mit einem Anderen Text"));
-    //column->SetDetailText("SDS mit einem Text ist angekommen");
+    std::shared_ptr<GUIListviewColumn> column2(new GUIListviewColumn("Zweite SMS mit einem Anderen Text"));
     row2.AddColumn(column2);
     row2.Tag = (void*)2;
     element->AddRow(row2);
@@ -144,9 +142,7 @@ void SampleApp::BuildMainScreen()
     status3Button->Text("3");
 
     auto sdsListview = new GUIListview(GUIPoint(250, 40), GUISize(700, 400),"sdsListview", lightgray_t_color,lightblack_color);
-	//auto songlistLongClickdelegate = std::bind(&CarPC::SongListLongClick, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-	//songListview->RegisterOnLongClick(songlistLongClickdelegate);
-	_manager->AddElement(mainScreenBackground, sdsListview);
+    _manager->AddElement(mainScreenBackground, sdsListview);
     sdsListview->ChangeRowHasImage(false);
     sdsListview->ChangeRowHasDetails(false);
     
@@ -199,10 +195,6 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             _manager->VisibleElement(element);
         }
-        /*element = _manager->GetElementByName("sdsScreen");
-        if(element != nullptr) {
-            _sendSdsDialog->Hide();
-        }*/
         element = _manager->GetElementByName("mapScreen");
         if(element != nullptr) {
             _mapDialog->Hide();
@@ -225,10 +217,6 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             _manager->InvisibleElement(element);
         }
-        /*element = _manager->GetElementByName("sdsScreen");
-        if(element != nullptr) {
-            _sendSdsDialog->Show();
-        }*/
         element = _manager->GetElementByName("mapScreen");
         if(element != nullptr) {
             _mapDialog->Hide();
@@ -251,10 +239,6 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             _manager->InvisibleElement(element);
         }
-        /*element = _manager->GetElementByName("sdsScreen");
-        if(element != nullptr) {
-            _sendSdsDialog->Hide();
-        }*/
         element = _manager->GetElementByName("mapScreen");
         if(element != nullptr) {
             _mapDialog->Show();
