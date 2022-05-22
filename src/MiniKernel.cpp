@@ -308,7 +308,7 @@ MiniKernel::CreateScreen(const std::string& title, const std::string& videoDrive
     TIMED_SCOPE_IF(timerCreateScreen, "CreateScreen", VLOG_IS_ON(4));
 #endif
 
-    _manager = screen->Create(title, _eventManager, _mapManager, backgroundImage, fullscreen);
+    _manager = screen->Create(title, _eventManager, _mapManager, backgroundImage, fullscreen, _kernelConfig.BackgroundScreen, _kernelConfig.ForegroundScreen);
     auto id = screen->GetId();
 
     _screens.insert(std::make_pair(id, screen));

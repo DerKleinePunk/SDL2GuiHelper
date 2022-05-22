@@ -13,7 +13,8 @@ enum class UiState : unsigned char {
 	undefined,
 	home,
 	map,
-	sds
+	sds,
+    musikPlayer
 };
 
 class SampleApp

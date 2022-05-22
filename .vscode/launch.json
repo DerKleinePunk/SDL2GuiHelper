@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
        {
-            "name": "(gdb) Launch Mini",
+            "name": "(gdb) Mini Sample",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Linux/SampleMini.bin",
@@ -36,7 +36,7 @@
             
         },
         {
-            "name": "(gdb) Launch Maxi",
+            "name": "(gdb) Maxi Sample",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Linux/SampleMaxi.bin",

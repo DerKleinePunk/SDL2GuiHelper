@@ -10,6 +10,8 @@
 #include <chrono>
 #include <thread>
 
+const SDL_Color my_light_blue = { 0x00, 0xA1, 0x9C, 0xff };
+
 void SampleApp::ApplicationEvent(AppEvent event, void* data1, void* data2) {
 
 }
@@ -141,7 +143,7 @@ void SampleApp::BuildMainScreen()
     status3Button->SetCorner(5);
     status3Button->Text("3");
 
-    auto sdsListview = new GUIListview(GUIPoint(250, 40), GUISize(700, 400),"sdsListview", lightgray_t_color,lightblack_color);
+    auto sdsListview = new GUIListview(GUIPoint(250, 40), GUISize(700, 400),"sdsListview", lightgray_t_color, my_light_blue);
     _manager->AddElement(mainScreenBackground, sdsListview);
     sdsListview->ChangeRowHasImage(false);
     sdsListview->ChangeRowHasDetails(false);
@@ -182,6 +184,16 @@ void SampleApp::BuildCommandBar()
     tempButton->Text("Karte");
     tempButton->RegisterOnClick([this](IGUIElement* sender) { UpdateUI(UiState::map); });
     _manager->AddElement(commandBar, tempButton);
+
+    buttonstartPos += 175;
+
+
+    tempButton = new GUITextButton(GUIPoint(buttonstartPos, 5), GUISize(150, 90),
+                                   "playerCommandButton", own_red_color, white_color);
+    tempButton->FontHeight(40);
+    tempButton->Text("Musik");
+    tempButton->RegisterOnClick([this](IGUIElement* sender) { UpdateUI(UiState::musikPlayer); });
+    _manager->AddElement(commandBar, tempButton);
 }
 
 void SampleApp::UpdateUI(UiState newUIState)
@@ -211,6 +223,10 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
+        element = _manager->GetElementByName("playerCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
         break;
     case UiState::sds:
         element = _manager->GetElementByName("mainScreen");
@@ -233,6 +249,10 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
+        element = _manager->GetElementByName("playerCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
         break;
     case UiState::map:
         element = _manager->GetElementByName("mainScreen");
@@ -252,6 +272,36 @@ void SampleApp::UpdateUI(UiState newUIState)
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("mapCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
+        }
+        element = _manager->GetElementByName("playerCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        break;
+    case UiState::musikPlayer:
+    element = _manager->GetElementByName("mainScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
+        element = _manager->GetElementByName("mapScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
+        element = _manager->GetElementByName("homeCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("sdsCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("mapCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("playerCommandButton");
         if(element != nullptr) {
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
         }
@@ -297,6 +347,8 @@ void SampleApp::Startup() {
     config.mapStyle = "/home/punky/develop/libosmscout-code/stylesheets/standard.oss";
     //config.markerImageFile = _config->GetMarkerImageFile();
     config.startMapPosition.Set(50.4090,9.3671);
+    config.BackgroundScreen = black_color;
+    config.ForegroundScreen = my_light_blue;
 
     _kernel->SetConfig(config);
 }

@@ -24,12 +24,12 @@ void GUIScreenCanvas::RenderText() {
 	SetRedraw();
 }
 
-GUIScreenCanvas::GUIScreenCanvas(GUISize size, const std::string& backgroundImage):
+GUIScreenCanvas::GUIScreenCanvas(GUISize size, const std::string& backgroundImage, SDL_Color backgroundColor, SDL_Color foregroundColor):
 	GUIElement(GUIPoint(0, 0), size, "ScreenCanvas"), 
 	imageTexture_(nullptr) {
     el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
-	backgroundColor_ = white_color;
-	foregroundColor_ = black_color;
+	backgroundColor_ = backgroundColor;
+	foregroundColor_ = foregroundColor;
 	_backgroundImage = backgroundImage;
 	_textureText = nullptr;
 	_fontHeight = 18;

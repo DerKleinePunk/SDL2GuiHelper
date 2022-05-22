@@ -5,12 +5,11 @@
 #define ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID ELPP_DEFAULT_LOGGER
 #endif
 
+#include "GUIListview.h"
+
 #include "../../common/easylogging/easylogging++.h"
 #include "../exception/GUIException.h"
-#include "GUI.h"
-#include "GUIElement.h"
 #include "GUIFontManager.h"
-#include "GUIListview.h"
 #include "GUIRenderer.h"
 #include "GUITexture.h"
 

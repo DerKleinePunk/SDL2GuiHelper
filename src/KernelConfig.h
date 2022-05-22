@@ -6,6 +6,8 @@ struct KernelConfig
 {
     KernelConfig(){
         lastMusikVolume = 128;//Value 0 - 128
+        BackgroundScreen = white_color;
+        ForegroundScreen = white_color;
     }
     std::string AudioFileForClick;
     std::string AudioFileForLongClick;
@@ -15,4 +17,6 @@ struct KernelConfig
     std::vector<std::string> mapIconPaths;
     std::string markerImageFile;
     utils::Geopos startMapPosition;
+    SDL_Color BackgroundScreen;
+    SDL_Color ForegroundScreen;
 };

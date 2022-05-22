@@ -14,7 +14,7 @@ class GUIScreenCanvas : public GUIElement
 	void GetFont();
 	void RenderText();
 protected:
-	explicit GUIScreenCanvas(GUISize size, const std::string& backgroundImage);
+	explicit GUIScreenCanvas(GUISize size, const std::string& backgroundImage, SDL_Color backgroundColor, SDL_Color foregroundColor);
 public:
 	void Resize(GUISize size);
 

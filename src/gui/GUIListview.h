@@ -4,10 +4,8 @@
 #include <functional>
 #include <memory>
 
-struct GUIEvent;
-class GUITexture;
-class IGUIElement;
-class GUIRenderer;
+#include "GUI.h"
+#include "GUIElement.h"
 
 typedef std::function<void(IGUIElement* sender, int row, void* tag)> ClickListViewDelegate;
 
