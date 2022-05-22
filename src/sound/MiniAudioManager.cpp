@@ -140,3 +140,8 @@ void MiniAudioManager::GetMediaPlayTimes(int64_t* totalTime, int64_t* currentTim
     *totalTime = 0;
     *currentTime = 0;
 }
+
+int MiniAudioManager::PlayMusik(const std::string& filename) {
+    LOG(WARNING) << "This PLayer can play Musik";
+    return -1;
+}

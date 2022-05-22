@@ -14,7 +14,8 @@ enum class KernelState : unsigned char {
 
 enum class KernelEvent : Sint32 {
     Shutdown = 1,
-	ShowError = 2,	
+	ShowError = 2,
+	MusikStartStream = 3,	
 };
 
 std::ostream& operator<<(std::ostream& os, const KernelState c);
@@ -44,14 +45,14 @@ public:
 	SDLEventManager();
 	~SDLEventManager();
 	bool Init();
-	bool IsKernelEvent(const SDL_Event* event, KernelEvent& type) const;
+	bool IsKernelEvent(const SDL_Event* event, KernelEvent& type, void*& data1, void*& data2) const;
 	bool IsApplicationEvent(const SDL_Event* event, AppEvent& appevent, void*& data1, void*& data2) const;
 
 	static Uint32 GetNewEventType();
 	bool PushEvent(Uint32 type, Uint32 windowID, Sint32 code, void* data1, void* data2) const;
 	int WaitEvent(SDL_Event* event, Uint32 timeout) const;
 
-	bool PushKernelEvent(KernelEvent event) const;
+	bool PushKernelEvent(KernelEvent event, void* data1 = nullptr, void* data2 = nullptr) const;
 	bool PushApplicationEvent(AppEvent event, void* data1, void* data2) const;
 
 	void RegisterBackend(SendToBackendDelegate callcack, IBackendConnect* backend);

@@ -21,9 +21,10 @@ class MiniAudioManager : public IAudioManager
     MiniAudioManager(const SDLEventManager* eventManager, const int musikVolume);
     virtual ~MiniAudioManager();
 
+    //The Interface
     int Init();
-
     bool UpdateUi(GUIRenderer* renderer, GUITexture* screen) const;
     int PlayBackground(const std::string& fileName);
     void GetMediaPlayTimes(int64_t* totalTime, int64_t* currentTime) const;
+    int PlayMusik(const std::string& filename);
 };

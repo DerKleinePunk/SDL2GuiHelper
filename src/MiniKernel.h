@@ -5,7 +5,7 @@
 #include "gui/GUIScreen.h"
 #include "gui/GUIElementManager.h"
 #include "KernelConfig.h"
-#include "sound/MiniAudioManager.h"
+#include "sound/IAudioManager.h"
 
 typedef std::function<void(KernelState state)> KernelStateCallbackFunction;
 typedef std::function<void(AppEvent code, void* data1, void* data2)> ApplicationEventCallbackFunction;
@@ -23,7 +23,7 @@ private:
     GUIElementManager* _manager;
     std::string _errorMessage;
     KernelConfig _kernelConfig;
-    MiniAudioManager* _audioManager;
+    IAudioManager* _audioManager;
     IMapManager* _mapManager;
 
     void HandleEvent(const SDL_Event& event,bool& exitLoop);

@@ -103,10 +103,12 @@ bool SDLEventManager::Init()
     return true;
 }
 
-bool SDLEventManager::IsKernelEvent(const SDL_Event* event, KernelEvent& type) const
+bool SDLEventManager::IsKernelEvent(const SDL_Event* event, KernelEvent& type, void*& data1, void*& data2) const
 {
     if(event->type == kernelEventType_) {
         type = static_cast<KernelEvent>(event->user.code);
+        data1 = event->user.data1;
+        data2 = event->user.data2;
         return true;
     }
     return false;
@@ -193,9 +195,9 @@ int SDLEventManager::WaitEvent(SDL_Event* event, Uint32 timeout) const
     return result;
 }
 
-bool SDLEventManager::PushKernelEvent(KernelEvent event) const
+bool SDLEventManager::PushKernelEvent(KernelEvent event, void* data1, void* data2) const
 {
-    return PushEvent(kernelEventType_, 0, static_cast<Sint32>(event), nullptr, nullptr);
+    return PushEvent(kernelEventType_, 0, static_cast<Sint32>(event), data1, data2);
 }
 
 bool SDLEventManager::PushApplicationEvent(AppEvent event, void* data1, void* data2) const

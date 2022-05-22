@@ -20,6 +20,14 @@
 #ifdef LIBOSMSCOUT
 #include "map/MapManager.h"
 #endif
+#ifdef ENABLEAUDIOMANAGER
+    #ifdef ENABLEMUSIKMANAGER
+        #include "sound/MusikAudioManager.h"
+    #else
+        #include "sound/MiniAudioManager.h"
+    #endif
+#endif
+
 
 //#define MILLESECONDS_PER_FRAME 1000.0/120.0       /* about 120 frames per second */
 #define MILLESECONDS_PER_FRAME 1000.0 / 60.0 /* about 60 frames per second */
@@ -53,7 +61,9 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
         }
 
         KernelEvent type;
-        if(_eventManager->IsKernelEvent(&event, type)) {
+        void* data1;
+        void* data2;
+        if(_eventManager->IsKernelEvent(&event, type, data1, data2)) {
             switch(type) {
                 case KernelEvent::Shutdown: {
                     LOG(INFO) << "Kernel Event Shutdown";
@@ -61,10 +71,18 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
                     break;
                 }
                 case KernelEvent::ShowError: {
-                    LOG(INFO) << "Kernel Event UpdateScreen";
+                    LOG(INFO) << "Kernel Event ShowError";
                     auto errorMessageDialog = new ErrorMessageDialog(_manager);
                     errorMessageDialog->SetMessage(_errorMessage);
                     errorMessageDialog->Create(nullptr);
+                    break;
+                }
+                case KernelEvent::MusikStartStream: {
+                    LOG(INFO) << "Kernel Event MusikStartStream";
+                    #ifdef ENABLEMUSIKMANAGER
+                    std::string* fileName = (std::string*)data1;
+                    _audioManager->PlayMusik(*fileName);
+                    #endif
                     break;
                 }
                 default: {
@@ -74,8 +92,6 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
         }
 
         AppEvent code;
-        void* data1;
-        void* data2;
         if(_eventManager->IsApplicationEvent(&event, code, data1, data2)) {
             // TODO better move to Kernel event ?
             // TODO better move Interface ?
@@ -358,7 +374,11 @@ int MiniKernel::StartAudio(const std::string& drivername)
     _base->InitAudio(drivername);
 
 #ifdef ENABLEAUDIOMANAGER
+#ifdef ENABLEMUSIKMANAGER
+    _audioManager = new MusikAudioManager(_eventManager, _kernelConfig.lastMusikVolume);
+#else
     _audioManager = new MiniAudioManager(_eventManager, _kernelConfig.lastMusikVolume);
+#endif
     auto result = _audioManager->Init();
     if(result != 0) {
         LOG(ERROR) << "Audio Init Failed";

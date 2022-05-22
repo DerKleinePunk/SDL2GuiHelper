@@ -12,12 +12,14 @@ class IAudioManager
 private:
     
 public:
-    IAudioManager();
-    ~IAudioManager();
+    virtual ~IAudioManager(){};
 
+    virtual int Init() = 0;
     virtual bool UpdateUi(GUIRenderer* renderer, GUITexture* screen) const = 0;
     virtual int PlayBackground(const std::string& fileName) = 0;
     virtual void GetMediaPlayTimes(int64_t* totalTime, int64_t* currentTime) const = 0;
+
+    virtual int PlayMusik(const std::string& filename) = 0;
 };
 
 

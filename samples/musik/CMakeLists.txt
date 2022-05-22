@@ -1,6 +1,6 @@
-message(STATUS "working on maxi dir")
+message(STATUS "working on musik dir")
 
-project("SampleMaxi")
+project("SampleMusik")
 
 FIND_PACKAGE(OSMScout REQUIRED)
 if(OSMScout_FOUND)
@@ -9,9 +9,12 @@ if(OSMScout_FOUND)
     MESSAGE(STATUS "OSMScout ${OSMSCOUT_INCLUDE_DIRS}")
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLIBOSMSCOUT")
 endif()
+
 FIND_PACKAGE(SQLITE3 REQUIRED)
 
-ADD_SUBDIRECTORY(${MAINFOLDER}/common ${MAINFOLDER}/build/${TARGET}/maxi)
+FIND_PACKAGE(FFmpeg COMPONENTS AVFORMAT AVCODEC AVUTIL SWSCALE SWRESAMPLE REQUIRED)
+
+ADD_SUBDIRECTORY(${MAINFOLDER}/common ${MAINFOLDER}/build/${TARGET}/musik)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" )
     SET (project_BIN ${PROJECT_NAME})
@@ -19,7 +22,7 @@ else()
     SET (project_BIN ${PROJECT_NAME}.bin)
 endif()
 
-INCLUDE_DIRECTORIES("${MAINFOLDER}/samples/maxi")
+INCLUDE_DIRECTORIES("${MAINFOLDER}/samples/musik")
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
 
 if(OSMScout_FOUND)
@@ -30,13 +33,21 @@ ENDIF()
 
 FILE(GLOB SRCS "*.cpp")
 
-add_executable(${project_BIN} ${SRCS} ${GUI_SRCS} ${MAIN_common_SRCS} ${MAP_SRCS} ${common_utils_SRCS_OSMSCOUT} ${common_database_SRCS} ${common_utils_SRCS_SDL2} ${common_SDL2_gfx_SRCS} ${SOUND_MINI_SRCS})
+MESSAGE(STATUS "MusikManager ${SOUND_MUSIK_SRCS}")
+
+add_executable(${project_BIN} ${SRCS} ${GUI_SRCS} ${MAIN_common_SRCS} ${MAP_SRCS} ${common_utils_SRCS_OSMSCOUT} ${common_database_SRCS} ${common_utils_SRCS_SDL2} ${common_SDL2_gfx_SRCS} ${SOUND_MUSIK_SRCS})
 
 TARGET_LINK_LIBRARIES(${project_BIN} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 
 IF(${SDL2_MIXER_FOUND})
     TARGET_LINK_LIBRARIES(${project_BIN} ${SDL2_MIXER_LIBRARIES})
     SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLEAUDIOMANAGER") 
+ENDIF()
+
+IF(${FFmpeg_FOUND})
+    MESSAGE(STATUS "FFmpeg ${FFMPEG_LIBRARIES}")
+    TARGET_LINK_LIBRARIES(${project_BIN} ${FFMPEG_LIBRARIES})
+    SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLEMUSIKMANAGER")
 ENDIF()
 
 if(OSMSCOUT_FOUND)
@@ -70,3 +81,8 @@ add_custom_command(TARGET ${project_BIN} POST_BUILD # Adds a post-build event to
                     COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
                        "${MAINFONTSOURCE}"      # <--this is in-file
                        $<TARGET_FILE_DIR:${project_BIN}>)
+set(MAINFONTSOURCE "${MAINFOLDER}/resources/sound/test.mp3")
+add_custom_command(TARGET ${project_BIN} POST_BUILD # Adds a post-build event to MyTest
+                       COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
+                          "${MAINFONTSOURCE}"      # <--this is in-file
+                          $<TARGET_FILE_DIR:${project_BIN}>)
