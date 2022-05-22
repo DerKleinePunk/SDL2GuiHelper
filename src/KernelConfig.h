@@ -6,7 +6,7 @@ struct KernelConfig
 {
     KernelConfig(){
         lastMusikVolume = 128;//Value 0 - 128
-        BackgroundScreen = white_color;
+        BackgroundScreen = black_color;
         ForegroundScreen = white_color;
     }
     std::string AudioFileForClick;
