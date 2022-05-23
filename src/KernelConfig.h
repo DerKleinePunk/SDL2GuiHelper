@@ -8,6 +8,7 @@ struct KernelConfig
         lastMusikVolume = 128;//Value 0 - 128
         BackgroundScreen = white_color;
         ForegroundScreen = black_color;
+        AudioDriver = ""; //Automatik Search
     }
     std::string AudioFileForClick;
     std::string AudioFileForLongClick;
@@ -19,4 +20,5 @@ struct KernelConfig
     utils::Geopos startMapPosition;
     SDL_Color BackgroundScreen;
     SDL_Color ForegroundScreen;
+    std::string AudioDriver;
 };

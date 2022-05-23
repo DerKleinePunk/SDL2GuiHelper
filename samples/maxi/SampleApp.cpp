@@ -47,7 +47,6 @@ void SampleApp::KernelstateChanged(KernelState state) {
 #ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
     	TIMED_SCOPE_IF(timerStartAudio, "StartAudio", VLOG_IS_ON(4));
 #endif		
-        _kernel->StartAudio("");
 		//mediaManager_ = kernel_->GetMediaManger();
 
 #ifdef ELPP_FEATURE_PERFORMANCE_TRACKING

@@ -24,8 +24,12 @@ MusikPlayerDialog::~MusikPlayerDialog()
 
 void MusikPlayerDialog::Init()
 {
-    auto zoomDownButton = new GUITextButton(GUIPoint(100, 200), GUISize(300, 60), "playButton", own_firered_color, white_color);
-    zoomDownButton->Text("Play Musik");
+    auto mediaDisplay = new GUIMediaDisplay(GUIPoint(0, 0), GUISize(100, 50,sizeType::relative), "mediaDisplay", own_firered_color, white_color, true);
+    mediaDisplay->FontHeight(20);
+    _manager->AddElement(_parent, mediaDisplay);
+
+    auto zoomDownButton = new GUITextButton(GUIPoint(20, 320), GUISize(300, 60), "playButton", own_firered_color, white_color);
+    zoomDownButton->Text("Play");
     zoomDownButton->RegisterOnClick([this](IGUIElement* sender) { PlayMusik(); });
     _manager->AddElement(_parent, zoomDownButton);
 

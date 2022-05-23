@@ -1,6 +1,6 @@
 #pragma once
 #include "../SDLEventManager.h"
-#include "IAudioManager.h"
+#include "../IAudioManager.h"
 #include <SDL_mixer.h>
 #include "MediaStream.h"
 

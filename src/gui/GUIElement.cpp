@@ -13,7 +13,7 @@
 #include "GUIRenderer.h"
 #include "GUITexture.h"
 #include "../exception/GUIException.h"
-
+#include "../MiniKernel.h"
 
 bool GUIElement::PrepareDraw() const {
 	if (hidden_)
@@ -411,7 +411,7 @@ void GUIElement::Create(GUIRenderer* renderer, GUIFontManager* fontManager)
 	UpdateScreenArea();
 }
 
-void GUIElement::Create(GUIRenderer* renderer, GUIElement* parent, GUIFontManager* fontManager, SDLEventManager* eventManager, GUIImageManager* imageManager, IMapManager* mapManager, Uint32 windowId)
+void GUIElement::Create(GUIRenderer* renderer, GUIElement* parent, GUIFontManager* fontManager, SDLEventManager* eventManager, GUIImageManager* imageManager, IMapManager* mapManager, IAudioManager* audioManager, MiniKernel* kernel, Uint32 windowId)
 {
 	parent_ = parent;
 	if (parent_ == nullptr) {
@@ -427,6 +427,19 @@ void GUIElement::Create(GUIRenderer* renderer, GUIElement* parent, GUIFontManage
 	if (imageManager_ == nullptr) {
 		throw NullPointerException("imageManager can not be null");
 	}
+
+	_kernel = kernel;
+	if (_kernel == nullptr) {
+		throw NullPointerException("imageManager can not be null");
+	}
+
+	_audioManager = audioManager;
+#ifdef ENABLEMUSIKMANAGER
+	if (_audioManager == nullptr) {
+		throw NullPointerException("audioManager can not be null");
+	}
+#endif
+
     mapManager_ = mapManager;
     windowId_ = windowId;
 	Create(renderer, fontManager);

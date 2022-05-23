@@ -32,10 +32,6 @@ void SampleApp::KernelstateChanged(KernelState state)
 
         _kernel->DrawTextOnBootScreen("Services Started\nStarting Audio");
 
-#ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
-        TIMED_SCOPE_IF(timerStartAudio, "StartAudio", VLOG_IS_ON(4));
-#endif
-        _kernel->StartAudio("");
         // mediaManager_ = kernel_->GetMediaManger();
 
 #ifdef ELPP_FEATURE_PERFORMANCE_TRACKING

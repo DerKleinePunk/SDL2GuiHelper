@@ -9,3 +9,4 @@
 #include "gui/GUITextEdit.h"
 #include "gui/GUIMapview.h"
 #include "gui/GUIRoundPictureButton.h"
+#include "gui/GUIMediaDisplay.h"

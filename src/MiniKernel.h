@@ -5,7 +5,7 @@
 #include "gui/GUIScreen.h"
 #include "gui/GUIElementManager.h"
 #include "KernelConfig.h"
-#include "sound/IAudioManager.h"
+#include "IAudioManager.h"
 
 typedef std::function<void(KernelState state)> KernelStateCallbackFunction;
 typedef std::function<void(AppEvent code, void* data1, void* data2)> ApplicationEventCallbackFunction;
@@ -18,7 +18,7 @@ private:
     bool _firstrun;
     std::map<Uint32, GUIScreen*> _screens;
     KernelStateCallbackFunction _callbackState;
-    ApplicationEventCallbackFunction _applicationEventCallbackFunction;
+    std::vector<ApplicationEventCallbackFunction> _applicationEventCallbackFunctions;
     float _screenDpi;
     GUIElementManager* _manager;
     std::string _errorMessage;
@@ -27,6 +27,7 @@ private:
     IMapManager* _mapManager;
 
     void HandleEvent(const SDL_Event& event,bool& exitLoop);
+    int StartAudio(const std::string& drivername);
 public:
     MiniKernel();   
     ~MiniKernel();
@@ -40,7 +41,6 @@ public:
     void SetStateCallBack(KernelStateCallbackFunction callback);
     void RegisterApplicationEvent(ApplicationEventCallbackFunction callbackFunction);
     void DrawTextOnBootScreen(const std::string& text);
-    int StartAudio(const std::string& drivername);
     SDLEventManager* GetEventManager() const;
     void ShowErrorMessage(const std::string& message);
     int PlaySound(const std::string& filename) const;

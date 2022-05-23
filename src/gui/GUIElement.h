@@ -5,6 +5,7 @@
 #include "../../common/easylogging/easylogging++.h"
 #include "GUIScreen.h"
 #include "../IMapManager.h"
+#include "../IAudioManager.h"
 
 class GUIRenderer;
 class GUITexture;
@@ -13,7 +14,7 @@ class GUIFontManager;
 class GUIImageManager;
 class SDLEventManager;
 class logger_;
-
+class MiniKernel;
 
 class GUIElement : public IGUIElement
 {
@@ -53,6 +54,8 @@ protected:
 	GUIImageManager* imageManager_;
 	GUIRenderer* renderer_;
     IMapManager* mapManager_;
+	IAudioManager* _audioManager;
+	MiniKernel* _kernel;
 	SDL_Color backgroundColor_;
 	SDL_Color foregroundColor_;
 	GUIPoint topLeft_;
@@ -74,7 +77,7 @@ protected:
 	GUIPoint ScreenTopLeft() const;
 	bool NeedRedraw() const;
 	void Create(GUIRenderer* renderer, GUIFontManager* fontManager);
-	void Create(GUIRenderer* renderer, GUIElement* parent, GUIFontManager* fontManager, SDLEventManager* eventManager, GUIImageManager* imageManager, IMapManager* mapManager, Uint32 windowId);
+	void Create(GUIRenderer* renderer, GUIElement* parent, GUIFontManager* fontManager, SDLEventManager* eventManager, GUIImageManager* imageManager, IMapManager* mapManager, IAudioManager* audioManager, MiniKernel* kernel, Uint32 windowId);
 	void HandleEventBase(GUIEvent& event);
 	void SetRedraw();
 	void SetRenderer(GUITexture* texture = nullptr) const;

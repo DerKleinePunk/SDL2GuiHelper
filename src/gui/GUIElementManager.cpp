@@ -262,7 +262,7 @@ bool GUIElementManager::IsMouseEvent(GUIEvent& event)
 	return false;
 }
 
-GUIElementManager::GUIElementManager(GUIRenderer* renderer,GUIScreenCanvas* canvas, SDLEventManager* eventManager, GUIImageManager* imageManager, IMapManager* mapManager, Uint32 windowId):
+GUIElementManager::GUIElementManager(GUIRenderer* renderer,GUIScreenCanvas* canvas, SDLEventManager* eventManager, GUIImageManager* imageManager, IMapManager* mapManager, IAudioManager* audioManager, MiniKernel* kernel, Uint32 windowId):
 	rootNode_(GUIElementTreeNode(reinterpret_cast<GUIElement*>(canvas))),
 	inEvent_(false), _modalElement(nullptr)
 {
@@ -275,6 +275,14 @@ GUIElementManager::GUIElementManager(GUIRenderer* renderer,GUIScreenCanvas* canv
     imageManager_ = imageManager;
     mapManager_ = mapManager;
     windowId_ = windowId;
+	
+	_audioManager = audioManager;
+	
+	if(kernel == nullptr) {
+        throw NullPointerException("kernel can not be null");
+    }
+	
+	_kernel = kernel;
 }
 
 GUIElementManager::~GUIElementManager() {
@@ -295,7 +303,7 @@ void GUIElementManager::AddElement(GUIElement* element)
 		throw ArgumentException("Name musst be unique");
 	}
 
-	element->Create(renderer_, rootNode_.Element(), fontManager_, eventManager_, imageManager_, mapManager_, windowId_);
+	element->Create(renderer_, rootNode_.Element(), fontManager_, eventManager_, imageManager_, mapManager_, _audioManager, _kernel, windowId_);
 	if (!inEvent_) {
         rootNode_.Add(element);
         element->Init();
@@ -343,7 +351,7 @@ void GUIElementManager::AddElement(GUIElement* parent, GUIElement* element) {
 			}
 			if (elementMapEntry->second->Element() == parent) {
 				elementMapEntry->second->Add(element);
-				element->Create(renderer_, parent, fontManager_, eventManager_, imageManager_, mapManager_, windowId_);
+				element->Create(renderer_, parent, fontManager_, eventManager_, imageManager_, mapManager_, _audioManager, _kernel, windowId_);
 				return;
 			}
 			++elementMapEntry;
@@ -352,7 +360,7 @@ void GUIElementManager::AddElement(GUIElement* parent, GUIElement* element) {
 			throw NullPointerException("parent not found");
 		}
 	}
-	element->Create(renderer_, parent, fontManager_, eventManager_, imageManager_, mapManager_, windowId_);
+	element->Create(renderer_, parent, fontManager_, eventManager_, imageManager_, mapManager_, _audioManager, _kernel, windowId_);
 	if (!inEvent_) {
         node->Add(element);
         element->Init();

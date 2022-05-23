@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include "../gui/GUIRenderer.h"
-#include "../gui/GUITexture.h"
+#include "gui/GUIRenderer.h"
+#include "gui/GUITexture.h"
 
 #define SDL_AUDIO_BUFFER_SIZE 1024
 #define FADING_TIME_MS 800

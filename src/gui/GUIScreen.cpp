@@ -100,6 +100,8 @@ GUIScreen::~GUIScreen()
 GUIElementManager* GUIScreen::Create(std::string title,
                                      SDLEventManager* eventManager,
                                      IMapManager* mapManager,
+                                     IAudioManager* audioManager,
+                                     MiniKernel* kernel,
                                      const std::string& backgroundImage,
                                      bool fullscreen,
                                      SDL_Color backgroundColor,
@@ -108,8 +110,19 @@ GUIElementManager* GUIScreen::Create(std::string title,
     if(eventManager == nullptr) {
         throw NullPointerException("eventManager can not be null");
     }
+    
+    if(kernel == nullptr) {
+        throw NullPointerException("kernel can not be null");
+    }
+
+#ifdef ENABLEMUSIKMANAGER
+    if(audioManager == nullptr) {
+        throw NullPointerException("audioManager can not be null");
+    }
+#endif
 
     eventManager_ = eventManager;
+    _kernel = kernel;
     size_ = GUISize(1024, 600);
 
     /*SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, OPENGL_PROFILE);
@@ -155,9 +168,9 @@ GUIElementManager* GUIScreen::Create(std::string title,
 
     id_ = SDL_GetWindowID(window_);
     canvas_ = new GUIScreenCanvas(size_, backgroundImage, backgroundColor, foregroundColor);
-    manager_ = new GUIElementManager(renderer_, canvas_, eventManager_, imageManager_, mapManager, id_);
+    manager_ = new GUIElementManager(renderer_, canvas_, eventManager_, imageManager_, mapManager, audioManager, _kernel, id_);
     canvas_->imageManager_ = imageManager_;
-
+   
     auto info = renderer_->GetInfo();
 
     LOG(INFO) << "Using Renderer " << info.name;

@@ -106,7 +106,6 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
                     element->Close();
                     delete element;
                 }
-                _applicationEventCallbackFunction(code, nullptr, data2);
             } else if(code == AppEvent::Click) {
                 if(_kernelConfig.AudioFileForClick.length() > 0) {
                     if(PlaySound(_kernelConfig.AudioFileForClick) < 0) {
@@ -119,8 +118,9 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
                         LOG(ERROR) << "Fehler beim Abspielen von Sound " << _kernelConfig.AudioFileForLongClick;
                     }
                 }
-            } else if(_applicationEventCallbackFunction != nullptr) {
-                _applicationEventCallbackFunction(code, data1, data2);
+            }
+            for(const auto callback : _applicationEventCallbackFunctions) {
+                callback(code, nullptr, data2);
             }
         }
     }
@@ -163,7 +163,6 @@ MiniKernel::MiniKernel()
     _firstrun = true;
     _callbackState = nullptr;
     _screenDpi = 0.0;
-    _applicationEventCallbackFunction = nullptr;
     _mapManager = nullptr;
     _audioManager = nullptr;
     _manager = nullptr;
@@ -277,6 +276,7 @@ void MiniKernel::StartCoreServices()
 #ifdef LIBOSMSCOUT
     _mapManager = new MapManager();
 #endif
+    StartAudio(_kernelConfig.AudioDriver);
 }
 
 void MiniKernel::Shutdown()
@@ -324,7 +324,7 @@ MiniKernel::CreateScreen(const std::string& title, const std::string& videoDrive
     TIMED_SCOPE_IF(timerCreateScreen, "CreateScreen", VLOG_IS_ON(4));
 #endif
 
-    _manager = screen->Create(title, _eventManager, _mapManager, backgroundImage, fullscreen, _kernelConfig.BackgroundScreen, _kernelConfig.ForegroundScreen);
+    _manager = screen->Create(title, _eventManager, _mapManager, _audioManager, this, backgroundImage, fullscreen, _kernelConfig.BackgroundScreen, _kernelConfig.ForegroundScreen);
     auto id = screen->GetId();
 
     _screens.insert(std::make_pair(id, screen));
@@ -354,7 +354,7 @@ void MiniKernel::SetStateCallBack(KernelStateCallbackFunction callback)
 
 void MiniKernel::RegisterApplicationEvent(ApplicationEventCallbackFunction callbackFunction)
 {
-    _applicationEventCallbackFunction = callbackFunction;
+    _applicationEventCallbackFunctions.push_back(callbackFunction);
 }
 
 void MiniKernel::DrawTextOnBootScreen(const std::string& text)
