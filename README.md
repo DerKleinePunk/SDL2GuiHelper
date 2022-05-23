@@ -8,7 +8,7 @@ Not an Komplett Projekt there are Samples sho how to use it.
 
 ![Mainscreen](dokumentation/images/MiniSampleScreen1.png)
 
-![Musik Data](dokumentation/images/MediaData.mp4)
+[![Musik Data](dokumentation/images/Videothumb)](dokumentation/images/MediaData.mp4)
 
 ## Defines
 
