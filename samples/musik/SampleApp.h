@@ -5,6 +5,7 @@
 
 #include "MapDialog.h"
 #include "MusikPlayerDialog.h"
+#include "AutomationDialog.h"
 
 // Todo Add it to Config
 const SDL_Color own_firered_color = { 0xA0, 0x00, 0x1C, 0xFF };
@@ -15,7 +16,8 @@ enum class UiState : unsigned char {
 	home,
 	map,
 	sds,
-    musikPlayer
+    musikPlayer,
+    automation
 };
 
 class SampleApp
@@ -25,6 +27,7 @@ private:
     GUIElementManager* _manager;
     MapDialog* _mapDialog;
     MusikPlayerDialog* _playerDialog;
+    AutomationDialog* _autoDialog;
     UiState _appUiStateCurrent; 
 
     void ApplicationEvent(AppEvent event, void* data1, void* data2);
@@ -35,6 +38,7 @@ private:
     void BuildMainScreen();
     void BuildMapScreen();
     void BuildPlayerScreen();
+    void BuildAutoScreen();
     void BuildCommandBar();
     void UpdateUI(UiState newUIState);
 public:

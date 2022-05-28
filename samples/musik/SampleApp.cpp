@@ -72,6 +72,7 @@ void SampleApp::BuildFirstScreen() {
     BuildMainScreen();
     BuildMapScreen();
     BuildPlayerScreen();
+    BuildAutoScreen();
     BuildCommandBar();
 
     //Clear Boot Log
@@ -171,6 +172,17 @@ void SampleApp::BuildPlayerScreen()
     _playerDialog->Init();
 }
 
+void SampleApp::BuildAutoScreen()
+{
+    auto playerScreenBackground =
+    new GUITestElement(GUIPoint(0, 0), GUISize(100, 100, sizeType::relative), transparent_color, "autoScreen");
+    _manager->AddElement(playerScreenBackground);
+    playerScreenBackground->Invisible();
+
+    _autoDialog = new AutomationDialog(playerScreenBackground, _manager, _kernel->GetEventManager());
+    _autoDialog->Init();
+}
+
 void SampleApp::BuildCommandBar()
 {
     auto commandBar = new GUITestElement(GUIPoint(0, 500), GUISize(1024, 100), transparent_color, "commandBar");
@@ -195,12 +207,20 @@ void SampleApp::BuildCommandBar()
 
     buttonstartPos += 175;
 
-
     tempButton = new GUITextButton(GUIPoint(buttonstartPos, 5), GUISize(150, 90),
                                    "playerCommandButton", own_red_color, white_color);
     tempButton->FontHeight(40);
     tempButton->Text("Musik");
     tempButton->RegisterOnClick([this](IGUIElement* sender) { UpdateUI(UiState::musikPlayer); });
+    _manager->AddElement(commandBar, tempButton);
+
+    buttonstartPos += 175;
+
+    tempButton = new GUITextButton(GUIPoint(buttonstartPos, 5), GUISize(150, 90),
+                                   "automationCommandButton", own_red_color, white_color);
+    tempButton->FontHeight(40);
+    tempButton->Text("Haus");
+    tempButton->RegisterOnClick([this](IGUIElement* sender) { UpdateUI(UiState::automation); });
     _manager->AddElement(commandBar, tempButton);
 }
 
@@ -223,6 +243,10 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             _playerDialog->Hide();
         }
+        element = _manager->GetElementByName("autoScreen");
+        if(element != nullptr) {
+            _autoDialog->Hide();
+        }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
@@ -236,6 +260,9 @@ void SampleApp::UpdateUI(UiState newUIState)
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("playerCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
         if(element != nullptr) {
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
@@ -253,6 +280,10 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             _playerDialog->Hide();
         }
+        element = _manager->GetElementByName("autoScreen");
+        if(element != nullptr) {
+            _autoDialog->Hide();
+        }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
@@ -266,6 +297,9 @@ void SampleApp::UpdateUI(UiState newUIState)
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("playerCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
         if(element != nullptr) {
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
@@ -283,6 +317,10 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             _playerDialog->Hide();
         }
+        element = _manager->GetElementByName("autoScreen");
+        if(element != nullptr) {
+            _autoDialog->Hide();
+        }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
@@ -299,9 +337,12 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
         break;
     case UiState::musikPlayer:
-    element = _manager->GetElementByName("mainScreen");
+        element = _manager->GetElementByName("mainScreen");
         if(element != nullptr) {
             _manager->InvisibleElement(element);
         }
@@ -312,6 +353,10 @@ void SampleApp::UpdateUI(UiState newUIState)
         element = _manager->GetElementByName("playerScreen");
         if(element != nullptr) {
             _playerDialog->Show();
+        }
+        element = _manager->GetElementByName("autoScreen");
+        if(element != nullptr) {
+            _autoDialog->Hide();
         }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
@@ -326,6 +371,48 @@ void SampleApp::UpdateUI(UiState newUIState)
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("playerCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
+        }
+        element = _manager->GetElementByName("automationCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        break;
+    case UiState::automation:
+        element = _manager->GetElementByName("mainScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
+        element = _manager->GetElementByName("mapScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
+        element = _manager->GetElementByName("playerScreen");
+        if(element != nullptr) {
+            _playerDialog->Hide();
+        }
+        element = _manager->GetElementByName("autoScreen");
+        if(element != nullptr) {
+            _autoDialog->Show();
+        }
+        element = _manager->GetElementByName("homeCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("sdsCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("mapCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("playerCommandButton");
+        if(element != nullptr) {
+            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("automationCommandButton");
         if(element != nullptr) {
             static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
         }

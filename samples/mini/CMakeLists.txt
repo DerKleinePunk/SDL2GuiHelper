@@ -29,6 +29,8 @@ IF("${TARGET}" STREQUAL "PI")
     TARGET_LINK_LIBRARIES(${project_BIN} ${RPIROOT}/opt/vc/lib/libvcsm.so)
 ENDIF()
 
+MESSAGE(STATUS "Compiler Flags are ${CMAKE_CXX_FLAGS}")
+
 message(STATUS "Generating Copy Rule for Resources")
 set(MAINFONTSOURCE "${MAINFOLDER}/resources/font/Inconsolata-Bold.ttf")
 add_custom_command(TARGET ${project_BIN} POST_BUILD # Adds a post-build event to MyTest

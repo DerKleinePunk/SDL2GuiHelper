@@ -50,6 +50,10 @@ IF(${FFmpeg_FOUND})
     SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLEMUSIKMANAGER")
 ENDIF()
 
+IF(${Cairo_FOUND})
+    SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLECAIRO")
+ENDIF()
+
 if(OSMSCOUT_FOUND)
     TARGET_LINK_LIBRARIES(${project_BIN} ${OSMScout_LIBRARIES})
     TARGET_LINK_LIBRARIES(${project_BIN} ${CAIRO_LIBRARIES})
@@ -69,6 +73,8 @@ IF("${TARGET}" STREQUAL "PI")
     TARGET_LINK_LIBRARIES(${project_BIN} ${RPIROOT}/opt/vc/lib/libvchiq_arm.so)
     TARGET_LINK_LIBRARIES(${project_BIN} ${RPIROOT}/opt/vc/lib/libvcsm.so)
 ENDIF()
+
+MESSAGE(STATUS "Compiler Flags are ${CMAKE_CXX_FLAGS}")
 
 message(STATUS "Generating Copy Rule for Resources")
 set(MAINFONTSOURCE "${MAINFOLDER}/resources/font/Inconsolata-Bold.ttf")

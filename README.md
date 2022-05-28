@@ -14,7 +14,10 @@ Not an Komplett Projekt there are Samples sho how to use it.
 
 LIBOSMSCOUT -> Enable Map Manger & Co
 
-ENABLEAUDIOMANAGER -> Enable Automanger need FFMPEG and more
+ENABLEAUDIOMANAGER -> Enable Audiomanger
+ENABLEMUSIKMANAGER -> Enable Audiomanger need FFMPEG an can Play Mp3 and Flac files
+
+ENABLECAIRO-> Some GUI Elements need Cairo to paint (try at now we muss test)
 
 DEFAULT_SMALL_FONT -> Fontname for small fons
 

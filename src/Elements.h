@@ -10,3 +10,4 @@
 #include "gui/GUIMapview.h"
 #include "gui/GUIRoundPictureButton.h"
 #include "gui/GUIMediaDisplay.h"
+#include "gui/GUIProgressbar.h"
