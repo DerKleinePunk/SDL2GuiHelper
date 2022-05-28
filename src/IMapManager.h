@@ -26,5 +26,6 @@ public:
     virtual void ZoomUp() = 0;
     virtual void ZoomDown() = 0;
     virtual void SetTargetPos(const double& lat,const double& lon) = 0;
+    virtual void MoveMapPixel(double x, double y) = 0;
 };
 

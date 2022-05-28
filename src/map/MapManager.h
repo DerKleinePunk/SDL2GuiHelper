@@ -81,4 +81,5 @@ class MapManager : public IMapManager
     void ZoomUp();
     void ZoomDown();
     void SetTargetPos(const double& lat,const double& lon);
+    void MoveMapPixel(double x, double y);
 };

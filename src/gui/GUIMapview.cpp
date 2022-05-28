@@ -40,6 +40,9 @@ void GUIMapview::HandleMapEvent(GUIEvent& event) {
             LOG(ERROR) << SDL_GetError();
         }
         SDL_UnlockMutex(mapMemLock_);
+        viewDeltaNow_.x = viewDeltaNow_.x - viewDeltaAtJob_.x;
+        viewDeltaNow_.y = viewDeltaNow_.y - viewDeltaAtJob_.y;
+        renderJobRun_ = false;
         SetRedraw();
     }
     
@@ -98,8 +101,7 @@ void GUIMapview::InitMap(){
 }
 
 GUIMapview::GUIMapview(const GUIPoint position, const GUISize size, const std::string& name, const SDL_Color background, const SDL_Color textcolor) :
-	GUIElement(position, size, name),
-    GUIOnClickDecorator(static_cast<GUIElement*>(this)), 
+	GUIElement(position, size, name), GUIOnClickDecorator(static_cast<GUIElement*>(this)), 
     font_(nullptr),
     mapPixels_(nullptr) {
     logger_ = el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
@@ -110,9 +112,15 @@ GUIMapview::GUIMapview(const GUIPoint position, const GUISize size, const std::s
     mapMemLock_ = SDL_CreateMutex();
     viewDeltaNow_.x = 0;
     viewDeltaNow_.y = 0;
+    viewDeltaAtJob_.x = 0;
+    viewDeltaAtJob_.y = 0;
+    startPoint_.x = 0;
+    startPoint_.y = 0;
     streetImageTexture_ = nullptr;
     headTexture_ = nullptr;
     statusbarTexture_ = nullptr;
+    renderJobRun_ = false;
+    _buttonIsDown = false;
 }
 
 void GUIMapview::Init() {
@@ -145,7 +153,7 @@ void GUIMapview::Draw() {
 void GUIMapview::HandleEvent(GUIEvent& event) {
 	if(event.Type == mapEvent_) {
         HandleMapEvent(event);
-    }
+    } 
 }
 
 void GUIMapview::UpdateAnimation() {
@@ -237,12 +245,46 @@ void GUIMapview::SetTargetPos(const double& lat,const double& lon)
     }
 }
 
-void GUIMapview::ButtonDownUpdate(Uint8 button)
+void GUIMapview::ButtonDownUpdate(Uint8 button, const GUIPoint& point)
 {
-
+    if(button == SDL_BUTTON_LEFT) {
+        startPoint_.x = point.x;
+        startPoint_.y = point.y;
+        _buttonIsDown = true;
+    } 
 }
 
-void GUIMapview::ButtonUpUpdate(Uint8 button)
+void GUIMapview::ButtonUpUpdate(Uint8 button, const GUIPoint& point)
 {
+    if(button == SDL_BUTTON_LEFT) {
+        _buttonIsDown = false;
+    }
+}
 
+void GUIMapview::ButtonMoveUpdate(Uint8 button, const GUIPoint& point)
+{
+    if(!_buttonIsDown) return;
+
+    int dx = point.x - startPoint_.x;
+    int dy = point.y - startPoint_.y;
+
+    viewDeltaNow_.x = viewDeltaNow_.x + dx;
+    viewDeltaNow_.y = viewDeltaNow_.y + dy;
+
+    startPoint_.x = point.x;
+    startPoint_.y = point.y;
+
+    if(!renderJobRun_) {
+
+        LOG(DEBUG) << "move map to x " << viewDeltaNow_.x << " y " << viewDeltaNow_.y;
+        LOG(DEBUG) << "dx " << dx << " dy " << dy;
+
+        renderJobRun_ = true;
+        viewDeltaAtJob_.x = viewDeltaNow_.x;
+        viewDeltaAtJob_.y = viewDeltaNow_.y;
+
+        if(mapManager_ != nullptr) {
+            mapManager_->MoveMapPixel(-viewDeltaNow_.x, viewDeltaNow_.y);
+        }
+    } 
 }

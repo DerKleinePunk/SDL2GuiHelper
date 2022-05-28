@@ -174,7 +174,7 @@ void GUITextButton::Enable()
     }
 }
 
-void GUITextButton::ButtonDownUpdate(Uint8 button)
+void GUITextButton::ButtonDownUpdate(Uint8 button, const GUIPoint& point)
 {
     if (button == SDL_BUTTON_LEFT) {
         _buttonDown = true;
@@ -182,10 +182,15 @@ void GUITextButton::ButtonDownUpdate(Uint8 button)
     }
 }
 
-void GUITextButton::ButtonUpUpdate(Uint8 button)
+void GUITextButton::ButtonUpUpdate(Uint8 button, const GUIPoint& point)
 {
     if (button == SDL_BUTTON_LEFT) {
         _buttonDown = false;
         SetRedraw();
     }
+}
+
+void GUITextButton::ButtonMoveUpdate(Uint8 button, const GUIPoint& point)
+{
+    UNUSED(button);
 }

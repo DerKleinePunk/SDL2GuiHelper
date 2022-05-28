@@ -49,8 +49,9 @@ public:
 	int GetCorner() const;
 	void SetCorner(int corner);
 
-	void ButtonDownUpdate(Uint8 button) override;
-	void ButtonUpUpdate(Uint8 button) override;
+	void ButtonDownUpdate(Uint8 button, const GUIPoint& point) override;
+	void ButtonUpUpdate(Uint8 button, const GUIPoint& point) override;
+    void ButtonMoveUpdate(Uint8 button, const GUIPoint& point) override;
 };
 
 

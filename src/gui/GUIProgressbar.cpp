@@ -170,12 +170,17 @@ void GUIProgressbar::Close()
 {
 }
 
-void GUIProgressbar::ButtonDownUpdate(Uint8 button)
+void GUIProgressbar::ButtonDownUpdate(Uint8 button, const GUIPoint& point)
 {
     UNUSED(button);
 }
 
-void GUIProgressbar::ButtonUpUpdate(Uint8 button)
+void GUIProgressbar::ButtonUpUpdate(Uint8 button, const GUIPoint& point)
+{
+    UNUSED(button);
+}
+
+void GUIProgressbar::ButtonMoveUpdate(Uint8 button, const GUIPoint& point)
 {
     UNUSED(button);
 }

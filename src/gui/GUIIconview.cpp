@@ -60,12 +60,17 @@ void GUIIconview::SetCurrentIcon(const std::string& fileName) {
 	SetRedraw();
 }
 
-void GUIIconview::ButtonDownUpdate(Uint8 button)
+void GUIIconview::ButtonDownUpdate(Uint8 button, const GUIPoint& point)
 {
 
 }
 
-void GUIIconview::ButtonUpUpdate(Uint8 button)
+void GUIIconview::ButtonUpUpdate(Uint8 button, const GUIPoint& point)
 {
 
+}
+
+void GUIIconview::ButtonMoveUpdate(Uint8 button, const GUIPoint& point)
+{
+    UNUSED(button);
 }

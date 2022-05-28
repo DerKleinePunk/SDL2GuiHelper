@@ -505,3 +505,21 @@ void MapManager::SetTargetPos(const double& lat, const double& lon)
         LOG(WARNING) << "Redraw lost";
     }
 }
+
+void MapManager::MoveMapPixel(double x, double y)
+{
+    _projectionCalc.Set(_mapCenter, _mapAngle, _magnification, _screenDpi, _mapWidth, _mapHeight);
+    _projectionCalc.Move(x, y);
+    _mapCenter = _projectionCalc.GetCenter();
+
+    if(_jobQueue.size() == 0) {
+        auto mydata2 = new ThreadJobData();
+        mydata2->whattodo = "DrawMap";
+        mydata2->data1 = nullptr;
+        mydata2->data2 = nullptr;
+
+        _jobQueue.add(mydata2);
+    } else {
+        LOG(WARNING) << "Redraw lost";
+    }
+}

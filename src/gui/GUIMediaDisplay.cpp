@@ -196,10 +196,15 @@ void GUIMediaDisplay::Close()
 	//TODO Unregister AppEvents
 }
 
-void GUIMediaDisplay::ButtonDownUpdate(Uint8 button)
+void GUIMediaDisplay::ButtonDownUpdate(Uint8 button, const GUIPoint& point)
 {
 }
 
-void GUIMediaDisplay::ButtonUpUpdate(Uint8 button)
+void GUIMediaDisplay::ButtonUpUpdate(Uint8 button, const GUIPoint& point)
 {
+}
+
+void GUIMediaDisplay::ButtonMoveUpdate(Uint8 button, const GUIPoint& point)
+{
+    UNUSED(button);
 }

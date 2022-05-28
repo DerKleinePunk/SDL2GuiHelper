@@ -240,10 +240,15 @@ void GUITextLabel::SetCorner(int corner)
     _corner = corner;
 }
 
-void GUITextLabel::ButtonDownUpdate(Uint8 button)
+void GUITextLabel::ButtonDownUpdate(Uint8 button, const GUIPoint& point)
 {
 }
 
-void GUITextLabel::ButtonUpUpdate(Uint8 button)
+void GUITextLabel::ButtonUpUpdate(Uint8 button, const GUIPoint& point)
 {
+}
+
+void GUITextLabel::ButtonMoveUpdate(Uint8 button, const GUIPoint& point)
+{
+    UNUSED(button);
 }

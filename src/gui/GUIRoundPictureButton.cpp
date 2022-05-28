@@ -169,7 +169,7 @@ void GUIRoundPictureButton::UpdateAnimation()
 void GUIRoundPictureButton::Close() {
 }
 
-void GUIRoundPictureButton::ButtonDownUpdate(Uint8 button)
+void GUIRoundPictureButton::ButtonDownUpdate(Uint8 button, const GUIPoint& point)
 {
     if (button == SDL_BUTTON_LEFT) {
         _buttonDown = true;
@@ -177,10 +177,15 @@ void GUIRoundPictureButton::ButtonDownUpdate(Uint8 button)
     }
 }
 
-void GUIRoundPictureButton::ButtonUpUpdate(Uint8 button)
+void GUIRoundPictureButton::ButtonUpUpdate(Uint8 button, const GUIPoint& point)
 {
     if (button == SDL_BUTTON_LEFT) {
         _buttonDown = false;
         SetRedraw();
     }
+}
+
+void GUIRoundPictureButton::ButtonMoveUpdate(Uint8 button, const GUIPoint& point)
+{
+    UNUSED(button);
 }

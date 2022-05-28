@@ -6,7 +6,7 @@ struct GUIEvent;
 class GUITexture;
 class MapManager;
 
-class GUIMapview : public GUIElement, public GUIOnClickDecorator {
+class GUIMapview : public GUIElement, public GUIOnClickDecorator{
     el::Logger* logger_;
     bool initOk_;
     SDL_Color textcolor_;
@@ -16,12 +16,17 @@ class GUIMapview : public GUIElement, public GUIOnClickDecorator {
     GUITexture*         mapTexture_;
     Uint32              mapEvent_;
     SDL_Point           viewDeltaNow_;
+    SDL_Point           startPoint_;
+    SDL_Point           viewDeltaAtJob_;
     GUITexture*         streetImageTexture_;
     GUITexture*         headTexture_;
     GUITexture*         statusbarTexture_;
     std::string         currentStreetName_;
     int                 currentMaxSpeed_;
     int                 currentSpeed_;
+    bool                renderJobRun_;
+    bool                _buttonIsDown;
+      
     void RenderMap();
     void InitMap();
     void HandleMapEvent(GUIEvent& event);
@@ -44,6 +49,7 @@ public:
     void ZoomDown();
     void SetTargetPos(const double& lat,const double& lon);
 
-    void ButtonDownUpdate(Uint8 button) override;
-	void ButtonUpUpdate(Uint8 button) override;
+    void ButtonDownUpdate(Uint8 button, const GUIPoint& point) override;
+	void ButtonUpUpdate(Uint8 button, const GUIPoint& point) override;
+    void ButtonMoveUpdate(Uint8 button, const GUIPoint& point) override;
 };
