@@ -11,7 +11,7 @@
 #include <pango/pangocairo.h>
 #include <pango/pango-glyph.h>
 #include "GUITexture.h"
-
+#include "GUIRenderer.h"
 
 class GUICarioTexture
 {
@@ -21,10 +21,10 @@ private:
     unsigned char* _texturePixels;
     GUISize _size;
     GUITexture* _texture;
-
+    GUIRenderer* _renderer;
     void Create();
 public:
-    GUICarioTexture(GUISize size);
+    GUICarioTexture(GUIRenderer* renderer, GUISize size);
     ~GUICarioTexture();
 
     cairo_t* GetCairo();

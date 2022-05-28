@@ -10,6 +10,9 @@ Not an Komplett Projekt there are Samples sho how to use it.
 
 [![Musik Data](dokumentation/images/Videothumb)](dokumentation/images/MediaData.mp4)
 
+With Enabled cairo painter
+![Progress Bar 50 %](dokumentation/images/ProgressBar50.png)
+
 ## Defines
 
 LIBOSMSCOUT -> Enable Map Manger & Co

@@ -24,8 +24,28 @@ AutomationDialog::~AutomationDialog()
 
 void AutomationDialog::Init()
 {
-    _progressbar = new GUIProgressbar(GUIPoint(0, 0), GUISize(100, 50,sizeType::relative), "batterieLevel", own_firered_color, white_color);
+    _progressbar = new GUIProgressbar(GUIPoint(0, 45), GUISize(100, 50,sizeType::relative), "batterieLevel", own_firered_color, white_color);
     _manager->AddElement(_parent, _progressbar);
+
+    auto zoomDownButton = new GUITextButton(GUIPoint(20, 365), GUISize(300, 60), "value25Button", own_firered_color, white_color);
+    zoomDownButton->Text("25");
+    zoomDownButton->RegisterOnClick([this](IGUIElement* sender) { SetValue(25); });
+    _manager->AddElement(_parent, zoomDownButton);
+
+    zoomDownButton = new GUITextButton(GUIPoint(20, 430), GUISize(300, 60), "value50Button", own_firered_color, white_color);
+    zoomDownButton->Text("50");
+    zoomDownButton->RegisterOnClick([this](IGUIElement* sender) { SetValue(50); });
+    _manager->AddElement(_parent, zoomDownButton);
+
+    zoomDownButton = new GUITextButton(GUIPoint(325, 365), GUISize(300, 60), "value75Button", own_firered_color, white_color);
+    zoomDownButton->Text("75");
+    zoomDownButton->RegisterOnClick([this](IGUIElement* sender) { SetValue(75); });
+    _manager->AddElement(_parent, zoomDownButton);
+
+    zoomDownButton = new GUITextButton(GUIPoint(325, 430), GUISize(300, 60), "value100Button", own_firered_color, white_color);
+    zoomDownButton->Text("100");
+    zoomDownButton->RegisterOnClick([this](IGUIElement* sender) { SetValue(100); });
+    _manager->AddElement(_parent, zoomDownButton);
 }
 
 void AutomationDialog::Show()
@@ -36,4 +56,9 @@ void AutomationDialog::Show()
 void AutomationDialog::Hide()
 {
     _parent->Invisible();
+}
+
+void AutomationDialog::SetValue(unsigned char value)
+{
+    _progressbar->SetValue(value);
 }

@@ -6,10 +6,12 @@
 #endif
 
 #include "MapManager.h"
-#include "../../common/easylogging/easylogging++.h"
-#include "../../common/utils/osmsoutlogger.h"
-#include "../../common/exception/ArgumentException.h"
+
 #include <chrono>
+
+#include "../../common/easylogging/easylogging++.h"
+#include "../../common/exception/ArgumentException.h"
+#include "../../common/utils/osmsoutlogger.h"
 using namespace std::chrono_literals;
 
 
@@ -19,7 +21,7 @@ int MapManager::WorkerMain()
 
     el::Helpers::setThreadName("MapManager Worker");
     LOG(DEBUG) << "Map Worker Started";
-    
+
     while(true) {
         try {
             auto jobInfo = _jobQueue.remove();
@@ -51,15 +53,14 @@ void MapManager::DrawMap()
 {
     LoadMapData();
 
-    if(_mapPixels == nullptr)  {
+    if(_mapPixels == nullptr) {
         LOG(DEBUG) << "no graphic buffer not paint the map";
         return;
     }
 
     if(_image_data_source == nullptr) {
-        _image_data_source =
-        cairo_image_surface_create_for_data(_mapPixels, CAIRO_FORMAT_ARGB32, _mapWidth, _mapHeight,
-                                            cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, _mapWidth));
+        _image_data_source = cairo_image_surface_create_for_data(_mapPixels, CAIRO_FORMAT_ARGB32, _mapWidth, _mapHeight,
+                                                                 cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, _mapWidth));
         _cairoImage = cairo_create(_image_data_source);
         _mapObjects = new MapObjects(_cairoImage);
         if(_cairoImage == nullptr) {
@@ -84,17 +85,14 @@ void MapManager::DrawMap()
             if(_paintMarker) {
                 auto imageWidth = cairo_image_surface_get_width(_image_data_marker);
                 auto imageHeight = cairo_image_surface_get_height(_image_data_marker);
-                cairo_set_source_surface(_cairoImage, _image_data_marker, x - (imageWidth / 2),
-                                         y - (imageHeight / 2));
+                cairo_set_source_surface(_cairoImage, _image_data_marker, x - (imageWidth / 2), y - (imageHeight / 2));
                 cairo_paint(_cairoImage);
                 LOG(DEBUG) << "drawed marker on surface";
             }
-            
-
         }
 
         _mapObjects->DrawAll(_projectionDraw);
-      
+
         cairo_surface_flush(_image_data_source);
     }
 
@@ -104,33 +102,28 @@ void MapManager::DrawMap()
     }
 }
 
-void MapManager::LoadMapData() {
-    _projectionDraw.Set(_mapCenter,
-                    _mapAngle,
-                    _magnification,
-                    _screenDpi,
-                    _mapWidth,
-                    _mapHeight);
+void MapManager::LoadMapData()
+{
+    _projectionDraw.Set(_mapCenter, _mapAngle, _magnification, _screenDpi, _mapWidth, _mapHeight);
 
-    if (_magnification.GetLevel()>=15) {
+    if(_magnification.GetLevel() >= 15) {
         _searchParameter.SetMaximumAreaLevel(6);
-    }
-    else {
+    } else {
         _searchParameter.SetMaximumAreaLevel(4);
     }
 
     _projectionDraw.SetLinearInterpolationUsage(_magnification.GetLevel() >= 10);
     _data.ClearDBData();
-    
+
     _mapService->LookupTiles(_projectionDraw, _mapTiles);
     auto count = 0;
-    for (auto it = _mapTiles.begin(); it != _mapTiles.end(); ++it) {
-        if (!it->get()->IsComplete()) {
+    for(auto it = _mapTiles.begin(); it != _mapTiles.end(); ++it) {
+        if(!it->get()->IsComplete()) {
             count++;
         }
     }
     LOG(INFO) << "titles " << _mapTiles.size() << " size need load " << count;
-    
+
     if(_mapService->LoadMissingTileData(_searchParameter, *_styleConfig, _mapTiles)) {
         _mapService->AddTileDataToMapData(_mapTiles, _data);
     }
@@ -179,7 +172,7 @@ MapManager::~MapManager()
 
     if(_image_data_marker != nullptr) {
         cairo_surface_destroy(_image_data_marker);
-         _image_data_marker = nullptr;
+        _image_data_marker = nullptr;
     }
 }
 
@@ -261,12 +254,12 @@ bool MapManager::InitOk() const
     return _initOk;
 }
 
-void MapManager::RegisterMe(int width, int height, NewMapImageDelegate callback, NewStreetNameOrSpeedDelegate callbackName) 
+void MapManager::RegisterMe(int width, int height, NewMapImageDelegate callback, NewStreetNameOrSpeedDelegate callbackName)
 {
     if(_painter == nullptr) throw new ArgumentException("painter == nullptr");
 
-    if(_mapPixels != nullptr) delete [] _mapPixels;
-    
+    if(_mapPixels != nullptr) delete[] _mapPixels;
+
     if(_cairoImage != nullptr) {
         cairo_destroy(_cairoImage);
     }
@@ -278,7 +271,7 @@ void MapManager::RegisterMe(int width, int height, NewMapImageDelegate callback,
 
     if(_image_data_marker != nullptr) {
         cairo_surface_destroy(_image_data_marker);
-         _image_data_marker = nullptr;
+        _image_data_marker = nullptr;
     }
 
     _width = width;
@@ -286,11 +279,11 @@ void MapManager::RegisterMe(int width, int height, NewMapImageDelegate callback,
 
     _mapWidth = width * 2;
     _mapHeight = height * 2;
-    
+
     _mapPixels = new unsigned char[_mapWidth * _mapHeight * 4];
     _callbackNewMapImage = callback;
     _callbackNewName = callbackName;
-    
+
     auto mydata2 = new ThreadJobData();
     mydata2->whattodo = "DrawMap";
     mydata2->data1 = nullptr;
@@ -335,35 +328,31 @@ void MapManager::DeInit()
     LOG(DEBUG) << "<- DeInit";
 }
 
-void MapManager::CenterMap(const double& lat,const double& lon, const double& compass, const double& currentSpeed) 
+void MapManager::CenterMap(const double& lat, const double& lon, const double& compass, const double& currentSpeed)
 {
     LOG(DEBUG) << "CenterMap Lat " << std::to_string(lat) << " Lon " << std::to_string(lon);
-    if (compass > -1) {
+    if(compass > -1) {
         _mapAngle = -compass * (2.0 * M_PI) / 360.0;
     }
-                
+
     _mapCenter.Set(lat, lon);
     _currentSpeed = currentSpeed;
     //_paintMarker = true;
-    
-    _projectionCalc.Set(_mapCenter,
-                    _mapAngle,
-                    _magnification,
-                    _screenDpi,
-                    _mapWidth,
-                    _mapHeight);
-    
+
+    _projectionCalc.Set(_mapCenter, _mapAngle, _magnification, _screenDpi, _mapWidth, _mapHeight);
+
     double x, y;
-    
+
     // New Pos every second NMEA Standard i think
-    auto speedToDistance = _currentSpeed/3.6; //m/sec wenn speed km/h
-    
-    auto posIThink = _mapCenter.Add(osmscout::Bearing::Degrees(_mapAngle), osmscout::Distance::Of<osmscout::Meter>(speedToDistance));
-    
+    auto speedToDistance = _currentSpeed / 3.6; // m/sec wenn speed km/h
+
+    auto posIThink =
+    _mapCenter.Add(osmscout::Bearing::Degrees(_mapAngle), osmscout::Distance::Of<osmscout::Meter>(speedToDistance));
+
     if(_projectionCalc.GeoToPixel(posIThink, x, y)) {
         LOG(DEBUG) << "Neue Pos ist auf Karte X " << x << " Y " << y << " Geo " << posIThink.GetDisplayText();
     }
-       
+
     if(_jobQueue.size() == 0) {
         auto mydata2 = new ThreadJobData();
         mydata2->whattodo = "DrawMap";
@@ -376,7 +365,8 @@ void MapManager::CenterMap(const double& lat,const double& lon, const double& co
     }
 }
 
-void MapManager::SetMarkerImageFile(const std::string& fileName) {
+void MapManager::SetMarkerImageFile(const std::string& fileName)
+{
     if(_image_data_marker != nullptr) {
         cairo_surface_destroy(_image_data_marker);
         _image_data_marker = nullptr;
@@ -432,64 +422,63 @@ void MapManager::ZoomDown()
 {
     if(_zoomValue - 1 >= 0) {
         _zoomValue--;
-        switch (_zoomValue)
-        {
-            case 0:
-                _magnification.SetLevel(osmscout::Magnification::magWorld);
-                break;
-            case 3:
-                _magnification.SetLevel(osmscout::Magnification::magWorld);
-                break;
-            case 4:
-                _magnification.SetLevel(osmscout::Magnification::magContinent);
-                break;
-            case 5:
-                _magnification.SetLevel(osmscout::Magnification::magState);
-                break;
-            case 6:
-                _magnification.SetLevel(osmscout::Magnification::magStateOver);
-                break;
-            case 7:
-                _magnification.SetLevel(osmscout::Magnification::magCounty);
-                break;
-            case 8:
-                _magnification.SetLevel(osmscout::Magnification::magRegion);
-                break;
-            case 9:
-                _magnification.SetLevel(osmscout::Magnification::magProximity);
-                break;
-            case 10:
-                _magnification.SetLevel(osmscout::Magnification::magCityOver);
-                break;
-            case 11:
-                _magnification.SetLevel(osmscout::Magnification::magCity);
-                break;
-            case 12:
-                _magnification.SetLevel(osmscout::Magnification::magSuburb);
-                break;
-            case 13:
-                _magnification.SetLevel(osmscout::Magnification::magDetail);
-                break;
-            case 14:
-                _magnification.SetLevel(osmscout::Magnification::magClose);
-                break;
-            case 15:
-                _magnification.SetLevel(osmscout::Magnification::magCloser);
-                break;
-            case 16:
-                _magnification.SetLevel(osmscout::Magnification::magVeryClose);
-                break;
-            case 18:
-                _magnification.SetLevel(osmscout::Magnification::magBlock);
-                break;
-            case 19:
-                _magnification.SetLevel(osmscout::Magnification::magStreet);
-                break;
-            case 20:
-                _magnification.SetLevel(osmscout::Magnification::magHouse);
-                break;
-            default:
-                break;
+        switch(_zoomValue) {
+        case 0:
+            _magnification.SetLevel(osmscout::Magnification::magWorld);
+            break;
+        case 3:
+            _magnification.SetLevel(osmscout::Magnification::magWorld);
+            break;
+        case 4:
+            _magnification.SetLevel(osmscout::Magnification::magContinent);
+            break;
+        case 5:
+            _magnification.SetLevel(osmscout::Magnification::magState);
+            break;
+        case 6:
+            _magnification.SetLevel(osmscout::Magnification::magStateOver);
+            break;
+        case 7:
+            _magnification.SetLevel(osmscout::Magnification::magCounty);
+            break;
+        case 8:
+            _magnification.SetLevel(osmscout::Magnification::magRegion);
+            break;
+        case 9:
+            _magnification.SetLevel(osmscout::Magnification::magProximity);
+            break;
+        case 10:
+            _magnification.SetLevel(osmscout::Magnification::magCityOver);
+            break;
+        case 11:
+            _magnification.SetLevel(osmscout::Magnification::magCity);
+            break;
+        case 12:
+            _magnification.SetLevel(osmscout::Magnification::magSuburb);
+            break;
+        case 13:
+            _magnification.SetLevel(osmscout::Magnification::magDetail);
+            break;
+        case 14:
+            _magnification.SetLevel(osmscout::Magnification::magClose);
+            break;
+        case 15:
+            _magnification.SetLevel(osmscout::Magnification::magCloser);
+            break;
+        case 16:
+            _magnification.SetLevel(osmscout::Magnification::magVeryClose);
+            break;
+        case 18:
+            _magnification.SetLevel(osmscout::Magnification::magBlock);
+            break;
+        case 19:
+            _magnification.SetLevel(osmscout::Magnification::magStreet);
+            break;
+        case 20:
+            _magnification.SetLevel(osmscout::Magnification::magHouse);
+            break;
+        default:
+            break;
         }
 
         auto mydata2 = new ThreadJobData();
@@ -501,10 +490,10 @@ void MapManager::ZoomDown()
     }
 }
 
-void MapManager::SetTargetPos(const double& lat,const double& lon)
+void MapManager::SetTargetPos(const double& lat, const double& lon)
 {
     _mapObjects->SetTargetPos(lat, lon);
-    
+
     if(_jobQueue.size() == 0) {
         auto mydata2 = new ThreadJobData();
         mydata2->whattodo = "DrawMap";

@@ -16,4 +16,6 @@ public:
     void Init();
     void Show();
     void Hide();
+
+    void SetValue(unsigned char value);
 };
