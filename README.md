@@ -1,18 +1,20 @@
 # SDL2 GUI Helper
 
-Some Classes to Build an SDL2 Gui
+Some classes to build an GUI using SDL2
 
-at now it is an Repos to make able using in more than one projekt without copy code.
+For now these are just repositories which can be used in different projects without the need to copy/paste the code into the projects source code.
 
-Not an Komplett Projekt there are Samples sho how to use it.
+Some examples show how to use them.
 
 ![Mainscreen](dokumentation/images/MiniSampleScreen1.png)
 
+Litte Video Displays the Media Data
 [![Musik Data](dokumentation/images/Videothumb)](dokumentation/images/MediaData.mp4)
 
 With Enabled cairo painter
 ![Progressbar 50 %](dokumentation/images/ProgressBar50.png)
 
+The Map View Build with [LibOsmScout](http://libosmscout.sourceforge.net/)
 ![Map View](dokumentation/images/MapView.png)
 
 ## Creating Map Data
