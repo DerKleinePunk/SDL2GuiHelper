@@ -6,7 +6,9 @@
 #endif
 
 #include "MiniKernel.h"
+
 #include <AppEvents.h>
+
 #include "../common/easylogging/easylogging++.h"
 #include "../common/exception/FileNotFoundException.h"
 #include "../common/exception/IllegalStateException.h"
@@ -21,11 +23,11 @@
 #include "map/MapManager.h"
 #endif
 #ifdef ENABLEAUDIOMANAGER
-    #ifdef ENABLEMUSIKMANAGER
-        #include "sound/MusikAudioManager.h"
-    #else
-        #include "sound/MiniAudioManager.h"
-    #endif
+#ifdef ENABLEMUSIKMANAGER
+#include "sound/MusikAudioManager.h"
+#else
+#include "sound/MiniAudioManager.h"
+#endif
 #endif
 
 
@@ -65,29 +67,29 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
         void* data2;
         if(_eventManager->IsKernelEvent(&event, type, data1, data2)) {
             switch(type) {
-                case KernelEvent::Shutdown: {
-                    LOG(INFO) << "Kernel Event Shutdown";
-                    exitLoop = true;
-                    break;
-                }
-                case KernelEvent::ShowError: {
-                    LOG(INFO) << "Kernel Event ShowError";
-                    auto errorMessageDialog = new ErrorMessageDialog(_manager);
-                    errorMessageDialog->SetMessage(_errorMessage);
-                    errorMessageDialog->Create(nullptr);
-                    break;
-                }
-                case KernelEvent::MusikStartStream: {
-                    LOG(INFO) << "Kernel Event MusikStartStream";
-                    #ifdef ENABLEMUSIKMANAGER
-                    std::string* fileName = (std::string*)data1;
-                    _audioManager->PlayMusik(*fileName);
-                    #endif
-                    break;
-                }
-                default: {
-                    LOG(WARNING) << "Not Implemented Kernel Event " << type;
-                }
+            case KernelEvent::Shutdown: {
+                LOG(INFO) << "Kernel Event Shutdown";
+                exitLoop = true;
+                break;
+            }
+            case KernelEvent::ShowError: {
+                LOG(INFO) << "Kernel Event ShowError";
+                auto errorMessageDialog = new ErrorMessageDialog(_manager);
+                errorMessageDialog->SetMessage(_errorMessage);
+                errorMessageDialog->Create(nullptr);
+                break;
+            }
+            case KernelEvent::MusikStartStream: {
+                LOG(INFO) << "Kernel Event MusikStartStream";
+#ifdef ENABLEMUSIKMANAGER
+                std::string* fileName = (std::string*)data1;
+                _audioManager->PlayMusik(*fileName);
+#endif
+                break;
+            }
+            default: {
+                LOG(WARNING) << "Not Implemented Kernel Event " << type;
+            }
             }
         }
 
@@ -155,6 +157,18 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
     }
 }
 
+void MiniKernel::UpdateScreens()
+{
+    auto screenPtr = _screens.begin();
+    while(screenPtr != _screens.end()) {
+        screenPtr->second->UpdateAnimationInternal();
+        if(screenPtr->second->NeedRedraw()) {
+            screenPtr->second->Draw();
+        }
+        ++screenPtr;
+    }
+}
+
 MiniKernel::MiniKernel()
 {
     el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
@@ -172,6 +186,11 @@ MiniKernel::~MiniKernel()
 {
 }
 
+/**
+ * @brief Start the Application Kernel
+ * @param[in] argc Count of Commanndline Parameters
+ * @param[in] argv *char[] the Commanndline Parameters
+ */
 bool MiniKernel::StartUp(int argc, char* argv[])
 {
     LOG(INFO) << "Kernel is starting";
@@ -189,18 +208,9 @@ bool MiniKernel::StartUp(int argc, char* argv[])
     return result;
 }
 
-void MiniKernel::UpdateScreens()
-{
-    auto screenPtr = _screens.begin();
-    while(screenPtr != _screens.end()) {
-        screenPtr->second->UpdateAnimationInternal();
-        if(screenPtr->second->NeedRedraw()) {
-            screenPtr->second->Draw();
-        }
-        ++screenPtr;
-    }
-}
-
+/**
+ * @brief Run the app
+ */
 void MiniKernel::Run()
 {
     SDL_Event event;
@@ -222,11 +232,11 @@ void MiniKernel::Run()
                     screenUpdateDone = true;
                 }
             }
-            
+
             if(!screenUpdateDone) {
                 startFrame = SDL_GetTicks();
                 UpdateScreens();
-            } 
+            }
 
             const auto endFrame = SDL_GetTicks();
 
@@ -271,6 +281,10 @@ void MiniKernel::Run()
     }
 }
 
+/**
+ * @brief Starting Core Services
+ * MapManger and Audio
+ */
 void MiniKernel::StartCoreServices()
 {
 #ifdef LIBOSMSCOUT
@@ -324,7 +338,8 @@ MiniKernel::CreateScreen(const std::string& title, const std::string& videoDrive
     TIMED_SCOPE_IF(timerCreateScreen, "CreateScreen", VLOG_IS_ON(4));
 #endif
 
-    _manager = screen->Create(title, _eventManager, _mapManager, _audioManager, this, backgroundImage, fullscreen, _kernelConfig.BackgroundScreen, _kernelConfig.ForegroundScreen);
+    _manager = screen->Create(title, _eventManager, _mapManager, _audioManager, this, backgroundImage, fullscreen,
+                              _kernelConfig.BackgroundScreen, _kernelConfig.ForegroundScreen);
     auto id = screen->GetId();
 
     _screens.insert(std::make_pair(id, screen));
@@ -333,12 +348,12 @@ MiniKernel::CreateScreen(const std::string& title, const std::string& videoDrive
         _mapManager->SetScreenDpi(_screenDpi);
         _mapManager->SetMarkerImageFile(_kernelConfig.markerImageFile);
         if(!_kernelConfig.mapDataPath.empty()) {
-            if(_mapManager->Init(_kernelConfig.mapDataPath, _kernelConfig.mapStyle,
-                                 _kernelConfig.mapIconPaths) != 0) {
+            if(_mapManager->Init(_kernelConfig.mapDataPath, _kernelConfig.mapStyle, _kernelConfig.mapIconPaths) != 0) {
                 LOG(ERROR) << "mapManager Init Failed";
             } else {
                 if(_kernelConfig.startMapPosition.GetLat() != 0 || _kernelConfig.startMapPosition.GetLon() != 0) {
-                    _mapManager->CenterMap(_kernelConfig.startMapPosition.GetLat(), _kernelConfig.startMapPosition.GetLon(), -1, 0);
+                    _mapManager->CenterMap(_kernelConfig.startMapPosition.GetLat(),
+                                           _kernelConfig.startMapPosition.GetLon(), -1, 0);
                 }
             }
         }

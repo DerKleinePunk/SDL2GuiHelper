@@ -28,12 +28,12 @@ private:
 
     void HandleEvent(const SDL_Event& event,bool& exitLoop);
     int StartAudio(const std::string& drivername);
+    void UpdateScreens();
 public:
     MiniKernel();   
     ~MiniKernel();
 
     bool StartUp(int argc, char* argv[]);
-    void UpdateScreens();
     void Run();
     void Shutdown();
     void StartCoreServices();

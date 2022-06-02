@@ -18,7 +18,6 @@ void SampleApp::KernelstateChanged(KernelState state)
         TIMED_SCOPE_IF(timerCreateScreen, "CreateScreen", VLOG_IS_ON(4));
 #endif
         _manager = _kernel->CreateScreen("SDL2 Gui Mini Sample", "", "", false);
-        _kernel->UpdateScreens();
         _kernel->DrawTextOnBootScreen("Starting Services");
 
         LOG(INFO) << "Starting Services";
