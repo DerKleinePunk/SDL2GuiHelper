@@ -134,6 +134,10 @@ Uint32 SDLEventManager::GetNewEventType()
     return result;
 }
 
+/**
+ *  \brief Waits timeout max for new event
+ *  \return true or false if Event was send retrun true
+ */
 bool SDLEventManager::PushEvent(Uint32 type, Uint32 windowID, Sint32 code, void* data1, void* data2) const
 {
     if(eventLock_ == nullptr) return false;

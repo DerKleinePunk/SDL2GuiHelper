@@ -48,7 +48,7 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
             winId = event.user.windowID;
         }
 
-        if(event.type == SDL_FINGERMOTION || event.type == SDL_FINGERDOWN || event.type == SDL_FINGERUP) {
+        if(event.type == SDL_FINGERMOTION || event.type == SDL_FINGERDOWN || event.type == SDL_FINGERUP || event.type == SDL_MULTIGESTURE) {
             // Todo how to map touchId to Window
             LOG(DEBUG) << "Finger Event on Touch Id " << event.tfinger.touchId << " Event " << event.type;
             winId = _screens.begin()->first;
