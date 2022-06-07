@@ -290,7 +290,9 @@ void MiniKernel::StartCoreServices()
 #ifdef LIBOSMSCOUT
     _mapManager = new MapManager();
 #endif
-    StartAudio(_kernelConfig.AudioDriver);
+    if(StartAudio(_kernelConfig.AudioDriver) < 0) {
+        LOG(ERROR) << "Audio Start Failed";
+    }
 }
 
 void MiniKernel::Shutdown()
@@ -386,22 +388,34 @@ void MiniKernel::DrawTextOnBootScreen(const std::string& text)
 
 int MiniKernel::StartAudio(const std::string& drivername)
 {
-    _base->InitAudio(drivername);
+    try {
+        if(!_base->InitAudio(drivername)) {
+            LOG(ERROR) << "Audio Init Failed";
+            return -1;
+        }
 
 #ifdef ENABLEAUDIOMANAGER
 #ifdef ENABLEMUSIKMANAGER
-    _audioManager = new MusikAudioManager(_eventManager, _kernelConfig.lastMusikVolume);
+        _audioManager = new MusikAudioManager(_eventManager, _kernelConfig.lastMusikVolume);
 #else
-    _audioManager = new MiniAudioManager(_eventManager, _kernelConfig.lastMusikVolume);
+        _audioManager = new MiniAudioManager(_eventManager, _kernelConfig.lastMusikVolume);
 #endif
-    auto result = _audioManager->Init();
-    if(result != 0) {
-        LOG(ERROR) << "Audio Init Failed";
-        // Todo show on screen
-        return result;
+        auto result = _audioManager->Init();
+        if(result != 0) {
+            LOG(ERROR) << "Audio Init Failed";
+            // Todo show on screen
+            return result;
+        }
+        LOG(INFO) << "AudioManager Started";
+#endif
+
+    } catch(const SDLException& e) {
+        LOG(ERROR) << e.what();
+        return -1;
+    } catch(const std::exception& e) {
+        LOG(ERROR) << e.what();
+        return -1;
     }
-    LOG(INFO) << "AudioManager Started";
-#endif
 
     return 0;
 }

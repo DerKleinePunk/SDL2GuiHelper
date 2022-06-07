@@ -65,6 +65,11 @@ void SDLBase::Init()
     initDone_ = true;
 }
 
+/**
+ * @brief Starting SDL2 Video Subsystem
+ * @param[in] videoDriver the VideoDriver or emtpy than we search for driver
+ * @return the DPI of Screen or default 96 DPI
+ */
 float SDLBase::InitVideo(const std::string& videoDriver)
 {
     // https://stackoverflow.com/questions/57672568/sdl2-on-raspberry-pi-without-x
@@ -186,7 +191,12 @@ float SDLBase::InitVideo(const std::string& videoDriver)
     return ddpi;
 }
 
-void SDLBase::InitAudio(const std::string& drivername)
+/**
+ * @brief Starting SDL2 Audio Subsystem
+ * @param[in] drivername the AudioDriver or emtpy than we search for driver
+ * @return the success
+ */
+bool SDLBase::InitAudio(const std::string& drivername)
 {
     if(InitSubsystem(SDL_INIT_AUDIO) < 0) {
         throw SDLException("InitAudio");
@@ -196,11 +206,12 @@ void SDLBase::InitAudio(const std::string& drivername)
     if(count == 0) {
         LOG(WARNING) << "Warning: no Audio device found";
         initAudioDone_ = false;
-        return;
+        return false;
     }
-
+ 
     for(auto i = 0; i < count; ++i) {
-        LOG(INFO) << "Audio device " << i << " " << SDL_GetAudioDeviceName(i, 0);
+        const char *devname = SDL_GetAudioDeviceName(i, 0);
+        LOG(INFO) << "Audio device " << i << " " << devname;
     }
 
     initAudioDone_ = true;
@@ -225,6 +236,8 @@ void SDLBase::InitAudio(const std::string& drivername)
     }
 
     LOG(INFO) << "Using audio driver: " << usedDriver;
+
+    return true;
 }
 
 int SDLBase::InitSubsystem(uint32_t flags)

@@ -144,14 +144,7 @@ GUIElementManager* GUIScreen::Create(std::string title,
         SDL_GetWindowSize(window_, &size_.width, &size_.height);
     }
 
-    if(!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
-        LOG(WARNING) << "Linear texture filtering not enabled!";
-    }
-
-    /*if (!SDL_SetHint(SDL_HINT_RENDER_BATCHING, "0"))
-    {
-        LOG(WARNING) << "RENDER_BATCHING not disabled!";
-    }*/
+    //todo Log all Hints for SDL
 
     try {
         renderer_ = new GUIRenderer();
@@ -234,7 +227,8 @@ void GUIScreen::HandleEvent(const SDL_Event* event)
 
 bool GUIScreen::NeedRedraw() const
 {
-    return manager_->NeedRedraw();
+    return true;
+    //return manager_->NeedRedraw();
 }
 
 void GUIScreen::ToggleFullscreen()

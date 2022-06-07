@@ -108,21 +108,13 @@ int MiniAudioManager::PlayBackground(const std::string& fileName)
 {
     auto current_chunk = Mix_LoadWAV(fileName.c_str());
 	if (current_chunk == nullptr) {
-		LOG(ERROR) << "Couldn't load file: " << Mix_GetError();
+		LOG(ERROR) << "Couldn't load file: " << fileName << " " << Mix_GetError();
 		return -1;
-	}
+	} else {
+        VLOG(1) << "Try Playing " << fileName;
+    }
 
     auto result = Mix_PlayChannel(-1, current_chunk, 0);
-    /*TODO if(!stopMedia_) {
-        Mix_FadeOutMusic(FADING_TIME_MS, true);
-        FadeOutMusic(FADING_TIME_MS, true);
-        result = Mix_PlayChannel(-1, current_chunk, 0);
-    } else {
-        result = Mix_FadeInChannel(-1, current_chunk, 0, FADING_TIME_MS);
-    }*/
-	// -1 means search free channel we have 4 see init
-    // if 'loops' is greater than zero, loop the sound that many times.
-    // If 'loops' is -1, loop inifinitely (~65000 times).
 	if (result == -1) {
 		// may be critical error, or maybe just no channels were free.
 		// you could allocated another channel in that case...

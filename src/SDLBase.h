@@ -20,6 +20,6 @@ public:
 
 	void Init();
 	float InitVideo(const std::string& videoDriver);
-	void InitAudio(const std::string& drivername);
+	bool InitAudio(const std::string& drivername);
 };
 
