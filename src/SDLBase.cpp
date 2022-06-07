@@ -68,9 +68,10 @@ void SDLBase::Init()
 /**
  * @brief Starting SDL2 Video Subsystem
  * @param[in] videoDriver the VideoDriver or emtpy than we search for driver
+ * @param[out] useVideoDriver theVideoDriver realy used 
  * @return the DPI of Screen or default 96 DPI
  */
-float SDLBase::InitVideo(const std::string& videoDriver)
+float SDLBase::InitVideo(const std::string& videoDriver, std::string& useVideoDriver)
 {
     // https://stackoverflow.com/questions/57672568/sdl2-on-raspberry-pi-without-x
     if(VLOG_IS_ON(1)) {
@@ -109,6 +110,7 @@ float SDLBase::InitVideo(const std::string& videoDriver)
 
     const auto driver = SDL_GetCurrentVideoDriver();
     LOG(INFO) << "Using " << driver << " Video driver";
+    useVideoDriver== std::string(driver);
 
     initVideoDone_ = true;
 

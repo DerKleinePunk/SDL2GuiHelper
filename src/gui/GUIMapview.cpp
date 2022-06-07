@@ -158,6 +158,18 @@ void GUIMapview::HandleEvent(GUIEvent& event) {
 }
 
 void GUIMapview::UpdateAnimation() {
+    if(!renderJobRun_) {
+        if(viewDeltaNow_.x != 0 || viewDeltaNow_.y != 0 )
+        {
+            renderJobRun_ = true;
+            viewDeltaAtJob_.x = viewDeltaNow_.x;
+            viewDeltaAtJob_.y = viewDeltaNow_.y;
+
+            if(mapManager_ != nullptr) {
+                mapManager_->MoveMapPixel(-viewDeltaNow_.x, viewDeltaNow_.y);
+            }
+        }
+    }
 }
 
 void GUIMapview::Close() {
@@ -249,16 +261,33 @@ void GUIMapview::SetTargetPos(const double& lat,const double& lon)
 void GUIMapview::ButtonDownUpdate(Uint8 button, const GUIPoint& point)
 {
     if(button == SDL_BUTTON_LEFT) {
-        startPoint_.x = point.x;
-        startPoint_.y = point.y;
+        startPoint_ = point;
         _buttonIsDown = true;
     } 
 }
 
 void GUIMapview::ButtonUpUpdate(Uint8 button, const GUIPoint& point)
 {
-    if(button == SDL_BUTTON_LEFT) {
+    if(button == SDL_BUTTON_LEFT && _buttonIsDown == true) {
         _buttonIsDown = false;
+        int dx = point.x - startPoint_.x;
+        int dy = point.y - startPoint_.y;
+
+        viewDeltaNow_.x = viewDeltaNow_.x + dx;
+        viewDeltaNow_.y = viewDeltaNow_.y + dy;
+
+        if(!renderJobRun_) {
+            if(viewDeltaNow_.x != 0 || viewDeltaNow_.y != 0 )
+            {
+                renderJobRun_ = true;
+                viewDeltaAtJob_.x = viewDeltaNow_.x;
+                viewDeltaAtJob_.y = viewDeltaNow_.y;
+
+                if(mapManager_ != nullptr) {
+                    mapManager_->MoveMapPixel(-viewDeltaNow_.x, viewDeltaNow_.y);
+                }
+            }
+        }
     }
 }
 

@@ -333,7 +333,7 @@ MiniKernel::CreateScreen(const std::string& title, const std::string& videoDrive
 #ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
     TIMED_SCOPE_IF(timerInitVideo, "InitVideo", VLOG_IS_ON(4));
 #endif
-    _screenDpi = _base->InitVideo(videoDriver);
+    _screenDpi = _base->InitVideo(videoDriver, _videoDriver);
     auto screen = new GUIScreen();
 
 #ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
@@ -450,4 +450,9 @@ int MiniKernel::PlaySound(const std::string& filename) const
 void MiniKernel::SetConfig(const KernelConfig& config)
 {
     _kernelConfig = config;
+}
+
+const std::string MiniKernel::GetVideoDriver()
+{
+    return _videoDriver;
 }

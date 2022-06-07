@@ -2,6 +2,7 @@
 #include "../IAudioManager.h"
 #include "../IMapManager.h"
 #include "GUI.h"
+#include "../MiniKernel.h"
 
 class GUIElement;
 class GUIElementManager;

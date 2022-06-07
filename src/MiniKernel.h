@@ -10,6 +10,8 @@
 typedef std::function<void(KernelState state)> KernelStateCallbackFunction;
 typedef std::function<void(AppEvent code, void* data1, void* data2)> ApplicationEventCallbackFunction;
 
+class GUIScreen;
+
 class MiniKernel
 {
 private:
@@ -25,6 +27,7 @@ private:
     KernelConfig _kernelConfig;
     IAudioManager* _audioManager;
     IMapManager* _mapManager;
+    std::string _videoDriver;
 
     void HandleEvent(const SDL_Event& event,bool& exitLoop);
     int StartAudio(const std::string& drivername);
@@ -45,5 +48,6 @@ public:
     void ShowErrorMessage(const std::string& message);
     int PlaySound(const std::string& filename) const;
     void SetConfig(const KernelConfig& config);
+    const std::string GetVideoDriver();
 };
 

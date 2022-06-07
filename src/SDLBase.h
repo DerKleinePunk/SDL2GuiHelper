@@ -19,7 +19,7 @@ public:
 	virtual ~SDLBase();
 
 	void Init();
-	float InitVideo(const std::string& videoDriver);
+	float InitVideo(const std::string& videoDriver, std::string& useVideoDriver);
 	bool InitAudio(const std::string& drivername);
 };
 
