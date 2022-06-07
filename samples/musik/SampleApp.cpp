@@ -457,7 +457,7 @@ void SampleApp::Startup() {
     config.mapIconPaths = iconPaths;
     config.mapStyle = "/home/punky/develop/libosmscout/stylesheets/standard.oss";
     //config.markerImageFile = _config->GetMarkerImageFile();
-    config.startMapPosition.Set(50.4090,9.3671);
+    config.startMapPosition.Set(50.094,8.49617);
     config.BackgroundScreen = black_color;
     config.ForegroundScreen = my_light_blue;
 

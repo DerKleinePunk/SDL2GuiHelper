@@ -32,6 +32,7 @@ void GUIMapview::HandleMapEvent(GUIEvent& event) {
         void *pixels;
         int pitch;
         SDL_LockMutex(mapMemLock_);
+        //Todo Crash after resize...
         if(SDL_LockTexture(mapTexture_->operator SDL_Texture*(), NULL, &pixels, &pitch) == 0) {
             memcpy(pixels, mapPixels_, pitch * Size().height * 2);
             SDL_UnlockTexture(mapTexture_->operator SDL_Texture*());
@@ -273,6 +274,7 @@ void GUIMapview::ButtonMoveUpdate(Uint8 button, const GUIPoint& point)
 
     startPoint_.x = point.x;
     startPoint_.y = point.y;
+    needRedraw_ = true;
 
     if(!renderJobRun_) {
 
