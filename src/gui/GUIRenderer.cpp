@@ -22,9 +22,20 @@ void GUIRenderer::CheckThreadId() const {
 	}
 }
 
-void GUIRenderer::Create(SDL_Window* window)
+/**
+ * @brief Create Renderer
+ * @param[in] window the SDL Window
+ * @param[in] vsync use VSync Renderer
+ */
+void GUIRenderer::Create(SDL_Window* window, bool vsync)
 {
-	renderer_ = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
+	Uint32 flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE;
+	if(vsync)
+	{
+		flags |= SDL_RENDERER_PRESENTVSYNC;
+	}
+
+	renderer_ = SDL_CreateRenderer(window, -1, flags);
 	if (renderer_ == nullptr)
 	{
 		throw GUIException("SDL_CreateRenderer");

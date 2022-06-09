@@ -110,7 +110,7 @@ GUIElementManager* GUIScreen::Create(std::string title,
     if(eventManager == nullptr) {
         throw NullPointerException("eventManager can not be null");
     }
-    
+
     if(kernel == nullptr) {
         throw NullPointerException("kernel can not be null");
     }
@@ -144,11 +144,39 @@ GUIElementManager* GUIScreen::Create(std::string title,
         SDL_GetWindowSize(window_, &size_.width, &size_.height);
     }
 
-    //todo Log all Hints for SDL
+    // todo Log all Hints for SDL
+
+    std::ifstream fileCompatible("/sys/firmware/devicetree/base/compatible",  std::ifstream::binary);
+    std::string compatibleString;
+
+    auto piType = 0;
+    if(fileCompatible.good()){
+        auto buffer = new char[14];
+        memset(buffer, 0, 14);
+        fileCompatible.read(buffer, 13);
+        if(strcmp(buffer, "raspberrypi,4") == 0){
+            piType = 4;
+        }
+        if(strcmp(buffer, "raspberrypi,3") == 0){
+            piType = 3;
+        }
+    }
+    fileCompatible.close();
+
+    auto vSync = false;
+    if(_kernel->GetVideoDriver() == "KMSDRM") {
+        // A Bug in KMSDM Switch Doppelbuffel no work on Raspi (4?)
+        //[drm:vc4_fkms_page_flip [vc4]] *ERROR* Async flips aren't allowed
+        if(piType == 3 || piType == 4) {
+            vSync = true;
+        }
+    }
+
+     LOG(INFO) << "Raspberry Type " << piType;
 
     try {
         renderer_ = new GUIRenderer();
-        renderer_->Create(window_);
+        renderer_->Create(window_, vSync);
         imageManager_ = new GUIImageManager(renderer_);
 
     } catch(std::exception const& exp) {
@@ -163,22 +191,22 @@ GUIElementManager* GUIScreen::Create(std::string title,
     canvas_ = new GUIScreenCanvas(size_, backgroundImage, backgroundColor, foregroundColor);
     manager_ = new GUIElementManager(renderer_, canvas_, eventManager_, imageManager_, mapManager, audioManager, _kernel, id_);
     canvas_->imageManager_ = imageManager_;
-   
+
     auto info = renderer_->GetInfo();
 
     LOG(INFO) << "Using Renderer " << info.name;
-	
-	auto swapInterval = SDL_GL_GetSwapInterval();
-	LOG(INFO) << "Swap Interval is " << swapInterval;
-	
-	/* Only Useable when using Open GL
-	if(useVideoDriver == "KMSDRM" && swapInterval == 0) {
-		if(SDL_GL_SetSwapInterval(1) != 0) {
-			if(SDL_GL_SetSwapInterval(-1) != 0) {
-				LOG(ERROR) << "SDL_GL_SetSwapInterval failed:" << SDL_GetError();
-			}
-		}
-	}*/
+
+    auto swapInterval = SDL_GL_GetSwapInterval();
+    LOG(INFO) << "Swap Interval is " << swapInterval;
+
+    /* Only Useable when using Open GL
+    if(useVideoDriver == "KMSDRM" && swapInterval == 0) {
+        if(SDL_GL_SetSwapInterval(1) != 0) {
+            if(SDL_GL_SetSwapInterval(-1) != 0) {
+                LOG(ERROR) << "SDL_GL_SetSwapInterval failed:" << SDL_GetError();
+            }
+        }
+    }*/
 
     canvas_->Init();
     GetScreenSize();
@@ -239,14 +267,6 @@ void GUIScreen::HandleEvent(const SDL_Event* event)
 
 bool GUIScreen::NeedRedraw() const
 {
-	/*
-    if(_kernel->GetVideoDriver() == "KMSDRM") {
-        //A Bug in KMSDM Switch Doppelbuffel no work
-        //[drm:vc4_fkms_page_flip [vc4]] *ERROR* Async flips aren't allowed
-
-        return true;
-    }*/
-
     return manager_->NeedRedraw();
 }
 

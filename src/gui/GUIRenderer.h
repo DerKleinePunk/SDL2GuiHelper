@@ -17,7 +17,7 @@ public:
 	GUIRenderer();
 	virtual ~GUIRenderer();
 	
-	void Create(SDL_Window* window);
+	void Create(SDL_Window* window, bool vsync);
 	void SetViewport(GUIRect rect) const;
 	void SetClipRect(GUIRect rect) const;
     void ClearClipRect() const;
