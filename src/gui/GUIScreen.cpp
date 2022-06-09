@@ -227,7 +227,7 @@ void GUIScreen::HandleEvent(const SDL_Event* event)
 
 bool GUIScreen::NeedRedraw() const
 {
-    if(_kernel->GetVideoDriver() == "KMSDM") {
+    if(_kernel->GetVideoDriver() == "KMSDRM") {
         //A Bug in KMSDM Switch Doppelbuffel no work
         //[drm:vc4_fkms_page_flip [vc4]] *ERROR* Async flips aren't allowed
 
