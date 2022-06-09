@@ -166,7 +166,9 @@ float SDLBase::InitVideo(const std::string& videoDriver, std::string& useVideoDr
     }
 
     LOG(INFO) << "Open GL Version " << glmaVersion << "." << glmiVersion;
-
+	auto swapInterval = SDL_GL_GetSwapInterval();
+	LOG(INFO) << "Swap Interval is " << swapInterval;
+		
     SDL_version compiled;
     SDL_IMAGE_VERSION(&compiled);
     const auto linked = *IMG_Linked_Version();
