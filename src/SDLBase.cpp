@@ -108,16 +108,15 @@ float SDLBase::InitVideo(const std::string& videoDriver, std::string& useVideoDr
         }
     }
 
-    const auto driver = SDL_GetCurrentVideoDriver();
-    LOG(INFO) << "Using " << driver << " Video driver";
-    useVideoDriver = std::string(driver);
-
+    useVideoDriver = std::string(SDL_GetCurrentVideoDriver());
+	LOG(INFO) << "Using " << useVideoDriver << " Video driver";
+	
     initVideoDone_ = true;
 
     _touches = SDL_GetNumTouchDevices();
     LOG(INFO) << "TouchDevices " << std::to_string(_touches);
 
-    if(strcmp(driver, "RPI") == 0 || strcmp(driver, "KMSDRM") == 0 ) {
+    if(useVideoDriver == "RPI" || useVideoDriver == "KMSDRM" ) {
         // todo Change thinks we are on Raspberry without X driver var MemoryLeak ?
         LOG(INFO) << "Raspberry without X";
 
@@ -168,6 +167,14 @@ float SDLBase::InitVideo(const std::string& videoDriver, std::string& useVideoDr
     LOG(INFO) << "Open GL Version " << glmaVersion << "." << glmiVersion;
 	auto swapInterval = SDL_GL_GetSwapInterval();
 	LOG(INFO) << "Swap Interval is " << swapInterval;
+	
+	if(useVideoDriver == "KMSDRM" && swapInterval == 0) {
+		if(SDL_GL_SetSwapInterval(1) != 0) {
+			if(SDL_GL_SetSwapInterval(-1) != 0) {
+				LOG(ERROR) << "SDL_GL_SetSwapInterval failed:" << SDL_GetError();
+			}
+		}
+	}
 		
     SDL_version compiled;
     SDL_IMAGE_VERSION(&compiled);
