@@ -167,6 +167,18 @@ GUIElementManager* GUIScreen::Create(std::string title,
     auto info = renderer_->GetInfo();
 
     LOG(INFO) << "Using Renderer " << info.name;
+	
+	auto swapInterval = SDL_GL_GetSwapInterval();
+	LOG(INFO) << "Swap Interval is " << swapInterval;
+	
+	/* Only Useable when using Open GL
+	if(useVideoDriver == "KMSDRM" && swapInterval == 0) {
+		if(SDL_GL_SetSwapInterval(1) != 0) {
+			if(SDL_GL_SetSwapInterval(-1) != 0) {
+				LOG(ERROR) << "SDL_GL_SetSwapInterval failed:" << SDL_GetError();
+			}
+		}
+	}*/
 
     canvas_->Init();
     GetScreenSize();
