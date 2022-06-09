@@ -9,7 +9,8 @@ Some examples show how to use them.
 ![Mainscreen](dokumentation/images/MiniSampleScreen1.png)
 
 Litte Video Displays the Media Data
-[![Musik Data](dokumentation/images/Videothumb)](dokumentation/images/MediaData.mp4)
+
+https://user-images.githubusercontent.com/20199046/172757128-42f9fedc-0681-4619-ba37-226707f851ce.mp4
 
 With Enabled cairo painter
 ![Progressbar 50 %](dokumentation/images/ProgressBar50.png)
