@@ -110,7 +110,7 @@ float SDLBase::InitVideo(const std::string& videoDriver, std::string& useVideoDr
 
     const auto driver = SDL_GetCurrentVideoDriver();
     LOG(INFO) << "Using " << driver << " Video driver";
-    useVideoDriver== std::string(driver);
+    useVideoDriver = std::string(driver);
 
     initVideoDone_ = true;
 
