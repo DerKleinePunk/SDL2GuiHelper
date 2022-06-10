@@ -24,10 +24,10 @@ class SampleApp
 {
 private:
     MiniKernel* _kernel;
-    GUIElementManager* _manager;
+    GUIElementManager* _manager{};
     MapDialog* _mapDialog;
     MusikPlayerDialog* _playerDialog;
-    AutomationDialog* _autoDialog;
+    AutomationDialog* _autoDialog{};
     UiState _appUiStateCurrent; 
 
     void ApplicationEvent(AppEvent event, void* data1, void* data2);

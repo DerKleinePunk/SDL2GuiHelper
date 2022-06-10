@@ -90,7 +90,7 @@ void SampleApp::BuildFirstScreen() {
 }
 
 void SampleApp::LoadSdsList() {
-    auto element = static_cast<GUIListview*>(_manager->GetElementByName("sdsListview"));
+    auto element = dynamic_cast<GUIListview*>(_manager->GetElementByName("sdsListview"));
     element->BeginUpdate();
     element->Clear();
     GUIListviewRow row;
@@ -248,22 +248,22 @@ void SampleApp::UpdateUI(UiState newUIState)
         }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
         }
         element = _manager->GetElementByName("sdsCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("mapCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("playerCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         break;
     case UiState::sds:
@@ -285,22 +285,22 @@ void SampleApp::UpdateUI(UiState newUIState)
         }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("sdsCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
         }
         element = _manager->GetElementByName("mapCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("playerCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         break;
     case UiState::map:
@@ -322,22 +322,22 @@ void SampleApp::UpdateUI(UiState newUIState)
         }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("sdsCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("mapCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
         }
         element = _manager->GetElementByName("playerCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         break;
     case UiState::musikPlayer:
@@ -359,23 +359,23 @@ void SampleApp::UpdateUI(UiState newUIState)
         }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("sdsCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("mapCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("playerCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
         }
         element = _manager->GetElementByName("automationCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         break;
     case UiState::automation:
@@ -397,23 +397,23 @@ void SampleApp::UpdateUI(UiState newUIState)
         }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("sdsCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("mapCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("playerCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("automationCommandButton");
         if(element != nullptr) {
-            static_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
         }
         break;
     default:
@@ -437,9 +437,7 @@ SampleApp::SampleApp(MiniKernel* kernel) {
     el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
 }
 
-SampleApp::~SampleApp() {
-
-}
+SampleApp::~SampleApp() = default;
 
 void SampleApp::Startup() {
     auto statedelegate = std::bind(&SampleApp::KernelstateChanged, this, std::placeholders::_1);
@@ -452,8 +450,8 @@ void SampleApp::Startup() {
     //config.AudioFileForLongClick = _config->GetSoundForClick();
     config.mapDataPath = "/home/punky/develop/sdl2guitests/src/maps/europe/germany/hessen";
     std::vector<std::string> iconPaths;
-    iconPaths.push_back("/home/punky/develop/libosmscout/libosmscout/data/icons/14x14/standard/");
-    iconPaths.push_back("/home/punky/develop/libosmscout/libosmscout/data/icons/svg/standard/");
+    iconPaths.emplace_back("/home/punky/develop/libosmscout/libosmscout/data/icons/14x14/standard/");
+    iconPaths.emplace_back("/home/punky/develop/libosmscout/libosmscout/data/icons/svg/standard/");
     config.mapIconPaths = iconPaths;
     config.mapStyle = "/home/punky/develop/libosmscout/stylesheets/standard.oss";
     //config.markerImageFile = _config->GetMarkerImageFile();

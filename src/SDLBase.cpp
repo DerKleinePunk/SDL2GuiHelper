@@ -269,7 +269,7 @@ void SDLBase::SdlLogEntry(void* userdata, int category, SDL_LogPriority priority
     if(VLOG_IS_ON(2)) {
         auto kernel = reinterpret_cast<SDLBase*>(userdata);
 
-        std::string categoryText = "";
+        std::string categoryText;
         switch(category) {
         case SDL_LOG_CATEGORY_APPLICATION: {
             categoryText = "Application ";

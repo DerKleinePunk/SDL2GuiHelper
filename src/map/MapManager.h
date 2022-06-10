@@ -3,8 +3,8 @@
 #include <osmscout/GeoCoord.h>
 #include <osmscout/LocationDescriptionService.h>
 #include <osmscout/LocationService.h>
-#include <osmscout/MapPainterCairo.h>
-#include <osmscout/MapService.h>
+#include <osmscoutmapcairo/MapPainterCairo.h>
+#include <osmscoutmap/MapService.h>
 #include <osmscout/routing/SimpleRoutingService.h>
 #include <osmscout/util/String.h>
 #include "../../common/utils/osmsoutlogger.h"

@@ -9,6 +9,8 @@
 
 #include <AppEvents.h>
 
+#include <utility>
+
 #include "../common/easylogging/easylogging++.h"
 #include "../common/exception/FileNotFoundException.h"
 #include "../common/exception/IllegalStateException.h"
@@ -82,7 +84,7 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
             case KernelEvent::MusikStartStream: {
                 LOG(INFO) << "Kernel Event MusikStartStream";
 #ifdef ENABLEMUSIKMANAGER
-                std::string* fileName = (std::string*)data1;
+                auto* fileName = (std::string*)data1;
                 _audioManager->PlayMusik(*fileName);
 #endif
                 break;
@@ -121,7 +123,7 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
                     }
                 }
             }
-            for(const auto callback : _applicationEventCallbackFunctions) {
+            for(const auto& callback : _applicationEventCallbackFunctions) {
                 callback(code, nullptr, data2);
             }
         }
@@ -132,7 +134,7 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
         exitLoop = true;
         break;
     case SDL_KEYDOWN: {
-        const Uint8* state = SDL_GetKeyboardState(NULL);
+        const Uint8* state = SDL_GetKeyboardState(nullptr);
         switch(event.key.keysym.sym) {
         case SDLK_ESCAPE:
             exitLoop = true;
@@ -183,8 +185,7 @@ MiniKernel::MiniKernel()
 }
 
 MiniKernel::~MiniKernel()
-{
-}
+= default;
 
 /**
  * @brief Start the Application Kernel
@@ -366,10 +367,10 @@ MiniKernel::CreateScreen(const std::string& title, const std::string& videoDrive
 
 void MiniKernel::SetStateCallBack(KernelStateCallbackFunction callback)
 {
-    _callbackState = callback;
+    _callbackState = std::move(callback);
 }
 
-void MiniKernel::RegisterApplicationEvent(ApplicationEventCallbackFunction callbackFunction)
+void MiniKernel::RegisterApplicationEvent(const ApplicationEventCallbackFunction& callbackFunction)
 {
     _applicationEventCallbackFunctions.push_back(callbackFunction);
 }
@@ -452,7 +453,7 @@ void MiniKernel::SetConfig(const KernelConfig& config)
     _kernelConfig = config;
 }
 
-const std::string MiniKernel::GetVideoDriver()
+std::string MiniKernel::GetVideoDriver()
 {
     return _videoDriver;
 }

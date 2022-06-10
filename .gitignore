@@ -19,9 +19,9 @@
 **/[Dd]efault/
 build-debug/
 build-release/
-cmake-build-Debug/
-cmake-build-Debug_Raspberry/
-cmake-build-Debug_Windows/
+cmake-build-[Dd]ebug/
+cmake-build-[Dd]ebug_Raspberry/
+cmake-build-[Dd]ebug_Windows/
 build-debug-pi/
 buildNetBean/
 buildNetBeanPI/

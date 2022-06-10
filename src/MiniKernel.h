@@ -42,12 +42,12 @@ public:
     void StartCoreServices();
     GUIElementManager* CreateScreen(const std::string& title, const std::string& videoDriver, const std::string& backgroundImage, bool fullscreen);
     void SetStateCallBack(KernelStateCallbackFunction callback);
-    void RegisterApplicationEvent(ApplicationEventCallbackFunction callbackFunction);
+    void RegisterApplicationEvent(const ApplicationEventCallbackFunction& callbackFunction);
     void DrawTextOnBootScreen(const std::string& text);
     SDLEventManager* GetEventManager() const;
     void ShowErrorMessage(const std::string& message);
     int PlaySound(const std::string& filename) const;
     void SetConfig(const KernelConfig& config);
-    const std::string GetVideoDriver();
+    std::string GetVideoDriver();
 };
 

@@ -189,7 +189,7 @@ int MapManager::Init(std::string dataPath, std::string mapStyle, std::vector<std
     _dataPath = dataPath;
 
     _database = std::make_shared<osmscout::Database>(_databaseParameter);
-    if(!_database->Open(dataPath.c_str())) {
+    if(!_database->Open(dataPath)) {
         LOG(ERROR) << "Cannot open database";
         return -1;
     }
@@ -256,7 +256,7 @@ bool MapManager::InitOk() const
 
 void MapManager::RegisterMe(int width, int height, NewMapImageDelegate callback, NewStreetNameOrSpeedDelegate callbackName)
 {
-    if(_painter == nullptr) throw new ArgumentException("painter == nullptr");
+    if(_painter == nullptr) throw ArgumentException("painter == nullptr");
 
     if(_mapPixels != nullptr) delete[] _mapPixels;
 
