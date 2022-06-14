@@ -13,6 +13,8 @@
 #include "GUITexture.h"
 #include "GUIRenderer.h"
 
+void rounded_rectangle(cairo_t* cr, int x, int y, int w, int h, int r);
+
 class GUICarioTexture
 {
 private:

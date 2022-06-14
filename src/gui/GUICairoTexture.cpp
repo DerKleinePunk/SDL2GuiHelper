@@ -11,6 +11,16 @@
 
 #ifdef ENABLECAIRO
 
+void rounded_rectangle(cairo_t* cr, int x, int y, int w, int h, int r)
+{
+    cairo_new_sub_path(cr);
+    cairo_arc(cr, x + r, y + r, r, M_PI, 3.0 * M_PI / 2.0);
+    cairo_arc(cr, x + w - r, y + r, r, 3.0 * M_PI / 2.0, 2.0 * M_PI);
+    cairo_arc(cr, x + w - r, y + h - r, r, 0, M_PI / 2.0);
+    cairo_arc(cr, x + r, y + h - r, r, M_PI / 2.0, M_PI);
+    cairo_close_path(cr);
+}
+
 void GUICarioTexture::Create()
 {
     _texturePixels = new unsigned char[_size.width * _size.height * 4];
@@ -33,6 +43,10 @@ GUICarioTexture::GUICarioTexture(GUIRenderer* renderer, GUISize size)
 GUICarioTexture::~GUICarioTexture()
 {
     //Todo aufräumen speicher
+    if(_cairoImage != nullptr) {
+        cairo_destroy(_cairoImage);
+    }
+    
     if(_texturePixels != nullptr){
         delete _texturePixels;
     }
