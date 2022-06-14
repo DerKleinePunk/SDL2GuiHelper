@@ -44,7 +44,7 @@ MediaStream::MediaStream()
       last_video_stream(0), last_audio_stream(0), last_subtitle_stream(0), audio_codec_name(nullptr),
       subtitle_codec_name(nullptr), video_codec_name(nullptr), audio_hw_buf_size(0), rdft(nullptr), rdft_data(nullptr),
       vis_texture(nullptr), seek_flags(0), seek_pos(0), seek_rel(0), step(0), read_pause_return(0), frame_timer(0),
-      frame_last_returned_time(0), frame_last_filter_delay(0), wait_mutex(nullptr), last_vis_time(0)
+      frame_last_returned_time(0), frame_last_filter_delay(0), wait_mutex(nullptr), last_vis_time(0), audioQueue_()
 {
     av_init_packet(&audio_packet_);
     av_init_packet(&flush_pkt);
@@ -1004,7 +1004,7 @@ int MediaStream::queue_put_nullpacket(PacketQueue* q, const int streamIndex)
 static int stream_has_enough_packets(AVStream* st, const int streamId, PacketQueue* queue)
 {
     return streamId < 0 || queue->abort_request || (st->disposition & AV_DISPOSITION_ATTACHED_PIC) ||
-           queue->nb_packets > MIN_FRAMES && (!queue->duration || av_q2d(st->time_base) * queue->duration > 1.0);
+           (queue->nb_packets > MIN_FRAMES && (!queue->duration || av_q2d(st->time_base) * queue->duration > 1.0));
 }
 
 static int frame_queue_nb_remaining(FrameQueue* f)
@@ -1117,9 +1117,9 @@ StreamStates MediaStream::FillStreams()
 
     /* if the queue are full, no need to read more */
     if(infinite_buffer < 1 && (audioq_.size + videoq_.size + subtitleq_.size > MAX_QUEUE_SIZE ||
-                               stream_has_enough_packets(audio_stream_, audio_stream_index, &audioq_) &&
+                               (stream_has_enough_packets(audio_stream_, audio_stream_index, &audioq_) &&
                                stream_has_enough_packets(video_stream_, video_stream_index, &videoq_) &&
-                               stream_has_enough_packets(subtitle_stream_, subtitle_stream_index, &subtitleq_))) {
+                               stream_has_enough_packets(subtitle_stream_, subtitle_stream_index, &subtitleq_)))) {
         /* wait 10 ms */
         SDL_LockMutex(wait_mutex);
         SDL_CondWaitTimeout(continue_read_thread, wait_mutex, 10);
@@ -1664,7 +1664,7 @@ void MediaStream::video_audio_display(GUIRenderer* renderer, GUITexture* screen)
 {
     // This Code Only works with 16 Bit Audio Data at audio_tgt
     int i, i_start, x, y1, y, ys, delay, n, nb_display_channels;
-    int ch, h, h2;
+    int ch, h = 0, h2;
     int cur_rdft_bits, nb_freq;
     const auto size = screen->Size();
     for(cur_rdft_bits = 1; (1 << cur_rdft_bits) < 2 * size.width; cur_rdft_bits++)

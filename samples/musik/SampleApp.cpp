@@ -463,6 +463,11 @@ void SampleApp::Startup() {
 }
 
 void SampleApp::Shutdown() {
+    if(_autoDialog != nullptr) {
+        delete _autoDialog;
+        _autoDialog = nullptr;
+    }
+
     if(_mapDialog != nullptr) {
         delete _mapDialog;
         _mapDialog = nullptr;

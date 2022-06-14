@@ -24,7 +24,7 @@ public:
 	GUIListviewColumn();
 	explicit GUIListviewColumn(const std::string& text);
 	~GUIListviewColumn();
-	std::string GetText() const;
+	[[nodiscard]] std::string GetText() const;
 	GUITexture* GetTexture(GUIRenderer* renderer, TTF_Font*& font, TTF_Font*& smallFont, SDL_Color color, GUITexture** textureTextDetails, int maxWith);
 	int GetWidth() const;
 	int GetHeight() const;
@@ -32,8 +32,8 @@ public:
 	int GetDetailHeight() const;
 	int GetDetailWidth() const;
 	int GetImageSize() const;
-	char* GetImageData() const;
-	void SetImageData(const char* imageData, int size);
+	[[nodiscard]] char* GetImageData() const;
+    void SetImageData(const char* imageData, int size);
 };
 
 class GUIListviewRow {
@@ -44,31 +44,31 @@ public:
 	void* Tag;
 	GUIListviewRow();
 	std::vector<std::shared_ptr<GUIListviewColumn>> GetColumns() const;
-	void AddColumn(std::shared_ptr<GUIListviewColumn> column);
+	void AddColumn(const std::shared_ptr<GUIListviewColumn>& column);
 	int GetHeight();
 };
 
 class GUIListview : public GUIElement {
 	el::Logger* logger_;
 	TTF_Font* font_;
-	TTF_Font* smallFont_;
+	TTF_Font* smallFont_{};
 	std::vector<GUIListviewRow> rows_;
 	std::vector<std::string> quickJumpList_;
     GUITexture* textureQuickJumpList_;
 	GUITexture* textureNoDataText_;
 	GUITexture* textureData_;
 	GUIPoint drawNoDataTextPosition_;
-	Uint32 lastLeftButtonDow_;
+	Uint32 lastLeftButtonDow_{};
 	bool inUpdate_;
-	bool scrollEnabled_;
+	bool scrollEnabled_{};
 	bool scrolling_;
 	int downOnY_;
 	int movepixel_;
 	ClickListViewDelegate OnClick_;
 	ClickListViewDelegate OnLongClick_;
 	int selectedRow_;
-	int quickJumpEntryHeight_;
-	int downOnRow_;
+	int quickJumpEntryHeight_{};
+	int downOnRow_{};
 	int _rowListHeight;
 	bool _rowHasImage;
 	bool _rowHasDetails;
@@ -80,7 +80,7 @@ class GUIListview : public GUIElement {
 	void ButtonDown(Uint8 button, Uint8 clicks, const GUIPoint& point);
 	void UpdateScrollSize(const GUIPoint& pointInElement);
 	int GetRowAtPoint(const GUIPoint& pointInElement) const;
-	void CheckRowClick(const int rowId);
+	void CheckRowClick(int rowId);
 	void CheckScrolling(const GUIPoint& point);
 	void ButtonUp(Uint8 button, Uint8 clicks, const GUIPoint& point);
 	void MouseMoveEvent(Uint8 button, const GUIPoint& point);

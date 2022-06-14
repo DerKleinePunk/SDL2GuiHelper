@@ -1,8 +1,9 @@
 #pragma once
 #include <SDL_ttf.h>
+
+#include "GUICairoTexture.hpp"
 #include "GUIElement.h"
 #include "GUIOnClickDecorator.h"
-#include "GUICarioTexture.hpp"
 
 struct GUIPoint;
 struct GUISize;
@@ -11,18 +12,18 @@ class GUITexture;
 
 class GUIProgressbar : public GUIElement, public GUIOnClickDecorator
 {
-    SDL_Color _background;
-    SDL_Color _textcolor;
+    SDL_Color _background{};
+    SDL_Color _textcolor{};
     el::Logger* _logger;
-    unsigned char _value;
-    double _valueIntern;
+    unsigned char _value{};
+    double _valueIntern{};
 #ifdef ENABLECAIRO
-    GUICarioTexture* _cairoTexture;
+    GUICairoTexture* _cairoTexture{};
 #endif
     void DrawIntern();
     RTTI_DERIVED(GUIProgressbar);
 public:
-    GUIProgressbar(GUIPoint position, GUISize size, const std::string& name, SDL_Color background, SDL_Color textcolor);
+    GUIProgressbar(const GUIPoint& position, GUISize size, const std::string& name, SDL_Color background, SDL_Color textcolor);
     ~GUIProgressbar();
 
     void Init() override;

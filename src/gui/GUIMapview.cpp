@@ -101,7 +101,7 @@ void GUIMapview::InitMap(){
 #endif
 }
 
-GUIMapview::GUIMapview(const GUIPoint position, const GUISize size, const std::string& name, const SDL_Color background, const SDL_Color textcolor) :
+GUIMapview::GUIMapview(const GUIPoint position, const GUISize& size, const std::string& name, const SDL_Color background, const SDL_Color textcolor) :
 	GUIElement(position, size, name), GUIOnClickDecorator(static_cast<GUIElement*>(this)), 
     font_(nullptr),
     mapPixels_(nullptr) {

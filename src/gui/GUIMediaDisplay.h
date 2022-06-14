@@ -27,7 +27,7 @@ class GUIMediaDisplay : public GUIElement, public GUIOnClickDecorator
 	void GetFont();
 	void ApplicationEvent(const AppEvent event, void* data1, void* data2);
 public:
-	GUIMediaDisplay(GUIPoint position, GUISize size, const std::string& name, SDL_Color background, SDL_Color textcolor);
+	GUIMediaDisplay(const GUIPoint& position, const GUISize& size, const std::string& name, SDL_Color background, SDL_Color textcolor);
 	GUIMediaDisplay(GUIPoint position, GUISize size, const std::string& name, SDL_Color background, SDL_Color textcolor, bool smallFont);
 
 	void FontHeight(int fontHeight);

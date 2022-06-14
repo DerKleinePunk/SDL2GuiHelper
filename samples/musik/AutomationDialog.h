@@ -8,6 +8,7 @@ private:
     GUIElementManager* _manager;
     SDLEventManager* _eventManager;
     GUIProgressbar* _progressbar;
+    GUIGauge* _gauge;
     
 public:
     AutomationDialog(GUIElement* parent, GUIElementManager* manager, SDLEventManager* eventManager);

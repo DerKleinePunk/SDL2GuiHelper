@@ -9,21 +9,21 @@ class MapManager;
 class GUIMapview : public GUIElement, public GUIOnClickDecorator{
     el::Logger* logger_;
     bool initOk_;
-    SDL_Color textcolor_;
+    SDL_Color textcolor_{};
     TTF_Font* font_;
     SDL_mutex*          mapMemLock_;
     unsigned char*      mapPixels_;
     GUITexture*         mapTexture_;
-    Uint32              mapEvent_;
-    SDL_Point           viewDeltaNow_;
-    SDL_Point           startPoint_;
-    SDL_Point           viewDeltaAtJob_;
+    Uint32              mapEvent_{};
+    SDL_Point           viewDeltaNow_{};
+    SDL_Point           startPoint_{};
+    SDL_Point           viewDeltaAtJob_{};
     GUITexture*         streetImageTexture_;
     GUITexture*         headTexture_;
     GUITexture*         statusbarTexture_;
     std::string         currentStreetName_;
-    int                 currentMaxSpeed_;
-    int                 currentSpeed_;
+    int                 currentMaxSpeed_{};
+    int                 currentSpeed_{};
     bool                renderJobRun_;
     bool                _buttonIsDown;
       
@@ -35,7 +35,7 @@ class GUIMapview : public GUIElement, public GUIOnClickDecorator{
     void NewMapNameOrSpeed(const std::string& name, const int& maxSpeed, const int& currentSpeed);
 
 public:
-    GUIMapview(GUIPoint position, GUISize size, const std::string& name, SDL_Color background, SDL_Color textcolor);
+    GUIMapview(GUIPoint position, const GUISize& size, const std::string& name, SDL_Color background, SDL_Color textcolor);
 
     void Init() override;
     void Draw() override;

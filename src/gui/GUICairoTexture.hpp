@@ -15,7 +15,7 @@
 
 void rounded_rectangle(cairo_t* cr, int x, int y, int w, int h, int r);
 
-class GUICarioTexture
+class GUICairoTexture
 {
 private:
     cairo_surface_t* _image_data_source;
@@ -26,8 +26,8 @@ private:
     GUIRenderer* _renderer;
     void Create();
 public:
-    GUICarioTexture(GUIRenderer* renderer, GUISize size);
-    ~GUICarioTexture();
+  GUICairoTexture(GUIRenderer* renderer, GUISize size);
+    ~GUICairoTexture();
 
     cairo_t* GetCairo();
     void PaintDone();

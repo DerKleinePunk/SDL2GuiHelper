@@ -61,9 +61,9 @@ GUITexture* GUIListviewColumn::GetTexture(GUIRenderer* renderer,
 
     if(textureText_ != nullptr) return textureText_;
 
-    textureText_ = renderer->RenderTextBlended(font, GetText().c_str(), color);
+    textureText_ = renderer->RenderTextBlended(font, GetText(), color);
 
-    if(detailText_.size() > 0) {
+    if(!detailText_.empty()) {
         textureTextDetails_ = renderer->RenderTextBlendedWrapped(smallFont, detailText_.c_str(), color, maxWith);
         *textureTextDetails = textureTextDetails_;
     }
@@ -115,7 +115,7 @@ char* GUIListviewColumn::GetImageData() const
     return imageData_.get();
 }
 
-void GUIListviewColumn::SetImageData(const char* imageData, const int size)
+[[maybe_unused]] void GUIListviewColumn::SetImageData(const char* imageData, const int size)
 {
     imageData_.reset(new char[size], std::default_delete<char[]>());
     memcpy(imageData_.get(), imageData, size);
@@ -133,7 +133,7 @@ std::vector<std::shared_ptr<GUIListviewColumn>> GUIListviewRow::GetColumns() con
     return columns_;
 }
 
-void GUIListviewRow::AddColumn(const std::shared_ptr<GUIListviewColumn> column)
+void GUIListviewRow::AddColumn(const std::shared_ptr<GUIListviewColumn>& column)
 {
     _height = -1;
     columns_.push_back(column);
@@ -146,7 +146,7 @@ int GUIListviewRow::GetHeight()
     }
 
     _height = 0;
-    for(const auto column : columns_) {
+    for(const auto &column : columns_) {
         const auto temp = column->GetHeight();
         if(temp > _height) {
             _height = temp;
@@ -162,8 +162,8 @@ int GUIListview::GetRowListHeight()
     }
 
     _rowListHeight = 0;
-    for(size_t i = 0; i < rows_.size(); i++) {
-        _rowListHeight += rows_[i].GetHeight();
+    for(auto & row : rows_) {
+        _rowListHeight += row.GetHeight();
     }
 
     return _rowListHeight;
@@ -171,7 +171,7 @@ int GUIListview::GetRowListHeight()
 
 void GUIListview::DrawData()
 {
-    if(rows_.size() == 0) return;
+    if(rows_.empty()) return;
 
 #ifdef ELPP_FEATURE_PERFORMANCE_TRACKING
     TIMED_SCOPE_IF(timerBlkObjDrawData, "DrawListViewData", VLOG_IS_ON(4));
@@ -233,7 +233,7 @@ void GUIListview::DrawData()
                 const auto textureText =
                 column->GetTexture(renderer_, font_, smallFont_, foregroundColor_, &details, Size().width);
                 if(textureText == nullptr) {
-                    throw new GUIException("column GetTexture nullptr");
+                    throw GUIException("column GetTexture nullptr");
                 }
                 dstrect.y = actHight + 1;
                 renderer_->RenderCopy(textureText, GUIPoint(dstrect.x, dstrect.y));
@@ -258,7 +258,7 @@ void GUIListview::DrawData()
             renderer_->DrawRect(rect, own_blue_color);
 
             auto textPos = 0;
-            for(const auto quickJump : quickJumpList_) {
+            for(const auto &quickJump : quickJumpList_) {
                 const auto textureText = renderer_->RenderTextBlended(font_, quickJump, own_blue_color);
                 const auto point = GUIPoint(2, textPos);
                 renderer_->RenderCopy(textureText, point);
@@ -316,7 +316,7 @@ int GUIListview::GetRowAtPoint(const GUIPoint& pointInElement) const
     if(pointInElement.x < 0 || pointInElement.y < 0) {
         return -1;
     }
-    if(rows_.size() == 0) return -1;
+    if(rows_.empty()) return -1;
 
     auto heightClick = -movepixel_;
     int rowId = 0;
@@ -447,7 +447,7 @@ void GUIListview::MouseMoveEvent(const Uint8 button, const GUIPoint& point)
 void GUIListview::MouseLeaveEvent(const GUIPoint& point)
 {
     auto pointInElement = ScreenToElementCoords(point);
-    if(scrolling_ && rows_.size() != 0) {
+    if(scrolling_ && rows_.empty()) {
         VLOG(3) << ToString() << " Mouse leave at " + pointInElement.ToString();
         UpdateScrollSize(pointInElement);
         downOnY_ = pointInElement.y;

@@ -11,3 +11,4 @@
 #include "gui/GUIRoundPictureButton.h"
 #include "gui/GUIMediaDisplay.h"
 #include "gui/GUIProgressbar.h"
+#include "gui/GUIGauge.h"

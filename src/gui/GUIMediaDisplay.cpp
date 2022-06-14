@@ -39,7 +39,7 @@ void GUIMediaDisplay::ApplicationEvent(const AppEvent event, void* data1, void* 
 #endif
 }
 
-GUIMediaDisplay::GUIMediaDisplay(const GUIPoint position, const GUISize size, const std::string& name, const SDL_Color background, const SDL_Color textcolor)
+GUIMediaDisplay::GUIMediaDisplay(const GUIPoint& position, const GUISize& size, const std::string& name, const SDL_Color background, const SDL_Color textcolor)
     : GUIMediaDisplay(position, size, name, background, textcolor, false)
 {
 }

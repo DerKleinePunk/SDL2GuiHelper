@@ -24,6 +24,9 @@ typedef struct MyAvPacketList {
 } MyAVPacketList;
 
 typedef struct PacketQueue {
+    PacketQueue():first_pkt(nullptr), last_pkt(nullptr) {
+
+          };
 	MyAVPacketList *first_pkt, *last_pkt;
 	int nb_packets;
 	int size;
@@ -106,22 +109,22 @@ class MediaStream
 	double          audio_diff_avg_coef;
 	int				audio_diff_avg_count;
 	double          audio_diff_threshold;
-	AVPacket        audio_packet_;
+	AVPacket        audio_packet_{};
 	double			audio_clock;
 	PacketQueue     audioQueue_;
 	PacketQueue     videoQueue_;
 	SwrContext*     pSwrCtx_;
-	AVPacket        flush_pkt;
+	AVPacket        flush_pkt{};
 	int             av_sync_type;
 	bool			is_ready;
 	bool            streamdown;
 	int64_t			totalTime_;//But it was in ? (audio)
 	int64_t         currentTime_;//But it was in ? (audio)
-	int16_t			sample_array[SAMPLE_ARRAY_SIZE];
+	int16_t			sample_array[SAMPLE_ARRAY_SIZE]{};
 	int				sample_array_index;
 	int				last_i_start; // Helper from sampel drawing
-	AudioParams		audio_tgt;
-	AudioParams		audio_src;
+	AudioParams		audio_tgt{};
+	AudioParams		audio_src{};
 	uint64_t        audio_callback_time;
 	uint8_t*        audio_buffer_;
 	uint8_t*        audio_buf1;
@@ -137,18 +140,18 @@ class MediaStream
 	int64_t			start_time;
 	int64_t			duration;
 	const char*		wanted_stream_spec[AVMEDIA_TYPE_NB] = { nullptr };
-	FrameQueue		pictq_;
-	FrameQueue		subpq_;
-	FrameQueue		sampq_;
+	FrameQueue		pictq_{};
+	FrameQueue		subpq_{};
+	FrameQueue		sampq_{};
 	double			max_frame_duration;      // maximum duration of a frame - above this, we consider the jump a timestamp discontinuity
 	PacketQueue     videoq_;
 	PacketQueue		audioq_;
 	PacketQueue     subtitleq_;
 	double			audio_diff_cum; /* used for AV difference average computation */
 	SDL_cond*       continue_read_thread;
-	Clock			audclk;
-	Clock			vidclk;
-	Clock			extclk;
+	Clock			audclk{};
+	Clock			vidclk{};
+	Clock			extclk{};
 	int				abort_request;
 	int				video_stream_index;
 	int             last_video_stream_index;
@@ -173,9 +176,9 @@ class MediaStream
 	int				genpts = 0;
 	int				lowres = 0;
 	ShowMode        show_mode;
-	Decoder         auddec;
-	Decoder         viddec;
-	Decoder         subdec;
+	Decoder         auddec{};
+	Decoder         viddec{};
+	Decoder         subdec{};
 	int				audio_hw_buf_size;
 	bool			muted;
 	RDFTContext*	rdft;

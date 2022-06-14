@@ -1,13 +1,14 @@
 #ifndef ELPP_DEFAULT_LOGGER
-#define ELPP_DEFAULT_LOGGER "GUICarioTexture"
+#define ELPP_DEFAULT_LOGGER "GUICairoTexture"
 #endif
 #ifndef ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID
 #define ELPP_CURR_FILE_PERFORMANCE_LOGGER_ID ELPP_DEFAULT_LOGGER
 #endif
 
+#include "GUICairoTexture.hpp"
+
 #include "../../common/easylogging/easylogging++.h"
 #include "GUI.h"
-#include "GUICarioTexture.hpp"
 
 #ifdef ENABLECAIRO
 
@@ -21,7 +22,7 @@ void rounded_rectangle(cairo_t* cr, int x, int y, int w, int h, int r)
     cairo_close_path(cr);
 }
 
-void GUICarioTexture::Create()
+void GUICairoTexture::Create()
 {
     _texturePixels = new unsigned char[_size.width * _size.height * 4];
     _image_data_source = cairo_image_surface_create_for_data(_texturePixels, CAIRO_FORMAT_ARGB32, _size.width, _size.height,
@@ -29,7 +30,7 @@ void GUICarioTexture::Create()
     _cairoImage = cairo_create(_image_data_source);
 }
 
-GUICarioTexture::GUICarioTexture(GUIRenderer* renderer, GUISize size)
+GUICairoTexture::GUICairoTexture(GUIRenderer* renderer, GUISize size)
 {
     el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
     _image_data_source = nullptr;
@@ -40,19 +41,26 @@ GUICarioTexture::GUICarioTexture(GUIRenderer* renderer, GUISize size)
     _renderer = renderer;
 }
 
-GUICarioTexture::~GUICarioTexture()
+GUICairoTexture::~GUICairoTexture()
 {
-    //Todo aufräumen speicher
+    if(_texture != nullptr) {
+        delete _texture;
+    }
+
     if(_cairoImage != nullptr) {
         cairo_destroy(_cairoImage);
     }
-    
+
+    if(_image_data_source != nullptr) {
+        cairo_surface_destroy(_image_data_source);
+    }
+
     if(_texturePixels != nullptr){
-        delete _texturePixels;
+        delete [] _texturePixels;
     }
 }
 
-cairo_t* GUICarioTexture::GetCairo()
+cairo_t* GUICairoTexture::GetCairo()
 {
     if(_image_data_source == nullptr) {
         Create();
@@ -61,7 +69,7 @@ cairo_t* GUICarioTexture::GetCairo()
     return _cairoImage;
 }
 
-void GUICarioTexture::PaintDone()
+void GUICairoTexture::PaintDone()
 {
     cairo_surface_flush(_image_data_source);
 
@@ -80,7 +88,7 @@ void GUICarioTexture::PaintDone()
     }
 }
 
-GUITexture* GUICarioTexture::GetTexture()
+GUITexture* GUICairoTexture::GetTexture()
 {
     return _texture;
 }

@@ -140,6 +140,7 @@ int MusikAudioManager::DecoderThreadMain()
     _current_musik_stream->GetMetaData(streamInfo);
 
     _eventManager->PushApplicationEvent(AppEvent::MusikStreamPlay, streamInfo, nullptr);
+    delete streamInfo;
 
     while(!_stopMedia) {
         // seek stuff goes here
