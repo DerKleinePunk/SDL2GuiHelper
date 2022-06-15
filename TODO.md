@@ -6,3 +6,8 @@ https://www.linuxquestions.org/questions/programming-9/open-an-svg-file-using-rs
 ## Füllstand Anzeige
 https://www.mikrocontroller.net/topic/505924
 https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both
+
+
+librsvg2-dev
+
+https://github.com/GNOME/librsvg/blob/main/tests/api.c

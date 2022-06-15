@@ -122,7 +122,7 @@ int MusikAudioManager::DecoderThreadMain()
     if((_hardwareFormat & 0xFF) == 16) {
         format = AV_SAMPLE_FMT_S16;
     }
-    const auto result = _current_musik_stream->Init(_musikfile, format, _hardwareChannels, _audioBufferSize, _hardwareRate);
+    auto result = _current_musik_stream->Init(_musikfile, format, _hardwareChannels, _audioBufferSize, _hardwareRate);
     if(result < 0) {
         delete _current_musik_stream;
         _current_musik_stream = nullptr;
@@ -182,6 +182,7 @@ int MusikAudioManager::DecoderThreadMain()
 
     _stopMedia = true;
     if(state == StreamStates::error) {
+        result = -99;
         if(!_eventManager->PushApplicationEvent(AppEvent::MusikStreamError, nullptr, nullptr)) {
             LOG(ERROR) << "PushEvent failed";
         }
@@ -193,7 +194,7 @@ int MusikAudioManager::DecoderThreadMain()
 
     LOG(DEBUG) << "decoder thread stopped";
 
-    return 0;
+    return result;
 }
 
 void MusikAudioManager::MixerCallback(Uint8* stream, int len)
@@ -467,5 +468,15 @@ void MusikAudioManager::GetMediaPlayTimes(int64_t* totalTime, int64_t* currentTi
 {
     if(_current_musik_stream && _current_musik_stream->IsReady()) {
         _current_musik_stream->GetPlayTimes(totalTime, currentTime);
+    }
+}
+
+void MusikAudioManager::MusikStreamThreadStopped()
+{
+    if(_musikdecoderthread != nullptr) {
+        int ret;
+        SDL_WaitThread(_musikdecoderthread, &ret);
+        LOG(DEBUG) << "Decoder Thread stoppt with " << ret;
+        _musikdecoderthread = nullptr;
     }
 }

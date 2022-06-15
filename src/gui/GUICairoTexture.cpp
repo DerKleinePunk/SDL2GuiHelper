@@ -9,18 +9,9 @@
 
 #include "../../common/easylogging/easylogging++.h"
 #include "GUI.h"
+#include <rsvg.h>
 
 #ifdef ENABLECAIRO
-
-void rounded_rectangle(cairo_t* cr, int x, int y, int w, int h, int r)
-{
-    cairo_new_sub_path(cr);
-    cairo_arc(cr, x + r, y + r, r, M_PI, 3.0 * M_PI / 2.0);
-    cairo_arc(cr, x + w - r, y + r, r, 3.0 * M_PI / 2.0, 2.0 * M_PI);
-    cairo_arc(cr, x + w - r, y + h - r, r, 0, M_PI / 2.0);
-    cairo_arc(cr, x + r, y + h - r, r, M_PI / 2.0, M_PI);
-    cairo_close_path(cr);
-}
 
 void GUICairoTexture::Create()
 {
@@ -91,6 +82,29 @@ void GUICairoTexture::PaintDone()
 GUITexture* GUICairoTexture::GetTexture()
 {
     return _texture;
+}
+
+void GUICairoTexture::RoundedRectangle(int x, int y, int w, int h, int r)
+{
+    cairo_new_sub_path(_cairoImage);
+    cairo_arc(_cairoImage, x + r, y + r, r, M_PI, 3.0 * M_PI / 2.0);
+    cairo_arc(_cairoImage, x + w - r, y + r, r, 3.0 * M_PI / 2.0, 2.0 * M_PI);
+    cairo_arc(_cairoImage, x + w - r, y + h - r, r, 0, M_PI / 2.0);
+    cairo_arc(_cairoImage, x + r, y + h - r, r, M_PI / 2.0, M_PI);
+    cairo_close_path(_cairoImage);
+}
+
+int GUICairoTexture::LoadSvg(const std::string fileName)
+{
+    GError *error = nullptr;
+    auto handle = rsvg_handle_new_from_file(fileName.c_str(), &error);
+    if(error != nullptr )
+    {
+        //Todo Log Error
+        return -1;
+    }
+
+    return 0;
 }
 
 #endif // ENABLECAIRO

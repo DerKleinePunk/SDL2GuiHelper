@@ -27,4 +27,5 @@ class MiniAudioManager : public IAudioManager
     int PlayBackground(const std::string& fileName);
     void GetMediaPlayTimes(int64_t* totalTime, int64_t* currentTime) const;
     int PlayMusik(const std::string& filename);
+    void MusikStreamThreadStopped();
 };

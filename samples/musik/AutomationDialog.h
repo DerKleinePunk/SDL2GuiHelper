@@ -9,7 +9,7 @@ private:
     SDLEventManager* _eventManager;
     GUIProgressbar* _progressbar;
     GUIGauge* _gauge;
-    
+    bool _progressbarShow;
 public:
     AutomationDialog(GUIElement* parent, GUIElementManager* manager, SDLEventManager* eventManager);
     ~AutomationDialog();
@@ -19,4 +19,5 @@ public:
     void Hide();
 
     void SetValue(unsigned char value);
+    void SwitchGui();
 };

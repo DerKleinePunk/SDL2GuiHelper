@@ -137,3 +137,8 @@ int MiniAudioManager::PlayMusik(const std::string& filename) {
     LOG(WARNING) << "This PLayer can play Musik";
     return -1;
 }
+
+void MiniAudioManager::MusikStreamThreadStopped()
+{
+    //Nothing Only Interface
+}

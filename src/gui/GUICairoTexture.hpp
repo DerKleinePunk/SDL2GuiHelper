@@ -13,8 +13,6 @@
 #include "GUITexture.h"
 #include "GUIRenderer.h"
 
-void rounded_rectangle(cairo_t* cr, int x, int y, int w, int h, int r);
-
 class GUICairoTexture
 {
 private:
@@ -33,6 +31,9 @@ public:
     void PaintDone();
 
     GUITexture* GetTexture();
+
+    void RoundedRectangle(int x, int y, int w, int h, int r);
+    int LoadSvg(const std::string fileName);
 };
 
 #endif //ENABLECAIRO

@@ -21,15 +21,15 @@ class MusikAudioManager : public IAudioManager
     Uint16 _hardwareFormat;
     int _hardwareRate;
     const SDLEventManager* _eventManager;
-    Mix_Chunk* _chunk[4];
+    Mix_Chunk* _chunk[4]{};
     std::string _musikfile;
-	  MusikStreamState _stream_state;
-	  MediaStream*  _current_musik_stream;
+	  MusikStreamState _stream_state{};
+	  MediaStream*  _current_musik_stream{};
 	  Uint8* _mixDataBuffer;
 	  int _mixDataBufferSize;
 	  bool _stopMedia;
     SDL_Thread* _musikdecoderthread;
-    int _ms_per_step; // Used to calculate fading steps
+    int _ms_per_step{}; // Used to calculate fading steps
     
     void FadeOutMusic(int msec, bool pauseAtEnd);
     void FadeInMusic(int msec);
@@ -48,4 +48,5 @@ class MusikAudioManager : public IAudioManager
     int PlayBackground(const std::string& fileName);
     void GetMediaPlayTimes(int64_t* totalTime, int64_t* currentTime) const;
     int PlayMusik(const std::string& filename);
+    void MusikStreamThreadStopped();
 };

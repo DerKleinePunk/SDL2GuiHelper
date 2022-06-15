@@ -42,7 +42,7 @@ void GUIProgressbar::DrawIntern()
     cairo_set_source_rgb(image, 0.0, 1.0, 0.0);
     // cairo_set_fill_rule (image, CAIRO_FILL_RULE_EVEN_ODD);
     //cairo_set_line_width(image, 5.0);
-    rounded_rectangle(image, linesize, linesize, (Size().width-(linesize * 2.0)) * _valueIntern, Size().height-(linesize * 2.0), linesize);
+    _cairoTexture->RoundedRectangle(linesize, linesize, (Size().width-(linesize * 2.0)) * _valueIntern, Size().height-(linesize * 2.0), linesize);
     //rounded_rectangle(image, 15, 15, Size().width-30, Size().height-30, 10);
     auto pattern = cairo_pattern_create_linear(0, 0, 0, Size().height);
     cairo_pattern_add_color_stop_rgba (pattern, 0.00,  0, 1, 0, 0.1);
@@ -53,7 +53,7 @@ void GUIProgressbar::DrawIntern()
     cairo_set_source (image, pattern);
     //cairo_fill_preserve(image);
     cairo_fill(image);
-    rounded_rectangle(image, linesize, linesize, Size().width-(linesize * 2.0), Size().height-(linesize * 2.0), linesize);
+    _cairoTexture->RoundedRectangle(linesize, linesize, Size().width-(linesize * 2.0), Size().height-(linesize * 2.0), linesize);
     cairo_set_line_width(image, linesize);
     cairo_set_source_rgb(image, 102.0 / 255.0, 102.0 / 255.0, 102.0 / 255.0);
     cairo_stroke(image);

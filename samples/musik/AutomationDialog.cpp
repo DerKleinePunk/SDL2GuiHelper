@@ -50,7 +50,13 @@ void AutomationDialog::Init()
     zoomDownButton->RegisterOnClick([this](IGUIElement* sender) { SetValue(100); });
     _manager->AddElement(_parent, zoomDownButton);
 
+    zoomDownButton = new GUITextButton(GUIPoint(650, 365), GUISize(300, 60), "switchButton", own_firered_color, white_color);
+    zoomDownButton->Text("Switch");
+    zoomDownButton->RegisterOnClick([this](IGUIElement* sender) { SwitchGui(); });
+    _manager->AddElement(_parent, zoomDownButton);
+
     _progressbar->Invisible();
+    _progressbarShow = false;
 }
 
 void AutomationDialog::Show()
@@ -67,4 +73,17 @@ void AutomationDialog::SetValue(unsigned char value)
 {
     _progressbar->SetValue(value);
     _gauge->SetValue(value);
+}
+
+void AutomationDialog::SwitchGui()
+{
+     if(_progressbarShow) {
+        _progressbar->Invisible();
+        _gauge->Visible();
+    } else {
+        _progressbar->Visible();
+        _gauge->Invisible();
+    }
+
+    _progressbarShow = !_progressbarShow;
 }
