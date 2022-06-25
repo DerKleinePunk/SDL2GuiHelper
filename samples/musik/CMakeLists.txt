@@ -9,6 +9,7 @@ if(OSMScout_FOUND)
     FIND_PACKAGE(RSvg REQUIRED)
     MESSAGE(STATUS "OSMScout ${OSMSCOUT_INCLUDE_DIRS}")
     MESSAGE(STATUS "RSvg ${RSVG_INCLUDE_DIR}")
+    MESSAGE(STATUS "RSvg ${RSVG_LIBRARIES}")
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLIBOSMSCOUT")
 endif()
 
@@ -62,6 +63,7 @@ if(OSMSCOUT_FOUND)
     TARGET_LINK_LIBRARIES(${project_BIN} ${OSMScout_LIBRARIES})
     TARGET_LINK_LIBRARIES(${project_BIN} ${CAIRO_LIBRARIES})
     TARGET_LINK_LIBRARIES(${project_BIN} ${PANGO_LIBRARIES})
+    TARGET_LINK_LIBRARIES(${project_BIN} ${RSVG_LIBRARIES})
 endif()
 
 if(SQLITE3_FOUND)
@@ -96,3 +98,8 @@ add_custom_command(TARGET ${project_BIN} POST_BUILD # Adds a post-build event to
                        COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
                           "${MAINFONTSOURCE}"      # <--this is in-file
                           $<TARGET_FILE_DIR:${project_BIN}>)
+set(MAINFONTSOURCE "${MAINFOLDER}/resources/images/danger.svg")
+add_custom_command(TARGET ${project_BIN} POST_BUILD # Adds a post-build event to MyTest
+                                                 COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
+                                                    "${MAINFONTSOURCE}"      # <--this is in-file
+                                                    $<TARGET_FILE_DIR:${project_BIN}>)

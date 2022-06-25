@@ -94,15 +94,37 @@ void GUICairoTexture::RoundedRectangle(int x, int y, int w, int h, int r)
     cairo_close_path(_cairoImage);
 }
 
-int GUICairoTexture::LoadSvg(const std::string fileName)
+int GUICairoTexture::LoadSvg(const std::string& fileName, const GUIRect& viewPort )
 {
     GError *error = nullptr;
     auto handle = rsvg_handle_new_from_file(fileName.c_str(), &error);
-    if(error != nullptr )
-    {
+    if(error != nullptr ) {
         //Todo Log Error
         return -1;
     }
+    
+    /*if(rsvg_handle_render_cairo (handle, _cairoImage) == FALSE) {
+    }*/
+
+    RsvgRectangle viewport = { 0.0, 0.0, 0.0, 0.0 };
+    viewport.x = viewPort.x;
+    viewport.y = viewPort.y;
+    viewport.width = viewPort.w;
+    viewport.height = viewPort.h; 
+
+    if(rsvg_handle_render_document (handle, _cairoImage, &viewport, &error) == FALSE) {
+
+    }
+
+    if(error != nullptr ) {
+        g_object_unref(handle);
+        
+        //Todo Log Error
+        return -1;
+    }
+
+
+    g_object_unref(handle);
 
     return 0;
 }

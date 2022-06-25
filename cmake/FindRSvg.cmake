@@ -1,15 +1,4 @@
-# - try to find Cairo
-# Once done this will define
-#
-#  CAIRO_FOUND - system has Cairo
-#  CAIRO_CFLAGS - the Cairo CFlags
-#  CAIRO_INCLUDE_DIRS - the Cairo include directories
-#  CAIRO_LIBRARIES - Link these to use Cairo
-#
-# Copyright (C) 2007, 2010, Pino Toscano, <pino@kde.org>
-#
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+# - try to find RSvg
 
 if(RSVG_INCLUDE_DIRS AND RSVG_LIBRARIES)
 
@@ -35,7 +24,7 @@ if(RSvg_FOUND)
   # set it back as false
   set(RSvg_FOUND FALSE)
 
-  find_library(RSVG_LIBRARY rsvg
+  find_library(RSVG_LIBRARY rsvg-2
                HINTS ${_pc_rsvg_LIBRARY_DIRS}
   )
   set(RSVG_LIBRARIES "${RSVG_LIBRARY}")

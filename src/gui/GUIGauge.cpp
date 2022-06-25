@@ -55,38 +55,15 @@ void GUIGauge::DrawIntern()
     cairo_arc(image, Size().width / 2, Size().height / 2, radius, angle1, angle2);
     cairo_stroke (image);
 
-    double angle3 = 240.0 * (M_PI/180.0);
+    //double angle3 = 240.0 * (M_PI/180.0);
+    double angle3 = (161.0 + (218.0 * _valueIntern)) * (M_PI/180.0);
     cairo_set_source_rgb(image, 0.0, 1.0, 0.0);
     cairo_set_line_width(image, linesize);
     cairo_arc(image, Size().width / 2, Size().height / 2, radius, angle1, angle3);
     cairo_stroke (image);
 
-    /* Draw block
-    cairo_set_source_rgba(image, 0.0, 0.0, 0.0, 1.0); /* black half transparent
-    cairo_rectangle(image, 8, 8, Size().width - 16, Size().height - 16);
-    cairo_fill(image);
+    _cairoTexture->LoadSvg("danger.svg", GUIRect(100, 50, 50, 50));
 
-
-    cairo_set_source_rgb(image, 0.0, 1.0, 0.0);
-    // cairo_set_fill_rule (image, CAIRO_FILL_RULE_EVEN_ODD);
-    //cairo_set_line_width(image, 5.0);
-    rounded_rectangle(image, linesize, linesize, (Size().width-(linesize * 2.0)) * _valueIntern, Size().height-(linesize * 2.0), linesize);
-    //rounded_rectangle(image, 15, 15, Size().width-30, Size().height-30, 10);
-    auto pattern = cairo_pattern_create_linear(0, 0, 0, Size().height);
-    cairo_pattern_add_color_stop_rgba (pattern, 0.00,  0, 1, 0, 0.1);
-    cairo_pattern_add_color_stop_rgba (pattern, 0.15,  0, 1, 0, 0.8);
-    cairo_pattern_add_color_stop_rgba (pattern, 0.5,  0, 1, 0, 1);
-    cairo_pattern_add_color_stop_rgba (pattern, 0.85,  0, 1, 0, 0.8);
-    cairo_pattern_add_color_stop_rgba (pattern, 1.0,  0, 1, 0, 0.1);
-    cairo_set_source (image, pattern);
-    //cairo_fill_preserve(image);
-    cairo_fill(image);
-    rounded_rectangle(image, linesize, linesize, Size().width-(linesize * 2.0), Size().height-(linesize * 2.0), linesize);
-    cairo_set_line_width(image, linesize);
-    cairo_set_source_rgb(image, 102.0 / 255.0, 102.0 / 255.0, 102.0 / 255.0);
-    cairo_stroke(image);
-
-    cairo_pattern_destroy(pattern);*/
     _cairoTexture->PaintDone();
 #endif
 }

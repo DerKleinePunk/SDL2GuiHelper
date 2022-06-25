@@ -33,7 +33,7 @@ public:
     GUITexture* GetTexture();
 
     void RoundedRectangle(int x, int y, int w, int h, int r);
-    int LoadSvg(const std::string fileName);
+    int LoadSvg(const std::string& fileName, const GUIRect& viewPort);
 };
 
 #endif //ENABLECAIRO
