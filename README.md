@@ -34,3 +34,55 @@ ENABLECAIRO-> Some GUI Elements need Cairo to paint (try at now we muss test)
 DEFAULT_SMALL_FONT -> Fontname for small fons
 
 DEFAULT_FONT -> Fontname Default
+
+## Need to Compile
+
+Debian Pakage Names
+ build-essential
+ libdrm-dev 
+ libgbm-dev
+ libsamplerate0-dev
+ libpng-dev
+ libtiff-dev
+ libwebp-dev
+ libcairo2-dev
+
+### SDL2
+SDL2 -> I always use own Build Versions
+
+wget -N http://www.libsdl.org/release/SDL2-2.0.22.tar.gz
+tar -xzf SDL2-2.0.22.tar.gz
+cd SDL2-2.0.22
+./autogen.sh
+On Desktop ./configure --disable-esd --disable-video-x11 
+
+wget -N https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5.tar.gz
+tar zxvf SDL2_image-2.0.5.tar.gz
+cd SDL2_image-2.0.5
+
+wget -N https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.4.tar.gz
+tar zxvf SDL2_mixer-2.0.4.tar.gz
+cd SDL2_mixer-2.0.4
+./autogen.sh
+./configure
+make
+sudo make install
+cd ..
+
+wget -N https://www.libsdl.org/projects/SDL_net/release/SDL2_net-2.0.1.tar.gz
+tar zxvf SDL2_net-2.0.1.tar.gz
+cd SDL2_net-2.0.1
+./autogen.sh
+./configure
+make
+sudo make install
+cd ..
+
+wget -N http://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.18.tar.gz
+tar zxvf SDL2_ttf-2.0.18.tar.gz
+cd SDL2_ttf-2.0.18
+./autogen.sh
+./configure
+make
+sudo make install
+cd ..
