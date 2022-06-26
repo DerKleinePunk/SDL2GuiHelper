@@ -46,6 +46,13 @@ Debian Pakage Names
  libtiff-dev
  libwebp-dev
  libcairo2-dev
+ libmarisa-dev
+ libxml2-dev
+ libpango1.0-dev
+ libprotobuf-dev
+ protobuf-compiler
+ libsqlite3-dev
+ 
 
 ### SDL2
 SDL2 -> I always use own Build Versions
@@ -102,3 +109,5 @@ cmake .. -DCMAKE_BUILD_TYPE=Debug -DOSMSCOUT_ENABLE_SSE=ON -DOSMSCOUT_BUILD_DOC_
 cmake --build . -j $(nproc)
 sudo cmake --build . --target install
 cd ..
+
+cmake .. -DCMAKE_BUILD_TYPE=Release -DOSMSCOUT_ENABLE_SSE=ON -DOSMSCOUT_BUILD_DOC_API=OFF -DOSMSCOUT_BUILD_DEMOS=OFF -DOSMSCOUT_BUILD_TOOL_OSMSCOUTOPENGL=OFF -DCMAKE_CXX_FLAGS="-Wno-psabi"
