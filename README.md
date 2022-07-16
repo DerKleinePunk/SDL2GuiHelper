@@ -39,7 +39,7 @@ DEFAULT_FONT -> Fontname Default
 
 Debian Pakage Names
  build-essential
- libdrm-dev 
+ libdrm-dev
  libgbm-dev
  libsamplerate0-dev
  libpng-dev
@@ -55,6 +55,7 @@ Debian Pakage Names
  
 
 ### SDL2
+
 SDL2 -> I always use own Build Versions
 
 wget -N http://www.libsdl.org/release/SDL2-2.0.22.tar.gz
@@ -76,6 +77,9 @@ make
 sudo make install
 cd ..
 
+#### SDL2-net
+
+```console
 wget -N https://www.libsdl.org/projects/SDL_net/release/SDL2_net-2.0.1.tar.gz
 tar zxvf SDL2_net-2.0.1.tar.gz
 cd SDL2_net-2.0.1
@@ -84,7 +88,11 @@ cd SDL2_net-2.0.1
 make
 sudo make install
 cd ..
+```
 
+#### SDL2-ttf
+
+```console
 wget -N http://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.18.tar.gz
 tar zxvf SDL2_ttf-2.0.18.tar.gz
 cd SDL2_ttf-2.0.18
@@ -93,9 +101,13 @@ cd SDL2_ttf-2.0.18
 make
 sudo make install
 cd ..
+```
 
 ### libosmscout
 
+Build libosmscout using with this
+
+```console
 git clone https://github.com/Framstag/libosmscout.git
 git checkout 8cd316736da94541f272bd3ab8e9f0eb4750e73c
 
@@ -111,3 +123,7 @@ sudo cmake --build . --target install
 cd ..
 
 cmake .. -DCMAKE_BUILD_TYPE=Release -DOSMSCOUT_ENABLE_SSE=ON -DOSMSCOUT_BUILD_DOC_API=OFF -DOSMSCOUT_BUILD_DEMOS=OFF -DOSMSCOUT_BUILD_TOOL_OSMSCOUTOPENGL=OFF -DCMAKE_CXX_FLAGS="-Wno-psabi"
+cmake --build . -j $(nproc)
+sudo cmake --build . --target install
+cd ..
+```
