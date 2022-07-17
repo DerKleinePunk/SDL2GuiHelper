@@ -9,9 +9,9 @@
 
 #include "../../common/easylogging/easylogging++.h"
 #include "GUI.h"
-#include <rsvg.h>
-
 #ifdef ENABLECAIRO
+
+#include <rsvg.h>
 
 void GUICairoTexture::Create()
 {

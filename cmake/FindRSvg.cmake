@@ -12,6 +12,7 @@ if(NOT WIN32)
   # in the FIND_PATH() and FIND_LIBRARY() calls
   find_package(PkgConfig REQUIRED)
   pkg_check_modules(_pc_rsvg librsvg-2.0)
+  # pkg_search_module(GDKPIXBUF gdk-pixbuf-2.0)
   if(_pc_rsvg_FOUND)
     set(RSvg_FOUND TRUE)
   endif(_pc_rsvg_FOUND)
@@ -33,13 +34,14 @@ if(RSvg_FOUND)
             HINTS ${_pc_rsvg_INCLUDE_DIRS}
             PATH_SUFFIXES librsvg
   )
-
-  find_path(PIXBUF_INCLUDE_DIR gdk-pixbuf.h
+  
+  find_path(PIXBUF_INCLUDE_DIR gdk-pixbuf/gdk-pixbuf.h
           HINTS ${_pc_rsvg_INCLUDE_DIRS}
-          PATH_SUFFIXES gdk-pixbuf
-          )
-
+  )
+ 
   set(RSVG_INCLUDE_DIRS ${RSVG_INCLUDE_DIR} ${PIXBUF_INCLUDE_DIR})
+
+  MESSAGE(STATUS "RSvg ${RSVG_INCLUDE_DIRS}")
 
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(RSvg DEFAULT_MSG RSVG_LIBRARIES RSVG_INCLUDE_DIRS)

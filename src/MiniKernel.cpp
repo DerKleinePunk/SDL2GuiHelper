@@ -122,11 +122,15 @@ void MiniKernel::HandleEvent(const SDL_Event& event, bool& exitLoop)
                         LOG(ERROR) << "Fehler beim Abspielen von Sound " << _kernelConfig.AudioFileForLongClick;
                     }
                 }
-            } else if(code == AppEvent::MusikStreamError || code == AppEvent::MusikStreamStopp) {
+
+            } 
+#ifdef ENABLEMUSIKMANAGER
+            else if(code == AppEvent::MusikStreamError || code == AppEvent::MusikStreamStopp) {
                 if(_audioManager != nullptr) {
                     _audioManager->MusikStreamThreadStopped();
                 }
             }
+#endif
             for(const auto& callback : _applicationEventCallbackFunctions) {
                 callback(code, nullptr, data2);
             }
