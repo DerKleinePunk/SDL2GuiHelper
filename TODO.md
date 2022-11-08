@@ -11,3 +11,5 @@ https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-
 librsvg2-dev
 
 https://github.com/GNOME/librsvg/blob/main/tests/api.c
+
+http://www.stryder-it.de/simdashboard/help/de/SIM_Dashboard_App/Design_Editor/How_to_create_a_custom_Attitude_Indicator
