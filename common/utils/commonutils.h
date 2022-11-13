@@ -39,6 +39,13 @@ namespace utils
 	std::string exec(const char* cmd, int& resultCode);
 	FILE *MNFmemopen(const void *buffer, size_t size, const char* mode);
 	std::string GetHomePath();
+	/**
+	 * @brief replace all from to to in string str
+	 * 
+	 * @param str the string
+	 * @param from this replace
+	 * @param to with this
+	 */
 	void replaceAll(std::string& str, const std::string& from, const std::string& to);
 	std::string GetPrintAbleString(const std::string& text);
 	std::string uchar2hex(unsigned char inchar);
@@ -46,7 +53,7 @@ namespace utils
 	std::ostream& formatDateTime(std::ostream& out, const tm& t, const char* fmt);
 	std::string dateTimeToString();
 	std::string dateTimeToString(const time_t& t);
-	std::string dateTimeToString(const tm& t, const char* format);
+	std::string dateTimeToString(const tm& t, const char* format);	
 	std::string dateTimeToJsonString(const timeval& t);
 	tm now();
 	tm utcNow();

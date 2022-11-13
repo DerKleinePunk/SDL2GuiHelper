@@ -27,8 +27,11 @@ void AutomationDialog::Init()
     _progressbar = new GUIProgressbar(GUIPoint(0, 45), GUISize(100, 50,sizeType::relative), "batterieLevel", own_firered_color, white_color);
     _manager->AddElement(_parent, _progressbar);
 
-    _gauge = new GUIGauge(GUIPoint(0, 45), GUISize(100, 50,sizeType::relative), "batterieLevel2", own_firered_color, white_color);
+    _gauge = new GUIGauge(GUIPoint(0, 45), GUISize(50, 50,sizeType::relative), "batterieLevel2", own_firered_color, white_color);
     _manager->AddElement(_parent, _gauge);
+
+    _svgView = new GUISvgView(GUIPoint(512, 45), GUISize(50, 50,sizeType::relative), "horizont");
+    _manager->AddElement(_parent, _svgView);
 
     auto zoomDownButton = new GUITextButton(GUIPoint(20, 365), GUISize(300, 60), "value25Button", own_firered_color, white_color);
     zoomDownButton->Text("25");
@@ -79,9 +82,11 @@ void AutomationDialog::SwitchGui()
 {
      if(_progressbarShow) {
         _progressbar->Invisible();
+        _svgView->Visible();
         _gauge->Visible();
     } else {
         _progressbar->Visible();
+        _svgView->Invisible();
         _gauge->Invisible();
     }
 

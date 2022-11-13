@@ -62,7 +62,7 @@ void GUIGauge::DrawIntern()
     cairo_arc(image, Size().width / 2, Size().height / 2, radius, angle1, angle3);
     cairo_stroke (image);
 
-    _cairoTexture->LoadSvg("danger.svg", GUIRect(100, 50, 50, 50));
+    _cairoTexture->LoadSvg("danger.svg", GUIRect(0, 0, 50, 50));
 
     _cairoTexture->PaintDone();
 #endif

@@ -12,3 +12,4 @@
 #include "gui/GUIMediaDisplay.h"
 #include "gui/GUIProgressbar.h"
 #include "gui/GUIGauge.h"
+#include "gui/GUISvgView.hpp"

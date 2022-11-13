@@ -34,6 +34,15 @@ public:
 
     void RoundedRectangle(int x, int y, int w, int h, int r);
     int LoadSvg(const std::string& fileName, const GUIRect& viewPort);
+    /**
+     * @brief LoadSvg from Memory
+     * 
+     * @param buffer this buffer
+     * @param bufferSize Buffersize in Bytes
+     * @param viewPort 
+     * @return int 0 no error
+     */
+    int LoadSvg(const unsigned char *buffer, size_t bufferSize, const GUIRect& viewPort);
 };
 
 #endif //ENABLECAIRO

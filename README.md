@@ -52,7 +52,7 @@ Debian Pakage Names
  libprotobuf-dev
  protobuf-compiler
  libsqlite3-dev
- 
+ librsvg2-dev
 
 ### SDL2
 

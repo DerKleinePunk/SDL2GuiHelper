@@ -9,6 +9,7 @@ private:
     SDLEventManager* _eventManager;
     GUIProgressbar* _progressbar;
     GUIGauge* _gauge;
+    GUISvgView* _svgView;
     bool _progressbarShow;
 public:
     AutomationDialog(GUIElement* parent, GUIElementManager* manager, SDLEventManager* eventManager);

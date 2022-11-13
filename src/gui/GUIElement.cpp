@@ -107,7 +107,7 @@ void GUIElement::Invalidate()
 			if ((anchor_ & AnchorFlags::Right) == AnchorFlags::Right &&
 				(anchor_ & AnchorFlags::Left) != AnchorFlags::Left)
 			{
-				topLeft_.x = 0;
+				//topLeft_.x = 0;
 			}
 		}
 

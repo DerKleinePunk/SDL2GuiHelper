@@ -62,6 +62,11 @@ cairo_t* GUICairoTexture::GetCairo()
 
 void GUICairoTexture::PaintDone()
 {
+    if(_image_data_source == nullptr) {
+        LOG(WARNING) << "no data to paint";
+        return;
+    }
+
     cairo_surface_flush(_image_data_source);
 
     if(_texture == nullptr){
@@ -86,6 +91,10 @@ GUITexture* GUICairoTexture::GetTexture()
 
 void GUICairoTexture::RoundedRectangle(int x, int y, int w, int h, int r)
 {
+    if(_image_data_source == nullptr) {
+        Create();
+    }
+
     cairo_new_sub_path(_cairoImage);
     cairo_arc(_cairoImage, x + r, y + r, r, M_PI, 3.0 * M_PI / 2.0);
     cairo_arc(_cairoImage, x + w - r, y + r, r, 3.0 * M_PI / 2.0, 2.0 * M_PI);
@@ -96,15 +105,16 @@ void GUICairoTexture::RoundedRectangle(int x, int y, int w, int h, int r)
 
 int GUICairoTexture::LoadSvg(const std::string& fileName, const GUIRect& viewPort )
 {
+    if(_image_data_source == nullptr) {
+        Create();
+    }
+
     GError *error = nullptr;
     auto handle = rsvg_handle_new_from_file(fileName.c_str(), &error);
     if(error != nullptr ) {
         //Todo Log Error
         return -1;
     }
-    
-    /*if(rsvg_handle_render_cairo (handle, _cairoImage) == FALSE) {
-    }*/
 
     RsvgRectangle viewport = { 0.0, 0.0, 0.0, 0.0 };
     viewport.x = viewPort.x;
@@ -113,7 +123,55 @@ int GUICairoTexture::LoadSvg(const std::string& fileName, const GUIRect& viewPor
     viewport.height = viewPort.h; 
 
     if(rsvg_handle_render_document (handle, _cairoImage, &viewport, &error) == FALSE) {
+        LOG(ERROR) << "Render SVG Failed";
+    }
 
+    if(error != nullptr ) {
+        g_object_unref(handle);
+        
+        //Todo Log Error
+        return -1;
+    }
+
+
+    g_object_unref(handle);
+
+    return 0;
+}
+
+int GUICairoTexture::LoadSvg(const unsigned char *buffer, size_t bufferSize, const GUIRect& viewPort)
+{
+    if(_image_data_source == nullptr) {
+        Create();
+    }
+
+    GError *error = nullptr;
+    auto handle = rsvg_handle_new_from_data(buffer, bufferSize, &error);
+    if(error != nullptr ) {
+        LOG(ERROR) << error->message;
+        return -1;
+    }
+    
+    const char *css = "svg#svg821 { max-width: 100%; height: auto; max-height: 90vh; transform: scale(2.2); }";
+    
+    if(rsvg_handle_set_stylesheet (handle, (const guint8 *) css, strlen (css), &error) == FALSE)  {
+        LOG(ERROR) << "set stylesheet";
+        if(error != nullptr ) {
+            LOG(ERROR) << error->message;
+        }
+    }
+
+    RsvgRectangle viewport = { 0.0, 0.0, 0.0, 0.0 };
+    viewport.x = viewPort.x;
+    viewport.y = viewPort.y;
+    viewport.width = viewPort.w;
+    viewport.height = viewPort.h; 
+
+    if(rsvg_handle_render_document(handle, _cairoImage, &viewport, &error) == FALSE) {
+        LOG(ERROR) << "render document";
+        if(error != nullptr ) {
+            LOG(ERROR) << error->message;
+        }
     }
 
     if(error != nullptr ) {
