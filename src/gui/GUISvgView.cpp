@@ -96,3 +96,15 @@ void GUISvgView::UpdateAnimation()
 void GUISvgView::Close()
 {
 }
+
+void GUISvgView::SetFile(const std::string& fileName)
+{
+    _fileName = fileName;
+
+#ifdef ENABLECAIRO
+    if(_cairoTexture != nullptr) {
+        DrawIntern();
+    }
+#endif
+
+}

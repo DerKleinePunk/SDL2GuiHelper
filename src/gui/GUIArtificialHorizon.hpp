@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 
 #include "GUICairoTexture.hpp"
 #include "GUIElement.h"
@@ -7,24 +8,19 @@ struct GUIPoint;
 struct GUISize;
 struct GUIEvent;
 
-/**
- * @brief Draw an SVG as Control
- * 
- */
-class GUISvgView : public GUIElement
+class GUIArtificialHorizon : public GUIElement
 {
 private:
     el::Logger* _logger;
-    std::string _fileName;
-    
+    double _rolling;
 #ifdef ENABLECAIRO
     GUICairoTexture* _cairoTexture;
 #endif
     void DrawIntern();
-    RTTI_DERIVED(GUISvgView);
+    RTTI_DERIVED(GUIArtificialHorizon);
 public:
-    GUISvgView(GUIPoint position, GUISize size, const std::string& name);
-    ~GUISvgView();
+    GUIArtificialHorizon(GUIPoint position, GUISize size, const std::string& name);
+    ~GUIArtificialHorizon();
 
     void Init() override;
     void Draw() override;
@@ -32,5 +28,7 @@ public:
     void UpdateAnimation() override;
     void Close() override;
 
-    void SetFile(const std::string& fileName);
+    void SetRolling(double value);
 };
+
+

@@ -13,6 +13,8 @@
 #include "GUITexture.h"
 #include "GUIRenderer.h"
 
+const double GradToRadians = M_PI/180.0;
+
 class GUICairoTexture
 {
 private:

@@ -24,14 +24,17 @@ AutomationDialog::~AutomationDialog()
 
 void AutomationDialog::Init()
 {
-    _progressbar = new GUIProgressbar(GUIPoint(0, 45), GUISize(100, 50,sizeType::relative), "batterieLevel", own_firered_color, white_color);
+    _progressbar = new GUIProgressbar(GUIPoint(0, 45), GUISize(100, 50, sizeType::relative), "batterieLevel", own_firered_color, white_color);
     _manager->AddElement(_parent, _progressbar);
 
     _gauge = new GUIGauge(GUIPoint(0, 45), GUISize(50, 50,sizeType::relative), "batterieLevel2", own_firered_color, white_color);
     _manager->AddElement(_parent, _gauge);
 
-    _svgView = new GUISvgView(GUIPoint(512, 45), GUISize(50, 50,sizeType::relative), "horizont");
-    _manager->AddElement(_parent, _svgView);
+     //GUISize(50, 50, sizeType::relative)
+     //GUISize(300, 300)
+
+    _horizon = new GUIArtificialHorizon(GUIPoint(512, 45), GUISize(50, 50, sizeType::relative), "horizont");
+    _manager->AddElement(_parent, _horizon);
 
     auto zoomDownButton = new GUITextButton(GUIPoint(20, 365), GUISize(300, 60), "value25Button", own_firered_color, white_color);
     zoomDownButton->Text("25");
@@ -76,17 +79,30 @@ void AutomationDialog::SetValue(unsigned char value)
 {
     _progressbar->SetValue(value);
     _gauge->SetValue(value);
+
+    if(value == 25)
+    {
+        _horizon->SetRolling(22.5);
+    }
+    else if(value == 50)
+    {
+        _horizon->SetRolling(45.0);
+    }
+    else if(value == 75)
+    {
+        _horizon->SetRolling(90.0);
+    }
 }
 
 void AutomationDialog::SwitchGui()
 {
      if(_progressbarShow) {
         _progressbar->Invisible();
-        _svgView->Visible();
+        _horizon->Visible();
         _gauge->Visible();
     } else {
         _progressbar->Visible();
-        _svgView->Invisible();
+        _horizon->Invisible();
         _gauge->Invisible();
     }
 
