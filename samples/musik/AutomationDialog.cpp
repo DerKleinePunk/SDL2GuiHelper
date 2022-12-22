@@ -86,11 +86,15 @@ void AutomationDialog::SetValue(unsigned char value)
     }
     else if(value == 50)
     {
-        _horizon->SetRolling(45.0);
+        _horizon->SetRolling(-45.0);
     }
     else if(value == 75)
     {
         _horizon->SetRolling(90.0);
+    }
+    else if(value == 100)
+    {
+        _horizon->SetRolling(0.0);
     }
 }
 
