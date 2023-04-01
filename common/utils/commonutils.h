@@ -81,4 +81,11 @@ namespace utils
 	// Initialize the static member.
 	template <typename Ret, typename... Params>
 	std::function<Ret(Params...)> Callback<Ret(Params...)>::func;
+
+	/**
+	 * @brief convert char* to std::string 
+	 * 
+	 * @param value the string can be null
+	 */
+	std::string chartoStringNullSave(const char* value);
 }

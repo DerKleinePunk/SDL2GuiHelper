@@ -299,4 +299,9 @@ std::string GetHomePath()
 }
 #endif
 
+std::string chartoStringNullSave(const char* value) 
+{
+    return std::string(value ? value : "");
+}
+
 } // namespace utils
