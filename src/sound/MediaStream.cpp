@@ -34,7 +34,7 @@
 
 MediaStream::MediaStream()
     : audio_stream_(nullptr), video_stream_(nullptr), subtitle_stream_(nullptr), audio_diff_avg_coef(0),
-      audio_diff_avg_count(0), audio_diff_threshold(0), audio_clock(0), pSwrCtx_(nullptr), av_sync_type(0),
+      audio_diff_avg_count(0), audio_diff_threshold(0), audio_clock(0), audioQueue_(), pSwrCtx_(nullptr), av_sync_type(0),
       is_ready(false), streamdown(false), totalTime_(0), currentTime_(0), sample_array_index(0), last_i_start(0),
       audio_callback_time(0), audio_buffer_(nullptr), audio_buf1(nullptr), audio_buf1_size(0), audio_buffer_size_(0),
       audio_buffer_index_(0), audio_write_buf_size(0), audio_clock_serial(0), realtime(0), max_frame_duration(0),
@@ -44,7 +44,7 @@ MediaStream::MediaStream()
       last_video_stream(0), last_audio_stream(0), last_subtitle_stream(0), audio_codec_name(nullptr),
       subtitle_codec_name(nullptr), video_codec_name(nullptr), audio_hw_buf_size(0), rdft(nullptr), rdft_data(nullptr),
       vis_texture(nullptr), seek_flags(0), seek_pos(0), seek_rel(0), step(0), read_pause_return(0), frame_timer(0),
-      frame_last_returned_time(0), frame_last_filter_delay(0), wait_mutex(nullptr), last_vis_time(0), audioQueue_()
+      frame_last_returned_time(0), frame_last_filter_delay(0), wait_mutex(nullptr), last_vis_time(0)
 {
     av_init_packet(&audio_packet_);
     av_init_packet(&flush_pkt);
@@ -915,7 +915,7 @@ int MediaStream::FrameQueueInit(FrameQueue* f, PacketQueue* pktq, int maxSize, c
 
 int MediaStream::PacketQueueInit(PacketQueue* queue)
 {
-    memset(queue, 0, sizeof(PacketQueue));
+    memset((void *)queue, 0, sizeof(PacketQueue));
     queue->mutex = SDL_CreateMutex();
     if(!queue->mutex) {
         av_log(nullptr, AV_LOG_FATAL, "SDL_CreateMutex(): %s\n", SDL_GetError());
@@ -1023,7 +1023,7 @@ void MediaStream::StreamTogglePause()
         set_clock(&vidclk, get_clock(&vidclk), vidclk.serial);
     }
     set_clock(&extclk, get_clock(&extclk), extclk.serial);
-    paused = audclk.paused = vidclk.paused = extclk.paused = !paused;
+    paused = (audclk.paused = (vidclk.paused = (extclk.paused = !paused)));
 }
 
 void MediaStream::step_to_next_frame()

@@ -207,8 +207,10 @@ void GUIArtificialHorizon::Close()
 void GUIArtificialHorizon::SetRolling(double value)
 {
     _rolling = value;
+#ifdef ENABLECAIRO
     delete _cairoTexture;
     _cairoTexture = new GUICairoTexture(renderer_, Size());
+#endif
     DrawIntern();
     SetRedraw();
 }
