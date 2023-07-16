@@ -72,6 +72,7 @@ void SampleApp::BuildFirstScreen() {
     BuildMapScreen();
     BuildPlayerScreen();
     BuildAutoScreen();
+    BuildSvgScreen();
     BuildCommandBar();
 
     //Clear Boot Log
@@ -182,6 +183,17 @@ void SampleApp::BuildAutoScreen()
     _autoDialog->Init();
 }
 
+void SampleApp::BuildSvgScreen()
+{
+    auto playerScreenBackground =
+    new GUITestElement(GUIPoint(0, 0), GUISize(100, 100, sizeType::relative), blue_color, "svgScreen");
+    _manager->AddElement(playerScreenBackground);
+    playerScreenBackground->Invisible();
+
+    auto view = new GUISvgView(GUIPoint(0, 45), GUISize(100, 50, sizeType::relative), "sampleSVG", "test2.svg");
+    _manager->AddElement(playerScreenBackground, view);
+}
+
 void SampleApp::BuildCommandBar()
 {
     auto commandBar = new GUITestElement(GUIPoint(0, 500), GUISize(1024, 100), transparent_color, "commandBar");
@@ -221,6 +233,15 @@ void SampleApp::BuildCommandBar()
     tempButton->Text("Haus");
     tempButton->RegisterOnClick([this](IGUIElement* sender) { UpdateUI(UiState::automation); });
     _manager->AddElement(commandBar, tempButton);
+
+    buttonstartPos += 175;
+
+    tempButton = new GUITextButton(GUIPoint(buttonstartPos, 5), GUISize(150, 90),
+                                   "showSvgCommandButton", own_red_color, white_color);
+    tempButton->FontHeight(40);
+    tempButton->Text("SVG");
+    tempButton->RegisterOnClick([this](IGUIElement* sender) { UpdateUI(UiState::showSvg); });
+    _manager->AddElement(commandBar, tempButton);
 }
 
 void SampleApp::UpdateUI(UiState newUIState)
@@ -246,6 +267,10 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             _autoDialog->Hide();
         }
+        element = _manager->GetElementByName("svgScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
@@ -262,6 +287,11 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
+        element = _manager->GetElementByName("automationCommandButton");
+        if(element != nullptr) {
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("showSvgCommandButton");
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
@@ -283,6 +313,10 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             _autoDialog->Hide();
         }
+        element = _manager->GetElementByName("svgScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
@@ -299,6 +333,11 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
+        element = _manager->GetElementByName("automationCommandButton");
+        if(element != nullptr) {
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("showSvgCommandButton");
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
@@ -336,6 +375,11 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
+        element = _manager->GetElementByName("automationCommandButton");
+        if(element != nullptr) {
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("showSvgCommandButton");
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
@@ -357,6 +401,10 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             _autoDialog->Hide();
         }
+        element = _manager->GetElementByName("svgScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
@@ -374,6 +422,10 @@ void SampleApp::UpdateUI(UiState newUIState)
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
         }
         element = _manager->GetElementByName("automationCommandButton");
+        if(element != nullptr) {
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("showSvgCommandButton");
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
@@ -395,6 +447,10 @@ void SampleApp::UpdateUI(UiState newUIState)
         if(element != nullptr) {
             _autoDialog->Show();
         }
+        element = _manager->GetElementByName("svgScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
         element = _manager->GetElementByName("homeCommandButton");
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
@@ -412,6 +468,56 @@ void SampleApp::UpdateUI(UiState newUIState)
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
         }
         element = _manager->GetElementByName("automationCommandButton");
+        if(element != nullptr) {
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
+        }
+        element = _manager->GetElementByName("showSvgCommandButton");
+        if(element != nullptr) {
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        break;
+    case UiState::showSvg:
+        element = _manager->GetElementByName("mainScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
+        element = _manager->GetElementByName("mapScreen");
+        if(element != nullptr) {
+            _manager->InvisibleElement(element);
+        }
+        element = _manager->GetElementByName("playerScreen");
+        if(element != nullptr) {
+            _playerDialog->Hide();
+        }
+        element = _manager->GetElementByName("autoScreen");
+        if(element != nullptr) {
+            _autoDialog->Hide();
+        }
+        element = _manager->GetElementByName("svgScreen");
+        if(element != nullptr) {
+            _manager->VisibleElement(element);
+        }
+        element = _manager->GetElementByName("homeCommandButton");
+        if(element != nullptr) {
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("sdsCommandButton");
+        if(element != nullptr) {
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("mapCommandButton");
+        if(element != nullptr) {
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("playerCommandButton");
+        if(element != nullptr) {
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("automationCommandButton");
+        if(element != nullptr) {
+            dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_red_color);
+        }
+        element = _manager->GetElementByName("showSvgCommandButton");
         if(element != nullptr) {
             dynamic_cast<GUITextButton*>(element)->ChangeBackColor(own_selected_command_color);
         }

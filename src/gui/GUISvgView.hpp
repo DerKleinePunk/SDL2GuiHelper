@@ -23,7 +23,7 @@ private:
     void DrawIntern();
     RTTI_DERIVED(GUISvgView);
 public:
-    GUISvgView(GUIPoint position, GUISize size, const std::string& name);
+    GUISvgView(GUIPoint position, GUISize size, const std::string& name, const std::string& fileName);
     ~GUISvgView();
 
     void Init() override;

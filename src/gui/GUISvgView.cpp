@@ -44,12 +44,12 @@ void GUISvgView::DrawIntern()
 #endif
 }
 
-GUISvgView::GUISvgView(GUIPoint position, GUISize size, const std::string& name):
+GUISvgView::GUISvgView(GUIPoint position, GUISize size, const std::string& name, const std::string& fileName):
     GUIElement(position, size, name)
 {
     _logger = el::Loggers::getLogger(ELPP_DEFAULT_LOGGER);
     backgroundColor_ = transparent_color;
-    _fileName = "artificial-horizon.svg";
+    _fileName = fileName;
 }
 
 GUISvgView::~GUISvgView()

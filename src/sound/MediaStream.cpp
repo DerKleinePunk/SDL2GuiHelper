@@ -915,7 +915,7 @@ int MediaStream::FrameQueueInit(FrameQueue* f, PacketQueue* pktq, int maxSize, c
 
 int MediaStream::PacketQueueInit(PacketQueue* queue)
 {
-    memset((void *)queue, 0, sizeof(PacketQueue));
+    queue = {};
     queue->mutex = SDL_CreateMutex();
     if(!queue->mutex) {
         av_log(nullptr, AV_LOG_FATAL, "SDL_CreateMutex(): %s\n", SDL_GetError());

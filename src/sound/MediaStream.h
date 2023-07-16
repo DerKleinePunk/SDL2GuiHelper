@@ -24,9 +24,10 @@ typedef struct MyAvPacketList {
 } MyAVPacketList;
 
 typedef struct PacketQueue {
-    PacketQueue():first_pkt(nullptr), last_pkt(nullptr) {
+    PacketQueue():first_pkt(nullptr), last_pkt(nullptr),mutex(nullptr),cond(nullptr)
+	{
 
-          };
+    };
 	MyAVPacketList *first_pkt, *last_pkt;
 	int nb_packets;
 	int size;

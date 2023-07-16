@@ -17,7 +17,8 @@ enum class UiState : unsigned char {
 	map,
 	sds,
     musikPlayer,
-    automation
+    automation,
+    showSvg
 };
 
 class SampleApp
@@ -39,6 +40,7 @@ private:
     void BuildMapScreen();
     void BuildPlayerScreen();
     void BuildAutoScreen();
+    void BuildSvgScreen();
     void BuildCommandBar();
     void UpdateUI(UiState newUIState);
 public:

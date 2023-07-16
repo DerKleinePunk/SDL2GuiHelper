@@ -62,6 +62,11 @@ cairo_t* GUICairoTexture::GetCairo()
 
 void GUICairoTexture::PaintDone()
 {
+    if(_renderer == nullptr) {
+        LOG(WARNING) << "_renderer is null wrong init State ?";
+        return;
+    }
+
     if(_image_data_source == nullptr) {
         LOG(WARNING) << "no data to paint";
         return;
@@ -112,7 +117,7 @@ int GUICairoTexture::LoadSvg(const std::string& fileName, const GUIRect& viewPor
     GError *error = nullptr;
     auto handle = rsvg_handle_new_from_file(fileName.c_str(), &error);
     if(error != nullptr ) {
-        //Todo Log Error
+        LOG(ERROR) << error->message;
         return -1;
     }
 
@@ -127,12 +132,10 @@ int GUICairoTexture::LoadSvg(const std::string& fileName, const GUIRect& viewPor
     }
 
     if(error != nullptr ) {
+        LOG(ERROR) << error->message;
         g_object_unref(handle);
-        
-        //Todo Log Error
         return -1;
     }
-
 
     g_object_unref(handle);
 
@@ -152,6 +155,7 @@ int GUICairoTexture::LoadSvg(const unsigned char *buffer, size_t bufferSize, con
         return -1;
     }
     
+    /*
     const char *css = "svg#svg821 { max-width: 100%; height: auto; max-height: 90vh; transform: scale(2.2); }";
     
     if(rsvg_handle_set_stylesheet (handle, (const guint8 *) css, strlen (css), &error) == FALSE)  {
@@ -159,7 +163,7 @@ int GUICairoTexture::LoadSvg(const unsigned char *buffer, size_t bufferSize, con
         if(error != nullptr ) {
             LOG(ERROR) << error->message;
         }
-    }
+    }*/
 
     RsvgRectangle viewport = { 0.0, 0.0, 0.0, 0.0 };
     viewport.x = viewPort.x;

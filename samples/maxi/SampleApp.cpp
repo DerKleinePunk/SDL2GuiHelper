@@ -185,7 +185,6 @@ void SampleApp::BuildCommandBar()
 
     buttonstartPos += 175;
 
-
     tempButton = new GUITextButton(GUIPoint(buttonstartPos, 5), GUISize(150, 90),
                                    "playerCommandButton", own_red_color, white_color);
     tempButton->FontHeight(40);
