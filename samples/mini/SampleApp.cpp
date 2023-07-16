@@ -155,7 +155,7 @@ void SampleApp::LoadSdsList()
             column7->SetDetailText("DetailText in Column");
         }
         row7.AddColumn(column7);
-        row7.Tag = (void*)i;
+        row7.Tag = (void*)(intptr_t)i;
         element->AddRow(row7);
     }
 
