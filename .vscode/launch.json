@@ -59,7 +59,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Linux/SampleMusik.bin",
-            "args": ["--v=5"],
+            "args": [],//"--v=5"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/bin/Linux/",
             "environment": [],

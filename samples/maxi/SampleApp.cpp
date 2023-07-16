@@ -338,10 +338,10 @@ void SampleApp::Startup() {
     //config.AudioFileForLongClick = _config->GetSoundForClick();
     config.mapDataPath = "/home/punky/develop/sdl2guitests/src/maps/europe/germany";
     std::vector<std::string> iconPaths;
-    iconPaths.push_back("/home/punky/develop/libosmscout-code/libosmscout/data/icons/14x14/standard/");
-    iconPaths.push_back("/home/punky/develop/libosmscout-code/libosmscout/data/icons/svg/standard/");
+    iconPaths.push_back("/home/punky/develop/libosmscout/libosmscout/data/icons/14x14/standard/");
+    iconPaths.push_back("/home/punky/develop/libosmscout/libosmscout/data/icons/svg/standard/");
     config.mapIconPaths = iconPaths;
-    config.mapStyle = "/home/punky/develop/libosmscout-code/stylesheets/standard.oss";
+    config.mapStyle = "/home/punky/develop/libosmscout/stylesheets/standard.oss";
     //config.markerImageFile = _config->GetMarkerImageFile();
     config.startMapPosition.Set(50.4090,9.3671);
     config.BackgroundScreen = black_color;

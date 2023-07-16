@@ -109,12 +109,12 @@ Build libosmscout using with this
 
 ```console
 git clone https://github.com/Framstag/libosmscout.git
-git checkout 8cd316736da94541f272bd3ab8e9f0eb4750e73c
+git checkout v2023.03.30.1
 
 echo buildding libosmscout debug
 DIRECTORY="build"
 if [ ! -d "$DIRECTORY" ]; then
-	mkdir $DIRECTORY
+ mkdir $DIRECTORY
 fi
 cd $DIRECTORY
 cmake .. -DCMAKE_BUILD_TYPE=Debug -DOSMSCOUT_ENABLE_SSE=ON -DOSMSCOUT_BUILD_DOC_API=OFF -DOSMSCOUT_BUILD_DEMOS=OFF -DOSMSCOUT_BUILD_TOOL_OSMSCOUTOPENGL=OFF -DCMAKE_CXX_FLAGS="-Wno-psabi"
@@ -127,3 +127,5 @@ cmake --build . -j $(nproc)
 sudo cmake --build . --target install
 cd ..
 ```
+
+For generating Map see [Map Readme](tools/map/README.md)

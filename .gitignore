@@ -38,8 +38,9 @@ build/
 .vscode/
 src/webpage/logs
 src/webpage/uploads
-src/maps/europe
-src/maps/hgt
+src/map/europe
+src/map/hgt
+src/map/tmp
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
