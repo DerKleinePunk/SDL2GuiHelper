@@ -1,4 +1,7 @@
-Make Able to Render SVG's on Screen
+# all new SDL3 is out
+https://github.com/libsdl-org/SDL/blob/main/docs/README-migration.md
+
+## Make Able to Render SVG's on Screen
 
 https://stackoverflow.com/questions/21152068/load-svg-with-cairo
 https://www.linuxquestions.org/questions/programming-9/open-an-svg-file-using-rsvg-and-cairo-562362/
@@ -13,3 +16,5 @@ librsvg2-dev
 https://github.com/GNOME/librsvg/blob/main/tests/api.c
 
 http://www.stryder-it.de/simdashboard/help/de/SIM_Dashboard_App/Design_Editor/How_to_create_a_custom_Attitude_Indicator
+
+1
